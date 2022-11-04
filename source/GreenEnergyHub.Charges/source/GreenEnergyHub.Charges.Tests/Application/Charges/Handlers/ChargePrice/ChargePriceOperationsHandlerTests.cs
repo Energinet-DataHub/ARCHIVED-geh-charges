@@ -147,6 +147,42 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
 
         [Theory]
         [InlineAutoMoqData]
+        public async Task HandleAsync_WhenChargeDoesNotExist_ThenRejectedEventRaised(
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
+            [Frozen] Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IDomainEventPublisher> domainEventPublisher,
+            [Frozen] Mock<IChargePriceOperationsRejectedEventFactory> chargePriceOperationsRejectedEventFactory,
+            TestMarketParticipant sender,
+            ChargePriceCommandReceivedEvent receivedEvent,
+            ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent,
+            ChargePriceOperationsHandler sut)
+        {
+            // Arrange
+            var validationResult = ValidationResult.CreateSuccess();
+            inputValidator.Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>(), It.IsAny<DocumentDto>())).Returns(validationResult);
+            chargePriceOperationsRejectedEventFactory
+                .Setup(c => c.Create(
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<List<ChargePriceOperationDto>>(),
+                    It.IsAny<ValidationResult>()))
+                .Returns(chargePriceOperationsRejectedEvent);
+            SetupChargeRepository(chargeRepository, null);
+            SetupMarketParticipantRepository(marketParticipantRepository, sender);
+            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            domainEventPublisher.Verify(
+                x => x.Publish(It.IsAny<ChargePriceOperationsRejectedEvent>()), Times.Once);
+            domainEventPublisher.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFails_ThenValidationErrorsAreLogged(
             Mock<ILoggerFactory> loggerFactory,
             Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
@@ -228,7 +264,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
 
         private static void SetupChargeRepository(
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            Charge charge)
+            Charge? charge)
         {
             chargeRepository
                 .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))!
