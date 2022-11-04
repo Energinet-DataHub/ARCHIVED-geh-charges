@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 5.0.0
+
+Removed `ChargeLinkV2Dto`
+
 ## Version 4.4.2
 
 `ChargeMessageType` is changed to reflect Charge BusinessReasonCode
