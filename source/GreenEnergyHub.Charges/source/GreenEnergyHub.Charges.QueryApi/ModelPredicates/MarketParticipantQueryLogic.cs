@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
     {
         public static IQueryable<MarketParticipantV1Dto> AsMarketParticipantV1Dto(this IQueryable<MarketParticipant> queryable)
         {
-            return queryable.Select(m => new MarketParticipantV1Dto(m.Id, m.Name, m.MarketParticipantId));
+            return queryable.Select(m => new MarketParticipantV1Dto(m.Id, m.Name, m.MarketParticipantId, m.BusinessProcessRole));
         }
     }
 }
