@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
-using Microsoft.Azure.Amqp.Serialization;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
