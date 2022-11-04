@@ -21,5 +21,5 @@ namespace Energinet.DataHub.Charges.Contracts.Charge
         Guid Id,
         string Name,
         string MarketParticipantId,
-        int Role);
+        string BusinessProcessRole);
 }
