@@ -74,7 +74,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
         [Theory]
         [InlineData("v1")]
-        [InlineData("v2")]
         public async Task SpecificationForVersion_ReturnsOk(string version)
         {
             var response = await _client.GetAsync($"/swagger/{version}/swagger.json");
