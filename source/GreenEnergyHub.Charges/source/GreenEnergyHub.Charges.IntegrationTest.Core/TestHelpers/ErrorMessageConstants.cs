@@ -18,5 +18,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
     {
         public static string ActorIsNotWhoTheyClaimToBeErrorMessage =>
             "The sender organization provided in the request body does not match the organization in the bearer token.";
+
+        public static string SyntaxValidationErrorMessage =>
+            "Syntax validation failed for business message.";
+
+        public static string AnElementIsEmptyOrContainsOnlyWhitespace =>
+            "An element contains an invalid value. It is either empty or contains only whitespace.";
+
+        public static string UnsupportedResolutionErrorMessage =>
+            "Provided Resolution value 'P1Y' is invalid and cannot be mapped.";
     }
 }

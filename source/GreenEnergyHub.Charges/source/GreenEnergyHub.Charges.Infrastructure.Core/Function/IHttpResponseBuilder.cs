@@ -50,7 +50,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
         /// </summary>
         /// <param name="request"></param>
         /// <param name="code"></param>
+        /// <param name="errorDetails"></param>
         /// <returns>400 B2B bad request response data</returns>
-        HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code);
+        HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code, string errorDetails);
     }
 }

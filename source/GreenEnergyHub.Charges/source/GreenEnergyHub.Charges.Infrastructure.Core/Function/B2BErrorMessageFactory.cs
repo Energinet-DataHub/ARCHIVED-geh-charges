@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.ComponentModel;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
     public static class B2BErrorMessageFactory
     {
-        public static B2BErrorMessage Create(B2BErrorCode code)
+        public static B2BErrorMessage Create(B2BErrorCode code, string errorDetails)
         {
             return code switch
             {
@@ -26,10 +27,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
                     new B2BErrorMessage(
                         "B2B-008",
                         "The sender organization provided in the request body does not match the organization in the bearer token."),
-
+                B2BErrorCode.SyntaxValidationErrorMessage =>
+                    new B2BErrorMessage(
+                        "B2B-005",
+                        "Syntax validation failed for business message." + AddDetails(errorDetails)),
                 _ =>
                     throw new InvalidEnumArgumentException($"Provided B2B error code '{code}' is invalid and cannot be mapped."),
             };
+        }
+
+        private static string AddDetails(string errorDetails)
+        {
+            return string.IsNullOrWhiteSpace(errorDetails) ? string.Empty : Environment.NewLine + errorDetails;
         }
     }
 }

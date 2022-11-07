@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.ComponentModel;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
 
@@ -23,18 +25,33 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
     [UnitTest]
     public class B2BErrorMessageFactoryTests
     {
-        [Fact]
-        public void Create_WhenFactoryCreateWithValidB2BCode_ReturnCorrectErrorMessage()
+        [Theory]
+        [InlineAutoMoqData(B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, "B2B-008", "The sender organization provided in the request body does not match the organization in the bearer token.")]
+        [InlineAutoMoqData(B2BErrorCode.SyntaxValidationErrorMessage, "B2B-005", "Syntax validation failed for business message.")]
+        public void Create_WhenFactoryCreateWithValidB2BCode_ReturnCorrectErrorMessage(
+            B2BErrorCode errorCode,
+            string expectedCode,
+            string expectedMessage)
         {
-            // Arrange
-            var expectedCode = "B2B-008";
-            var expectedMessage = "The sender organization provided in the request body does not match the organization in the bearer token.";
-
             // Act
-            var sut = B2BErrorMessageFactory.Create(B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            var sut = B2BErrorMessageFactory.Create(errorCode, string.Empty);
 
             // Assert
             sut.Code.Should().Be(expectedCode);
+            sut.Message.Should().Be(expectedMessage);
+        }
+
+        [Fact]
+        public void Create_WhenFactoryCreateWithValidB2BCodeAndErrorDetails_ReturnCorrectErrorMessage()
+        {
+            // Assert
+            var errorDetails = "This is some errorDetails";
+            var expectedMessage = "Syntax validation failed for business message." + Environment.NewLine + errorDetails;
+
+            // Act
+            var sut = B2BErrorMessageFactory.Create(B2BErrorCode.SyntaxValidationErrorMessage, errorDetails);
+
+            // Assert
             sut.Message.Should().Be(expectedMessage);
         }
 
@@ -45,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             var invalidB2BCode = (B2BErrorCode)0;
 
             // Assert
-            Assert.Throws<InvalidEnumArgumentException>(() => B2BErrorMessageFactory.Create(invalidB2BCode));
+            Assert.Throws<InvalidEnumArgumentException>(() => B2BErrorMessageFactory.Create(invalidB2BCode, string.Empty));
         }
     }
 }

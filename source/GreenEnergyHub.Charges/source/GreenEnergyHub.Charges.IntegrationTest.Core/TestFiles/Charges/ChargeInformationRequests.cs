@@ -22,6 +22,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string TaxTariffAsSystemOperator = "TestFiles/Charges/TaxTariffAsSystemOperator.xml";
         public const string SenderIdDoNotMatchAuthorizedActorId = "TestFiles/Charges/SenderIdDoNotMatchAuthorizedActorId.xml";
         public const string InvalidTaxTariffAsGridAccessProvider = "TestFiles/Charges/InvalidTaxTariffAsGridAccessProvider.xml";
+        public const string ChargeOperationIdIsEmpty = "TestFiles/Charges/ChargeOperationIdIsEmpty.xml";
 
         public const string BundleWithMultipleOperationsForSameTariff = "TestFiles/Charges/BundleWithMultipleOperationsForSameTariff.xml";
         public const string BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903 = "TestFiles/Charges/BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml";

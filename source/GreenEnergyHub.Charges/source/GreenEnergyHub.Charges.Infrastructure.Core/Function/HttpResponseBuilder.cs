@@ -50,11 +50,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             return httpResponse;
         }
 
-        public HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code)
+        public HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code, string errorDetails = "")
         {
             var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
             AddCorrelationIdToHeaders(httpResponse);
-            var errorMessage = B2BErrorMessageFactory.Create(code);
+            var errorMessage = B2BErrorMessageFactory.Create(code, errorDetails);
             var unauthorizedRequest = errorMessage.WriteAsXmlString();
             httpResponse.WriteString(unauthorizedRequest, Encoding.UTF8);
             return httpResponse;

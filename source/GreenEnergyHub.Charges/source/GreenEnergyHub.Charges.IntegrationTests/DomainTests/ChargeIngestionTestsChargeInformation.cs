@@ -100,6 +100,48 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 document.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
+            [Fact]
+            public async Task Ingestion_CIMOperationIdIsEmptyOrOnlyContainsWhitespace_Http400BadRequestWithB2B005ErrorResponse()
+            {
+                // Arrange
+                var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeInformationRequests.ChargeOperationIdIsEmpty);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStreamAsync();
+                var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
+                document.Element("Code")?.Value.Should().Be("B2B-005");
+                document.Element("Message")?.Value.Should()
+                    .Be(ErrorMessageConstants.SyntaxValidationErrorMessage +
+                        Environment.NewLine +
+                        ErrorMessageConstants.AnElementIsEmptyOrContainsOnlyWhitespace);
+            }
+
+            [Fact]
+            public async Task Ingestion_CIMResolutionIsNotSupported_Http400BadRequestWithB2B005ErrorResponse()
+            {
+                // Arrange
+                var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeInformationRequests.ChargeOperationIdIsEmpty);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStreamAsync();
+                var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
+                document.Element("Code")?.Value.Should().Be("B2B-005");
+                document.Element("Message")?.Value.Should()
+                    .Be(ErrorMessageConstants.SyntaxValidationErrorMessage +
+                        Environment.NewLine +
+                        ErrorMessageConstants.UnsupportedResolutionErrorMessage);
+            }
+
             /* CONFIRMATIONS - PLEASE REFER TO SAMPLES BELOW */
 
             /* NOTIFICATIONS */

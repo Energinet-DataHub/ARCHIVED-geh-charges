@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             var httpRequestData = CreateHttpRequestData(executionContext, "POST", "test", "http://localhost?Id=3");
 
             // Act
-            var responseData = sut.CreateBadRequestB2BResponse(httpRequestData, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            var responseData = sut.CreateBadRequestB2BResponse(httpRequestData, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, string.Empty);
 
             // Assert
             const string correlationIdKey = HttpRequestHeaderConstants.CorrelationId;

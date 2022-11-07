@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
@@ -65,7 +67,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         {
             try
             {
-                var inboundMessage = await ValidateMessageAsync(request).ConfigureAwait(false);
+                SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage;
+                try
+                {
+                    inboundMessage = await ValidateMessageAsync(request).ConfigureAwait(false);
+                }
+                catch (Exception exception) when (exception is InvalidOperationException or InvalidEnumArgumentException)
+                {
+                    _logger.LogError(
+                        exception,
+                        "Unable to parse request with correlation id: {CorrelationId}",
+                        _correlationContext.Id);
+
+                    var errorDetails = exception.Message;
+                    if (exception is InvalidOperationException)
+                        errorDetails = "An element contains an invalid value. It is either empty or contains only whitespace.";
+                    return _httpResponseBuilder.CreateBadRequestB2BResponse(
+                        request, B2BErrorCode.SyntaxValidationErrorMessage, errorDetails);
+                }
 
                 if (inboundMessage.HasErrors)
                 {
@@ -77,7 +96,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 if (AuthenticatedMatchesSenderId(inboundMessage) == false)
                 {
                     return _httpResponseBuilder.CreateBadRequestB2BResponse(
-                        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+                        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, string.Empty);
                 }
 
                 var bundle = inboundMessage.ValidatedMessage;
