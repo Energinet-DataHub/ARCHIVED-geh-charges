@@ -17,7 +17,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace GreenEnergyHub.Charges.WebApi
 {
-    public static class Program
+    public class Program
     {
         public static void Main(string[] args)
         {
