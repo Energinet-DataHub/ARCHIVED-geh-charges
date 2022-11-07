@@ -41,6 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
     [IntegrationTest]
     public class OutboxMessageProcessorEndpointTests
     {
+        [Collection(nameof(OutboxMessageProcessorEndpointTests))]
         public class RunAsync : IClassFixture<ChargesManagedDependenciesTestFixture>
         {
             private readonly ChargesManagedDependenciesTestFixture _fixture;
