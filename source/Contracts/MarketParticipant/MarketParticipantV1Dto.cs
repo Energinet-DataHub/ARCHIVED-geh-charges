@@ -20,5 +20,6 @@ namespace Energinet.DataHub.Charges.Contracts.Charge
     public record MarketParticipantV1Dto(
         Guid Id,
         string Name,
-        string MarketParticipantId);
+        string MarketParticipantId,
+        string BusinessProcessRole);
 }

@@ -17,6 +17,7 @@ using System.Linq;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using Xunit;
@@ -32,12 +33,14 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
         public void AsMarketParticipantV1Dto_SetsAllProperties(MarketParticipant marketParticipant)
         {
             // Arrange
+            marketParticipant.BusinessProcessRole = (int)MarketParticipantRole.GridAccessProvider;
             var marketParticipants = new List<MarketParticipant> { marketParticipant }.AsQueryable();
 
             var expected = new MarketParticipantV1Dto(
                 marketParticipant.Id,
                 marketParticipant.Name,
-                marketParticipant.MarketParticipantId);
+                marketParticipant.MarketParticipantId,
+                "DDM");
 
             // Act
             var actual = marketParticipants.AsMarketParticipantV1Dto();
