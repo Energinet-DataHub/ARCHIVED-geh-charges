@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 5.0.1
+
+Added `Role` to `MarketParticipantV1Dto`
+
 ## Version 5.0.0
 
 Removed `ChargeLinkV2Dto`
