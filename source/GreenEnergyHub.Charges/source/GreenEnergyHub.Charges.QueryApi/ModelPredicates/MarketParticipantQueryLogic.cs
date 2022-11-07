@@ -18,13 +18,17 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
+namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates;
+
+public static class MarketParticipantQueryLogic
 {
-    public static class MarketParticipantQueryLogic
+    public static IQueryable<MarketParticipantV1Dto> AsMarketParticipantV1Dto(
+        this IQueryable<MarketParticipant> queryable)
     {
-        public static IQueryable<MarketParticipantV1Dto> AsMarketParticipantV1Dto(this IQueryable<MarketParticipant> queryable)
-        {
-            return queryable.Select(m => new MarketParticipantV1Dto(m.Id, m.Name, m.MarketParticipantId, MarketParticipantRoleMapper.Map((MarketParticipantRole)m.BusinessProcessRole)));
-        }
+        return queryable.Select(m => new MarketParticipantV1Dto(
+            m.Id,
+            m.Name,
+            m.MarketParticipantId,
+            MarketParticipantRoleMapper.Map((MarketParticipantRole)m.BusinessProcessRole)));
     }
 }
