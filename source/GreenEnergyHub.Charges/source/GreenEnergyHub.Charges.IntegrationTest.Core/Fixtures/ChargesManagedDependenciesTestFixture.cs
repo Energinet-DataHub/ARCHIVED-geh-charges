@@ -41,8 +41,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures
         {
             DatabaseManager = new ChargesDatabaseManager();
 
-            var configuration = new FunctionAppHostConfigurationBuilder().BuildLocalSettingsConfiguration();
-            FunctionHostEnvironmentSettingHelper.SetFunctionHostEnvironmentVariablesFromSampleSettingsFile(configuration);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
 
