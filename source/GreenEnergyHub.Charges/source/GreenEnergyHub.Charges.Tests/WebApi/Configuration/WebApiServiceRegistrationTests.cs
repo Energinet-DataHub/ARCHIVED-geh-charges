@@ -14,10 +14,8 @@
 
 using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.TestHelpers;
 using GreenEnergyHub.Charges.WebApi;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
@@ -27,11 +25,6 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Configuration
     [UnitTest]
     public class WebApiServiceRegistrationTests
     {
-        public WebApiServiceRegistrationTests(IConfiguration config)
-        {
-            FunctionHostEnvironmentSettingHelper.SetFunctionHostEnvironmentVariablesFromSampleSettingsFile(config);
-        }
-
         [Fact]
         public void WhenWebApiIsConfigured_ThenAllApplicationDependenciesMustBeRegisteredOnlyOnce()
         {
