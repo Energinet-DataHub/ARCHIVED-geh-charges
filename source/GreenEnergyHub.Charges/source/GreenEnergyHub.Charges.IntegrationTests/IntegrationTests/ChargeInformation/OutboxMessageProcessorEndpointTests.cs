@@ -50,7 +50,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             {
                 _fixture = fixture;
                 _correlationContext = _fixture.CorrelationContext;
-                _correlationContext.SetId("testCorrelationId");
             }
 
             [Theory]
@@ -112,7 +111,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
                 var actual = await readContext.OutboxMessages
                     .SingleAsync(x => x.Id == outboxMessage.Id);
                 actual.Should().BeEquivalentTo(outboxMessage, om => om.Excluding(p => p.ProcessedDate));
-                outboxMessage.ProcessedDate.Should().NotBeNull();
+                actual.ProcessedDate.Should().NotBeNull();
             }
 
             [Theory]
@@ -177,7 +176,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
 
                 return OutboxMessage.Create(
                     data,
-                    _correlationContext.Id,
+                    Guid.NewGuid().ToString("N"),
                     domainEvent.GetType().ToString(),
                     InstantHelper.GetTodayAtMidnightUtc());
             }
