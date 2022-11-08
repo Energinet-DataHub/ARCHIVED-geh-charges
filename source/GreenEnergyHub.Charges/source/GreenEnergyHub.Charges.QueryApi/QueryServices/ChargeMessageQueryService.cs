@@ -61,6 +61,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                 chargeMessagesList.Select(cm =>
                     new ChargeMessageV1Dto(
                         cm.MessageId,
+                        cm.MarketParticipantId,
                         MapBusinessReasonCode((BusinessReasonCode)cm.MessageType),
                         DateTime.SpecifyKind(cm.MessageDateTime, DateTimeKind.Utc))));
             return chargeMessagesV1Dto;
