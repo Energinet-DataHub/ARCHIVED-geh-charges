@@ -92,8 +92,8 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
                         c.TaxIndicator,
                         cp.TransparentInvoicing,
                         c.ChargePoints.Any(),
-                        cp.StartDateTime,
-                        GetValidToDate(cp.EndDateTime))));
+                        DateTime.SpecifyKind(cp.StartDateTime, DateTimeKind.Utc),
+                        GetValidToDate(cp.EndDateTime) == null ? null : DateTime.SpecifyKind(cp.EndDateTime, DateTimeKind.Utc))));
 
             return result;
         }
