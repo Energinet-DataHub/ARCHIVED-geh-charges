@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.TestCore.Data
                 public const string SenderProvidedChargeId = "TestTar001";
                 public const string Name = "Tariff with multiple periods";
                 public const int NoOfPeriods = 4;
-                public const string ChargeOwnerId = "8100000000030";
+                public const string ChargeOwnerId = SeededData.MarketParticipants.Provider8100000000030.Gln;
             }
         }
     }
