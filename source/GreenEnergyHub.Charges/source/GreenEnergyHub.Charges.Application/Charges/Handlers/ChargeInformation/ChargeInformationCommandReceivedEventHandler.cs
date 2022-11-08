@@ -51,6 +51,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
             if (documentValidationResult.IsFailed)
             {
                 RaiseRejectedEvent(chargeInformationCommandReceivedEvent, documentValidationResult.InvalidRules);
+                return;
             }
 
             await _chargeInformationOperationsHandler.HandleAsync(chargeInformationCommandReceivedEvent).ConfigureAwait(false);
