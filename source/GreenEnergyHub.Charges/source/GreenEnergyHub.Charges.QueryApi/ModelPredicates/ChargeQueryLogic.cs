@@ -75,6 +75,29 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
                 GetValidToDate(c.ChargePeriods.OrderByDescending(cp => cp.EndDateTime).First().EndDateTime)));
         }
 
+        public static IQueryable<ChargeV1Dto> SelectManyAsChargeV1Dto(this IQueryable<Charge> queryable)
+        {
+            var result = queryable
+                .SelectMany(c => c.ChargePeriods
+                    .Select(cp => new ChargeV1Dto(
+                        c.Id,
+                        MapChargeType(c.GetChargeType()),
+                        MapResolution(c.GetResolution()),
+                        c.SenderProvidedChargeId,
+                        cp.Name,
+                        cp.Description,
+                        c.Owner.MarketParticipantId,
+                        c.Owner.Name,
+                        MapVatClassification((Domain.Charges.VatClassification)cp.VatClassification),
+                        c.TaxIndicator,
+                        cp.TransparentInvoicing,
+                        c.ChargePoints.Any(),
+                        cp.StartDateTime,
+                        GetValidToDate(cp.EndDateTime))));
+
+            return result;
+        }
+
         private static VatClassification MapVatClassification(Domain.Charges.VatClassification vatClassification) =>
             vatClassification switch
             {

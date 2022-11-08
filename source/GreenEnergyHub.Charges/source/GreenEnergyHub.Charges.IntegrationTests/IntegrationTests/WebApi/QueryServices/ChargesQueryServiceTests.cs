@@ -22,16 +22,12 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
-using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
-using GreenEnergyHub.Charges.TestCore.TestHelpers;
+using GreenEnergyHub.Charges.TestCore.Data;
 using GreenEnergyHub.TestHelpers;
-using NodaTime.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
-using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
-using ChargePeriod = GreenEnergyHub.Charges.Domain.Charges.ChargePeriod;
-using ChargePeriodBuilder = GreenEnergyHub.Charges.TestCore.Builders.Command.ChargePeriodBuilder;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices
 {
@@ -46,47 +42,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task SearchAsync_WhenNoSearchCriteria_ReturnsAllCharges()
+        public async Task SearchAsync_WhenNoSearchCriteria_ReturnsAll()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetValidCharge(marketParticipantId);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder().Build();
 
-            var expected = GetActiveCharges(chargesDatabaseQueryContext).Count();
+            var expectedChargeV1Dtos = chargesDatabaseQueryContext.ChargePeriods.Count();
             var sut = GetSut(chargesDatabaseQueryContext);
 
             // Act
             var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            actual.Count.Should().Be(expected);
+            actual.Count.Should().Be(expectedChargeV1Dtos);
             actual.Count.Should().NotBe(0);
         }
 
         [Fact]
-        public async Task SearchAsync_WhenSearchingByChargeId_ReturnsOneCharge()
+        public async Task SearchAsync_WhenSearchingByChargeId_ReturnsChargeV1DtoPerChargePeriodOfMatchingCharge()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetValidCharge(marketParticipantId);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-            var expected = charge.SenderProvidedChargeId;
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
-                .WithChargeIdOrName(expected)
+                .WithChargeIdOrName(TestData.Charge.TestTar001.SenderProvidedChargeId)
                 .Build();
 
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -95,32 +74,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            actual.Count.Should().Be(1);
-            actual.Single().ChargeId.Should().Be(expected);
+            actual.Count.Should().Be(TestData.Charge.TestTar001.NoOfPeriods);
+            actual.All(c => c.ChargeId == TestData.Charge.TestTar001.SenderProvidedChargeId).Should().BeTrue();
         }
 
         [Theory]
         [InlineAutoDomainData(Domain.Charges.ChargeType.Subscription, ChargeType.D01)]
         [InlineAutoDomainData(Domain.Charges.ChargeType.Fee, ChargeType.D02)]
         [InlineAutoDomainData(Domain.Charges.ChargeType.Tariff, ChargeType.D03)]
-        public async Task SearchAsync_WhenSearchingByChargeType_ReturnsChargesWithChargeType(
+        public async Task SearchAsync_WhenSearchingByChargeType_ReturnsChargeV1DtosPerChargePeriodOfMatchingChargeType(
             Domain.Charges.ChargeType chargeType,
             ChargeType expectedChargeType)
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime().ToInstant();
-
-            var charge = GetValidCharge(marketParticipantId, chargeType);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-            var expected = chargesDatabaseWriteContext.Charges.Count(c => c.Type == chargeType
-            && c.Periods.Any(p => p.StartDateTime <= todayAtMidnightUtc));
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var expected = GetExpectedChargeV1DtosCountPerChargeType(chargeType, chargesDatabaseQueryContext);
+
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
                 .WithChargeType(expectedChargeType)
                 .Build();
@@ -132,23 +101,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             actual.Count.Should().Be(expected);
-            actual.Should().Contain(c => c.ChargeType == expectedChargeType);
+            actual.All(c => c.ChargeType == expectedChargeType).Should().BeTrue();
         }
 
         [Fact]
         public async Task SearchAsync_WhenChargeTypeIsNull_ReturnsAllChargeTypes()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetValidCharge(marketParticipantId);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var expected = GetActiveCharges(chargesDatabaseQueryContext).Count();
+            var expected = chargesDatabaseQueryContext.ChargePeriods.Count();
 
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
                 .WithChargeTypes(null!)
@@ -165,20 +126,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task SearchAsync_WhenSearchingByMultipleChargeTypes_ReturnsChargesWithChargeTypes()
+        public async Task SearchAsync_WhenSearchingByMultipleChargeTypes_ReturnsChargeV1DtosPerChargePeriodOfMatchingChargeTypes()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetValidCharge(marketParticipantId);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-            var expected = chargesDatabaseWriteContext.Charges.Count(c =>
-                c.Type == Domain.Charges.ChargeType.Subscription || c.Type == Domain.Charges.ChargeType.Fee);
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var expected = GetExpectedChargeV1DtosCountPerChargeType(Domain.Charges.ChargeType.Subscription, chargesDatabaseQueryContext);
+            expected += GetExpectedChargeV1DtosCountPerChargeType(Domain.Charges.ChargeType.Fee, chargesDatabaseQueryContext);
+
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
                 .WithChargeTypes(new List<ChargeType> { ChargeType.D01, ChargeType.D02 })
                 .Build();
@@ -194,21 +148,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task SearchAsync_WhenSearchingByChargeName_ReturnsOneCharge_WithOnePeriod()
+        public async Task SearchAsync_WhenSearchingByChargeName_ReturnsChargeV1DtosPerChargePeriodOfMatchingCharge()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetValidCharge(marketParticipantId);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-            var expected = charge.Periods.First().Name;
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
-                .WithChargeIdOrName(expected)
+                .WithChargeIdOrName(TestData.Charge.TestTar001.Name)
                 .Build();
 
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -217,52 +162,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            actual.Count.Should().Be(1);
-            actual.Single().ChargeName.Should().Be(expected);
+            actual.Count.Should().Be(TestData.Charge.TestTar001.NoOfPeriods);
+            actual.All(c => c.ChargeName == TestData.Charge.TestTar001.Name).Should().BeTrue();
         }
 
         [Fact]
-        public async Task SearchAsync_WhenSearchingByChargeName_ReturnsOneCharge_WithMultiplePeriods()
+        public async Task SearchAsync_WhenSearchingByChargeNameButOnlyPartOfIt_ReturnsExpectedChargeV1Dtos()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var expected = "test_with_many_periods_get_one";
-            var charge = GetValidChargeWithMultiplePeriods(marketParticipantId, expected);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-
-            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
-                .WithChargeIdOrName(expected)
-                .Build();
-
-            var sut = GetSut(chargesDatabaseQueryContext);
-
-            // Act
-            var actual = await sut.SearchAsync(searchCriteria);
-
-            // Assert
-            actual.Count.Should().Be(1);
-            actual.Single().ChargeName.Should().Be(expected);
-        }
-
-        [Fact]
-        public async Task SearchAsync_WhenSearchingByChargeNameButOnlyPartOfIt_ReturnsCharge()
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetValidCharge(marketParticipantId);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-            var searchName = charge.Periods.First().Name[..5];
-            var expected = charge.SenderProvidedChargeId;
-
+            var searchName = TestData.Charge.TestTar001.Name[12..20];
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
                 .WithChargeIdOrName(searchName)
@@ -274,26 +182,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            actual.Count.Should().Be(1);
-            actual.Single().ChargeId.Should().Be(expected);
+            actual.Count.Should().Be(TestData.Charge.TestTar001.NoOfPeriods);
+            actual.All(c => c.ChargeName == TestData.Charge.TestTar001.Name).Should().BeTrue();
         }
 
         [Fact]
-        public async Task SearchAsync_WhenSearchingByOwnerId_ReturnsCharge()
+        public async Task SearchAsync_WhenSearchingByOwnerId_ReturnsExpectedChargeV1Dtos()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetValidCharge(marketParticipantId);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var expected = GetActiveCharges(chargesDatabaseQueryContext).Count(c => c.OwnerId == marketParticipantId);
+            var expected = chargesDatabaseQueryContext.ChargePeriods.Count(c =>
+                c.Charge.OwnerId == SeededData.MarketParticipants.Provider8100000000030.Id);
+
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
-                .WithOwnerId(marketParticipantId)
+                .WithOwnerId(SeededData.MarketParticipants.Provider8100000000030.Id)
                 .Build();
 
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -307,24 +209,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task SearchAsync_WhenSearchingByTwoOwnerIds_ReturnsCharges()
+        public async Task SearchAsync_WhenSearchingByTwoOwnerIds_ReturnsExpectedChargeV1Dtos()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-            var charge = GetValidCharge(marketParticipantId);
-
-            var marketParticipantId2 = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext, "SecondMarketParticipantOwnerId");
-            var charge2 = GetValidCharge(marketParticipantId2);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            chargesDatabaseWriteContext.Charges.Add(charge2);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var expected = GetActiveCharges(chargesDatabaseQueryContext).Count(c => c.OwnerId == marketParticipantId || c.OwnerId == marketParticipantId2);
+            var expected = chargesDatabaseQueryContext.ChargePeriods.Count(c =>
+                c.Charge.OwnerId == SeededData.MarketParticipants.SystemOperator.Id ||
+                c.Charge.OwnerId == SeededData.MarketParticipants.Provider8100000000030.Id);
+
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
-                .WithOwnerIds(new List<Guid> { marketParticipantId, marketParticipantId2 })
+                .WithOwnerIds(new List<Guid>
+                {
+                    SeededData.MarketParticipants.SystemOperator.Id,
+                    SeededData.MarketParticipants.Provider8100000000030.Id,
+                })
                 .Build();
 
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -334,24 +232,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             actual.Count.Should().Be(expected);
-            actual.Should().Contain(c => c.ChargeId == charge.SenderProvidedChargeId);
-            actual.Should().Contain(c => c.ChargeId == charge2.SenderProvidedChargeId);
+            actual.All(c => c.ChargeOwner is SeededData.MarketParticipants.SystemOperator.Gln
+                or SeededData.MarketParticipants.Provider8100000000030.Gln).Should().BeTrue();
         }
 
         [Fact]
-        public async Task SearchAsync_WhenOwnerIdsIsNull_ReturnsCharges()
+        public async Task SearchAsync_WhenOwnerIdsIsNull_ReturnsAll()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetValidCharge(marketParticipantId);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var expected = GetActiveCharges(chargesDatabaseQueryContext).Count();
+            var expected = chargesDatabaseQueryContext.ChargePeriods.Count();
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
                 .WithOwnerIds(null!)
                 .Build();
@@ -367,22 +257,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task SearchAsync_WhenSearchingByValidityNow_ReturnsChargesThatAreValidNow()
+        public async Task SearchAsync_WhenChargeHasMultiplePeriods_ReturnsSortedChargeV1Dtos()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var marketParticipantId = await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetPlannedCharge(marketParticipantId);
-            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime().ToInstant();
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-            var expected = chargesDatabaseWriteContext.Charges.Count(
-                c => c.Periods.Any(p => p.StartDateTime <= todayAtMidnightUtc));
-
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var expected = chargesDatabaseQueryContext.ChargePeriods
+                .Count(c => c.Charge.SenderProvidedChargeId == TestData.Charge.TestTar001.SenderProvidedChargeId);
             var searchCriteria = new ChargeSearchCriteriaV1DtoBuilder()
+                .WithChargeIdOrName(TestData.Charge.TestTar001.SenderProvidedChargeId)
                 .Build();
 
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -393,17 +275,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Assert
             actual.Count.Should().Be(expected);
             actual.Count.Should().NotBe(0);
-            actual.Should().NotContain(c => c.ChargeId == charge.SenderProvidedChargeId);
-        }
-
-        private static Charge GetPlannedCharge(Guid ownerId)
-        {
-            return new ChargeBuilder()
-                .WithName(Guid.NewGuid().ToString())
-                .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(10))
-                .WithSenderProvidedChargeId($"ChgId{Guid.NewGuid().ToString("n")[..5]}")
-                .WithOwnerId(ownerId)
-                .Build();
+            actual.Should().BeInAscendingOrder(c => c.ChargeName).And
+                .ThenBeInDescendingOrder(c => c.ValidFromDateTime);
         }
 
         private static ChargesQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
@@ -413,48 +286,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             return sut;
         }
 
-        private static Charge GetValidCharge(Guid ownerId, Domain.Charges.ChargeType chargeType = Domain.Charges.ChargeType.Subscription)
+        private static int GetExpectedChargeV1DtosCountPerChargeType(
+            Domain.Charges.ChargeType chargeType,
+            QueryDbContext chargesDatabaseQueryContext)
         {
-            return new ChargeBuilder()
-                .WithName(Guid.NewGuid().ToString())
-                .WithType(chargeType)
-                .WithStartDate(InstantHelper.GetTodayAtMidnightUtc())
-                .WithSenderProvidedChargeId($"ChgId{Guid.NewGuid().ToString("n")[..10]}")
-                .WithOwnerId(ownerId)
-                .Build();
-        }
+            var expectedCharges = chargesDatabaseQueryContext.Charges
+                .Where(c => c.Type == (int)chargeType)
+                .Include(c => c.ChargePeriods)
+                .ToList();
 
-        private static Charge GetValidChargeWithMultiplePeriods(Guid ownerId, string currentName)
-        {
-            var finishedPeriod = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(-7))
-                .Build();
-            var currentPeriod = new ChargePeriodBuilder()
-                .WithName(currentName)
-                .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(-1))
-                .Build();
-            var plannedPeriod = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(1))
-                .Build();
-
-            var periods = new List<ChargePeriod> { finishedPeriod, currentPeriod, plannedPeriod };
-
-            return new ChargeBuilder()
-                .WithName(Guid.NewGuid().ToString())
-                .WithStartDate(InstantHelper.GetTodayAtMidnightUtc())
-                .WithSenderProvidedChargeId($"ChgId{Guid.NewGuid().ToString("n")[..5]}")
-                .WithOwnerId(ownerId)
-                .AddPeriods(periods)
-                .Build();
-        }
-
-        private static IQueryable<QueryApi.Model.Charge> GetActiveCharges(QueryDbContext chargesDatabaseQueryContext)
-        {
-            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
-            var expected =
-                chargesDatabaseQueryContext.Charges.Where(c =>
-                    c.ChargePeriods.Any(cp => cp.StartDateTime <= todayAtMidnightUtc));
-            return expected;
+            var count = expectedCharges.Sum(charge => charge.ChargePeriods.Count);
+            return count;
         }
     }
 }
