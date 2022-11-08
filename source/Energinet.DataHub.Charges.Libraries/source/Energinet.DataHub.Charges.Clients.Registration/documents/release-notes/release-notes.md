@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 5.0.2
+
+Added `MarketParticipantId` to `ChargeMessageV1Dto`
+
 ## Version 5.0.1
 
 Added `Role` to `MarketParticipantV1Dto`
