@@ -66,20 +66,24 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Id))
                 {
+                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.Id);
                     id = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Type))
                 {
+                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.Type);
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     type = DocumentTypeMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.BusinessReasonCode))
                 {
+                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.BusinessReasonCode);
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     businessReasonCode = BusinessReasonCodeMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.IndustryClassification))
                 {
+                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.IndustryClassification);
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     industryClassification = IndustryClassificationMapper.Map(content);
                 }
@@ -91,6 +95,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderBusinessProcessRole))
                 {
+                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.SenderBusinessProcessRole);
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     senderBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
@@ -102,11 +107,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientBusinessProcessRole))
                 {
+                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.RecipientBusinessProcessRole);
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     recepientBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.CreatedDateTime))
                 {
+                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.CreatedDateTime);
                     createdDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
                 else if (reader.IsElement())

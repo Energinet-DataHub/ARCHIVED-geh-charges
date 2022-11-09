@@ -72,18 +72,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 {
                     inboundMessage = await ValidateMessageAsync(request).ConfigureAwait(false);
                 }
-                catch (Exception exception) when (exception is InvalidOperationException or InvalidEnumArgumentException)
+                catch (Exception exception) when (exception is InvalidXmlValueException or InvalidEnumArgumentException)
                 {
                     _logger.LogError(
                         exception,
                         "Unable to parse request with correlation id: {CorrelationId}",
                         _correlationContext.Id);
 
-                    var errorDetails = exception.Message;
-                    if (exception is InvalidOperationException)
-                        errorDetails = "An element contains an invalid value. It is either empty or contains only whitespace.";
                     return _httpResponseBuilder.CreateBadRequestB2BResponse(
-                        request, B2BErrorCode.SyntaxValidationErrorMessage, errorDetails);
+                        request, B2BErrorCode.SyntaxValidationErrorMessage, exception.Message);
                 }
 
                 if (inboundMessage.HasErrors)
