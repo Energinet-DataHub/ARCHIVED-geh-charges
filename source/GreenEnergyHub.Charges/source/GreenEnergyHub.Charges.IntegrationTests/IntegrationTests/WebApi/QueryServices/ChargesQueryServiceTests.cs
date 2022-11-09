@@ -275,7 +275,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Assert
             actual.Count.Should().Be(expected);
             actual.Count.Should().NotBe(0);
-            actual.Should().BeInAscendingOrder(c => c.ChargeName).And
+            actual.Should().BeInAscendingOrder(c => c.ChargeId).And
                 .ThenBeInDescendingOrder(c => c.ValidFromDateTime);
         }
 

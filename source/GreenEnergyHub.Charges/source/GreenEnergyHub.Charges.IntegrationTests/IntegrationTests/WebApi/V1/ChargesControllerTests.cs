@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             using var assertionScope = new AssertionScope();
             chargesList.Should().HaveCountGreaterThan(0);
-            chargesList.Should().BeInAscendingOrder(c => c.ChargeName).And
+            chargesList.Should().BeInAscendingOrder(c => c.ChargeId).And
                 .ThenBeInDescendingOrder(c => c.ValidFromDateTime);
             var actual = chargesList!.First(c => c.ChargeId == TestData.Charge.TestTar001.SenderProvidedChargeId);
             actual.Resolution.Should().Be(Resolution.PT1H);

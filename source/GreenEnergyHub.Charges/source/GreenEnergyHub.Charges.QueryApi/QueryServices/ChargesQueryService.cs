@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
         private static IList<ChargeV1Dto> SortCharges(IEnumerable<ChargeV1Dto> chargeV1Dtos)
         {
             return chargeV1Dtos
-                .OrderBy(c => c.ChargeName)
+                .OrderBy(c => c.ChargeId)
                 .ThenByDescending(c => c.ValidFromDateTime)
                 .ToList();
         }
