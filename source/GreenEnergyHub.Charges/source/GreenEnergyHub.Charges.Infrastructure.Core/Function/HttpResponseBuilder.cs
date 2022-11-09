@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             return httpResponse;
         }
 
-        public HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code, string errorDetails = "")
+        public HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code, string errorDetails)
         {
             var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
             AddCorrelationIdToHeaders(httpResponse);
