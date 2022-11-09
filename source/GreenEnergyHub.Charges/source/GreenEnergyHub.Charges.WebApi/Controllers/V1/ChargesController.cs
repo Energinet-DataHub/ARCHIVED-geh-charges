@@ -39,22 +39,6 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         }
 
         /// <summary>
-        ///     Returns all charges
-        /// </summary>
-        /// <returns>Charges data or "404 Not Found"</returns>
-        [HttpGet("GetAsync")]
-        [MapToApiVersion(Version1)]
-        public async Task<IActionResult> GetAsync()
-        {
-            var charges = await _data.Charges
-                .AsChargeV1Dto()
-                .ToListAsync()
-                .ConfigureAwait(false);
-
-            return Ok(charges);
-        }
-
-        /// <summary>
         /// Returns all charges based on the search criteria
         /// </summary>
         /// <returns>Charges data or "400 Bad request"</returns>

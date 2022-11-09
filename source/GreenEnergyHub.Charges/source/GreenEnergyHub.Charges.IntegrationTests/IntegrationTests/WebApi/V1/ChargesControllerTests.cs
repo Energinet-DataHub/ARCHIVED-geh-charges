@@ -43,61 +43,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         IClassFixture<WebApiFactory>
     {
         private const string BaseUrl = "/v1/Charges";
-        private readonly ChargesDatabaseManager _databaseManager;
 
         public ChargesControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
             ITestOutputHelper testOutputHelper)
             : base(chargesWebApiFixture, testOutputHelper)
         {
-            _databaseManager = chargesWebApiFixture.DatabaseManager;
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task GetAsync_WhenChargesExists_ReturnsOkAndCorrectContentType(WebApiFactory factory)
-        {
-            // Arrange
-            var sut = CreateHttpClient(factory);
-
-            // Act
-            var response = await sut.GetAsync($"{BaseUrl}/GetAsync");
-
-            // Assert
-            var contentType = response.Content.Headers.ContentType!.ToString();
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            contentType.Should().Be("application/json; charset=utf-8");
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task GetAsync_WhenRequested_ReturnsChargeInformation(WebApiFactory factory)
-        {
-            // Arrange
-            var sut = CreateHttpClient(factory);
-
-            // Act
-            var response = await sut.GetAsync($"{BaseUrl}/GetAsync");
-
-            // Assert
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var chargesList = JsonSerializer.Deserialize<List<ChargeV1Dto>>(
-                jsonString,
-                GetJsonSerializerOptions());
-
-            chargesList.Should().HaveCountGreaterThan(0);
-            var actual = chargesList!.Single(x => x.ChargeId == "EA-001");
-            actual.ChargeType.Should().Be(ChargeType.D03);
-            actual.Resolution.Should().Be(Resolution.PT1H);
-            actual.ChargeName.Should().Be("Elafgift");
-            actual.ChargeDescription.Should().Be("Elafgiften");
-            actual.ChargeOwner.Should().Be("5790000432752");
-            actual.ChargeOwnerName.Should().Be("System Operator");
-            actual.VatClassification.Should().Be(VatClassification.Vat25);
-            actual.TaxIndicator.Should().BeTrue();
-            actual.TransparentInvoicing.Should().BeTrue();
-            actual.ValidFromDateTime.Should().Be(new DateTime(2014, 12, 31, 23, 00, 00));
-            actual.ValidToDateTime.Should().Be(null); // because it's year (9999)
         }
 
         [Theory]
