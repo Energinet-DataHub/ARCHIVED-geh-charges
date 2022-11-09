@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             chargesList.Should().HaveCountGreaterThan(0);
             chargesList.Should().BeInAscendingOrder(c => c.ChargeId).And
                 .ThenBeInDescendingOrder(c => c.ValidFromDateTime);
-            var actual = chargesList!.First(c => c.ChargeId == TestData.Charge.TestTar001.SenderProvidedChargeId);
+            var actual = chargesList!.Last(c => c.ChargeId == TestData.Charge.TestTar001.SenderProvidedChargeId);
             actual.Resolution.Should().Be(Resolution.PT1H);
             actual.ChargeType.Should().Be(ChargeType.D03);
             actual.ChargeName.Should().Be(TestData.Charge.TestTar001.Name);
