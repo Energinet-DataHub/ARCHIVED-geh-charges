@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 6.0.0
+
+Removed `GetChargesAsync()` from `ChargesClient`
+
 ## Version 5.0.1
 
 Added `Role` to `MarketParticipantV1Dto`
