@@ -15,11 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
-using Microsoft.Azure.Functions.Worker;
+using GreenEnergyHub.Charges.Tests.TestHelpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -28,9 +27,9 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.FunctionHost
 {
     [UnitTest]
-    public class ServiceCollectionRegistrationTests
+    public class FunctionAppServiceRegistrationTests
     {
-        public ServiceCollectionRegistrationTests(IConfiguration config)
+        public FunctionAppServiceRegistrationTests(IConfiguration config)
         {
             FunctionHostEnvironmentSettingHelper.SetFunctionHostEnvironmentVariablesFromSampleSettingsFile(config);
         }
@@ -40,12 +39,12 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         {
             // Arrange
             var host = ChargesFunctionApp.ConfigureApplication();
-            var functionAppDependencies = FindDependenciesForType(typeof(ChargesFunctionApp));
+            var functionAppDependencies = DependencyHelper.FindDependenciesForType(typeof(ChargesFunctionApp));
             var typesToResolve = new List<Type>();
 
             // Act
             foreach (var dependency in functionAppDependencies)
-                typesToResolve.AddRange(GetConstructorParametersForDependency(dependency));
+                typesToResolve.AddRange(DependencyHelper.GetConstructorParametersForDependency(dependency));
 
             // Assert
             foreach (var type in typesToResolve.Distinct())
@@ -53,31 +52,6 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
                 var services = host.Services.GetServices(type);
                 services.Count().Should().Be(1, $"Found more than one registered service of type {type}");
             }
-        }
-
-        private static IEnumerable<Type> GetConstructorParametersForDependency(Type dependency)
-        {
-            return GetParameterTypesForConstructor(dependency.GetConstructors().Single());
-        }
-
-        private static IEnumerable<Type> GetParameterTypesForConstructor(ConstructorInfo constructorInfo)
-        {
-            return constructorInfo.GetParameters().Select(pi => pi.ParameterType);
-        }
-
-        private static IEnumerable<Type> FindDependenciesForType(Type type)
-        {
-            return type.Assembly.GetTypes().Where(MethodsAreAnnotatedWithFunctionAttribute);
-        }
-
-        private static bool MethodsAreAnnotatedWithFunctionAttribute(Type type)
-        {
-            return type.GetMethods().Any(MethodIsAnnotatedWithFunctionAttribute);
-        }
-
-        private static bool MethodIsAnnotatedWithFunctionAttribute(MethodInfo methodInfo)
-        {
-            return methodInfo.IsDefined(typeof(FunctionAttribute));
         }
     }
 }
