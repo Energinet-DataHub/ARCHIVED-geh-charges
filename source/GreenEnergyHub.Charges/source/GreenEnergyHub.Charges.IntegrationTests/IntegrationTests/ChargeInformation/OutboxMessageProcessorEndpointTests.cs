@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             [Theory]
             [AutoMoqData]
             public async Task RunAsync_WhenRejectedOutboxMessageIsRead_ThenDomainEventRaised_AndProcessedDateIsSet(
-                [Frozen] Mock<IDomainEventDispatcher> domainEventDispatcher,
+                [Frozen] Mock<IDomainEventDispatcher> dispatcher,
                 TimerInfo timerInfo,
                 ChargePriceOperationsRejectedEventBuilder builder)
             {
@@ -64,20 +64,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
                 var domainEvent = builder.Build();
                 var outboxMessage = await CreateStoredOutboxMessage(domainEvent);
 
-                var outboxProcessor = new OutboxMessageProcessorEndpoint(
-                    _fixture.GetService<IOutboxMessageRepository>(),
-                    _fixture.GetService<IOutboxMessageParser>(),
-                    _fixture.GetService<IClock>(),
-                    _correlationContext,
-                    domainEventDispatcher.Object,
-                    _fixture.UnitOfWork,
-                    _fixture.GetService<ILoggerFactory>());
+                var sut = CreateSystemUnderTest(dispatcher.Object);
 
                 // Act
-                await outboxProcessor.RunAsync(timerInfo);
+                await sut.RunAsync(timerInfo);
 
                 // Assert
-                domainEventDispatcher.Verify(d => d.DispatchAsync(It.IsAny<DomainEvent>()), Times.Once());
+                dispatcher.Verify(d => d.DispatchAsync(It.IsAny<DomainEvent>()), Times.Once());
                 var writeContext = _fixture.DatabaseManager.CreateDbContext();
                 var actual = await writeContext.OutboxMessages.SingleAsync(om =>
                     om.Id == outboxMessage.Id);
@@ -88,21 +81,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             [InlineAutoMoqData]
             public async Task RunAsync_WhenConfirmedOutboxMessageIsRead_ThenDomainEventRaised_AndProcessedDateIsSet(
                 TimerInfo timerInfo,
-                Mock<IDomainEventDispatcher> domainEventDispatcher,
+                Mock<IDomainEventDispatcher> dispatcher,
                 ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder)
             {
                 // Arrange
                 var domainEvent = chargePriceOperationsAcceptedEventBuilder.Build();
                 var outboxMessage = await CreateStoredOutboxMessage(domainEvent);
-
-                var sut = new OutboxMessageProcessorEndpoint(
-                    _fixture.GetService<IOutboxMessageRepository>(),
-                    _fixture.GetService<IOutboxMessageParser>(),
-                    _fixture.GetService<IClock>(),
-                    _correlationContext,
-                    domainEventDispatcher.Object,
-                    _fixture.UnitOfWork,
-                    _fixture.GetService<ILoggerFactory>());
+                var sut = CreateSystemUnderTest(dispatcher.Object);
 
                 // Act
                 await sut.RunAsync(timerInfo);
@@ -128,14 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
                 var operationsRejectedEvent = chargePriceOperationsRejectedEventBuilder.Build();
                 var outboxMessage = await CreateStoredOutboxMessage(operationsRejectedEvent);
 
-                var sut = new OutboxMessageProcessorEndpoint(
-                    _fixture.GetService<IOutboxMessageRepository>(),
-                    _fixture.GetService<IOutboxMessageParser>(),
-                    _fixture.GetService<IClock>(),
-                    _correlationContext,
-                    dispatcher.Object,
-                    _fixture.UnitOfWork,
-                    _fixture.GetService<ILoggerFactory>());
+                var sut = CreateSystemUnderTest(dispatcher.Object);
 
                 // Act & Assert
                 dispatcher
@@ -153,6 +131,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
                 await sut.RunAsync(timerInfo);
                 actual = await FetchOutboxMessageAsync(outboxMessage.Id);
                 actual.ProcessedDate.Should().NotBeNull();
+            }
+
+            private OutboxMessageProcessorEndpoint CreateSystemUnderTest(IDomainEventDispatcher dispatcher)
+            {
+                return new OutboxMessageProcessorEndpoint(
+                    _fixture.GetService<IOutboxMessageRepository>(),
+                    _fixture.GetService<IOutboxMessageParser>(),
+                    _fixture.GetService<IClock>(),
+                    _correlationContext,
+                    dispatcher,
+                    _fixture.UnitOfWork,
+                    _fixture.GetService<ILoggerFactory>());
             }
 
             private async Task<OutboxMessage> FetchOutboxMessageAsync(Guid outboxMessageId)
