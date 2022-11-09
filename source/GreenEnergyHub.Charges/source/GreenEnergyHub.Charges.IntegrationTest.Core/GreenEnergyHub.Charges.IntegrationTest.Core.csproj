@@ -90,10 +90,16 @@ limitations under the License.
     <Content Include="TestFiles\Charges\BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\ChargeOperationIdIsEmpty.xml">
+    <Content Include="TestFiles\Charges\ChargeDocumentIdIsEmpty.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\InvalidBusinessReasonCode.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\PriceSeries\IrregularPriceSeriesInvalidEndDate.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\UnsupportedResolution.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\Subscription.xml">
@@ -142,9 +148,6 @@ limitations under the License.
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\TaxTariffAsSystemOperator.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\Charges\UnsupportedResolution.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Samples\ChargeLinks\ChargeLinkSubscriptionSample.xml">

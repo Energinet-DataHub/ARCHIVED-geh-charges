@@ -22,10 +22,16 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public static string SyntaxValidationErrorMessage =>
             "Syntax validation failed for business message.";
 
-        public static string AnElementIsEmptyOrContainsOnlyWhitespace =>
-            "An element contains an invalid value. It is either empty or contains only whitespace.";
+        public static string AnElementContainsAnInvalidValue =>
+            "{0} element contains an invalid value. ";
+
+        public static string ValueIsEmptyOrIsWhiteSpace =>
+            "It is either empty or contains only whitespace.";
 
         public static string UnsupportedResolutionErrorMessage =>
             "Provided Resolution value 'P1Y' is invalid and cannot be mapped.";
+
+        public static string UnsupportedBusinessReasonCodeErrorMessage =>
+            "Provided BusinessReasonCode value 'D02' is invalid and cannot be mapped.";
     }
 }

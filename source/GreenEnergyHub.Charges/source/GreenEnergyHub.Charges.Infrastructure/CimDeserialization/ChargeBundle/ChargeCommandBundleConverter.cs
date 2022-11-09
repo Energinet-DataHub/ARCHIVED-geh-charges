@@ -98,6 +98,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             {
                 if (reader.Is(CimChargeCommandConstants.Id))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     operationId = content;
                 }
@@ -328,6 +329,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 {
                     var content = await reader.ReadValueAsDurationAsync().ConfigureAwait(false);
                     priceResolution = ResolutionMapper.Map(content);
+                    if (priceResolution == Resolution.Unknown)
+                    {
+                        throw new InvalidXmlValueException(
+                            CimChargeCommandConstants.PriceResolution,
+                            $"Provided Resolution value '{content}' is invalid and cannot be mapped.");
+                    }
                 }
                 else if (reader.Is(CimChargeCommandConstants.TimeInterval))
                 {

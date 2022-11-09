@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
@@ -66,24 +67,42 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Id))
                 {
-                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.Id);
+                    if (!reader.CanReadValue)
+                    {
+                        throw new InvalidXmlValueException(
+                            CimMarketDocumentConstants.Id,
+                            $"It is either empty or contains only whitespace.");
+                    }
+
                     id = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Type))
                 {
-                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.Type);
+                    if (!reader.CanReadValue)
+                    {
+                        throw new InvalidXmlValueException(
+                            CimMarketDocumentConstants.Type,
+                            $"It is either empty or contains only whitespace.");
+                    }
+
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     type = DocumentTypeMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.BusinessReasonCode))
                 {
-                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.BusinessReasonCode);
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     businessReasonCode = BusinessReasonCodeMapper.Map(content);
+                    if (businessReasonCode == BusinessReasonCode.Unknown)
+                    {
+                        throw new InvalidXmlValueException(
+                            CimMarketDocumentConstants.BusinessReasonCode,
+                            $"Provided BusinessReasonCode value '{content}' is invalid and cannot be mapped.");
+                    }
                 }
                 else if (reader.Is(CimMarketDocumentConstants.IndustryClassification))
                 {
-                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.IndustryClassification);
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     industryClassification = IndustryClassificationMapper.Map(content);
                 }
@@ -95,7 +114,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderBusinessProcessRole))
                 {
-                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.SenderBusinessProcessRole);
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     senderBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
@@ -107,13 +126,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientBusinessProcessRole))
                 {
-                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.RecipientBusinessProcessRole);
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     recepientBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.CreatedDateTime))
                 {
-                    if (!reader.CanReadValue) throw new InvalidXmlValueException(CimMarketDocumentConstants.CreatedDateTime);
+                    if (!reader.CanReadValue) continue;
                     createdDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
                 else if (reader.IsElement())

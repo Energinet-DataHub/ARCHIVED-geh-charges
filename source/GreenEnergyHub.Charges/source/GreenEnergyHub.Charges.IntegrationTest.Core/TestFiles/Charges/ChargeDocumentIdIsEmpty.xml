@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeofpricelist:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
-    <cim:mRID>DocId{{$isoTimestamp}}</cim:mRID>
+    <cim:mRID></cim:mRID>
     <cim:type>D10</cim:type>
     <cim:process.processType>D18</cim:process.processType>
     <cim:businessSector.type>23</cim:businessSector.type>
@@ -25,7 +25,7 @@ limitations under the License.
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
     <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
     <cim:MktActivityRecord>
-        <cim:mRID></cim:mRID>
+        <cim:mRID>OpId1_{{$isoTimestamp}}</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>

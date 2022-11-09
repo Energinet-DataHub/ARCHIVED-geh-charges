@@ -20,10 +20,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
     [Serializable]
     public class InvalidXmlValueException : Exception
     {
-        /// <summary>Throws an <see cref="InvalidXmlValueException"/> if <paramref name="value"/> is empty or contains only whitespace.</summary>
-        /// <param name="value">The cim element name to validate as empty or contains only whitespace.</param>
-        public InvalidXmlValueException(string value)
-            : base($"{value} element contains an invalid value. It is either empty or contains only whitespace.")
+        /// <summary>Throws an <see cref="InvalidXmlValueException"/> if <paramref name="elementName"/> is am element that has an invalid value.</summary>
+        /// <param name="elementName">The cim element name to validate that has an invalid value</param>
+        /// <param name="message">details on the invalid value</param>
+        public InvalidXmlValueException(string elementName, string message)
+            : base($"{elementName} element contains an invalid value. {message}")
         {
         }
 

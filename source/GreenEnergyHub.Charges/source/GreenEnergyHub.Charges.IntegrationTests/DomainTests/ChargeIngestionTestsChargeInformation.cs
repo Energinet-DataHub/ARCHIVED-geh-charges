@@ -24,9 +24,12 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges.PriceSeries;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using Xunit;
@@ -96,16 +99,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
                 var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                document.Element("Code")?.Value.Should().Be("B2B-008");
-                document.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
+                document.Element("Error")?.Element("Code")?.Value.Should().Be("B2B-008");
+                document.Element("Error")?.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
             [Fact]
-            public async Task Ingestion_CIMOperationIdIsEmptyOrOnlyContainsWhitespace_Http400BadRequestWithB2B005ErrorResponse()
+            public async Task Ingestion_CIMDocumentIdIsEmptyOrOnlyContainsWhitespace_Http400BadRequestWithB2B005ErrorResponse()
             {
                 // Arrange
+                var expectedMessage = string.Format(
+                    ErrorMessageConstants.SyntaxValidationErrorMessage +
+                    Environment.NewLine +
+                    ErrorMessageConstants.AnElementContainsAnInvalidValue +
+                    ErrorMessageConstants.ValueIsEmptyOrIsWhiteSpace,
+                    CimMarketDocumentConstants.Id);
+
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequests.ChargeOperationIdIsEmpty);
+                    EndpointUrl, ChargeInformationRequests.ChargeDocumentIdIsEmpty);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -114,19 +124,50 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
                 var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                document.Element("Code")?.Value.Should().Be("B2B-005");
-                document.Element("Message")?.Value.Should()
-                    .Be(ErrorMessageConstants.SyntaxValidationErrorMessage +
-                        Environment.NewLine +
-                        ErrorMessageConstants.AnElementIsEmptyOrContainsOnlyWhitespace);
+                document.Element("Error")?.Element("Code")?.Value.Should().Be("B2B-005");
+                var actualMessage = document.Element("Error")?.Element("Message")?.Value;
+                Assert.Equal(expectedMessage, actualMessage, ignoreLineEndingDifferences: true);
+            }
+
+            [Fact]
+            public async Task Ingestion_CIMDocumentBusinessReasonCodeIsNotSupported_Http400BadRequestWithB2B005ErrorResponse()
+            {
+                // Arrange
+                var expectedMessage = string.Format(
+                    ErrorMessageConstants.SyntaxValidationErrorMessage +
+                    Environment.NewLine +
+                    ErrorMessageConstants.AnElementContainsAnInvalidValue +
+                    ErrorMessageConstants.UnsupportedBusinessReasonCodeErrorMessage,
+                    CimMarketDocumentConstants.BusinessReasonCode);
+
+                var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeInformationRequests.InvalidBusinessReasonCode);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStreamAsync();
+                var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
+                document.Element("Error")?.Element("Code")?.Value.Should().Be("B2B-005");
+                var actualMessage = document.Element("Error")?.Element("Message")?.Value;
+                Assert.Equal(expectedMessage, actualMessage, ignoreLineEndingDifferences: true);
             }
 
             [Fact]
             public async Task Ingestion_CIMResolutionIsNotSupported_Http400BadRequestWithB2B005ErrorResponse()
             {
                 // Arrange
+                var expectedMessage = string.Format(
+                    ErrorMessageConstants.SyntaxValidationErrorMessage +
+                    Environment.NewLine +
+                    ErrorMessageConstants.AnElementContainsAnInvalidValue +
+                    ErrorMessageConstants.UnsupportedResolutionErrorMessage,
+                    "resolution");
+
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequests.ChargeOperationIdIsEmpty);
+                    EndpointUrl, ChargePricesRequests.UnsupportedResolution);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -135,11 +176,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
                 var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                document.Element("Code")?.Value.Should().Be("B2B-005");
-                document.Element("Message")?.Value.Should()
-                    .Be(ErrorMessageConstants.SyntaxValidationErrorMessage +
-                        Environment.NewLine +
-                        ErrorMessageConstants.UnsupportedResolutionErrorMessage);
+                document.Element("Error")?.Element("Code")?.Value.Should().Be("B2B-005");
+                var actualMessage = document.Element("Error")?.Element("Message")?.Value;
+                Assert.Equal(expectedMessage, actualMessage, ignoreLineEndingDifferences: true);
             }
 
             /* CONFIRMATIONS - PLEASE REFER TO SAMPLES BELOW */

@@ -17,7 +17,7 @@ limitations under the License.
 <cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeofpricelist:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
     <cim:mRID>DocId{{$isoTimestamp}}</cim:mRID>
     <cim:type>D10</cim:type>
-    <cim:process.processType>D18</cim:process.processType>
+    <cim:process.processType>D02</cim:process.processType>
     <cim:businessSector.type>23</cim:businessSector.type>
     <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:sender_MarketParticipant.mRID>
     <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
@@ -33,7 +33,7 @@ limitations under the License.
                 <cim:mRID>ChargeId01</cim:mRID>
                 <cim:name>Charge tariff day Name1</cim:name>
                 <cim:description>CREATE</cim:description>
-                <cim:priceTimeFrame_Period.resolution>P1Y</cim:priceTimeFrame_Period.resolution>
+                <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
                 <cim:VATPayer>D02</cim:VATPayer>
                 <cim:transparentInvoicing>false</cim:transparentInvoicing>
