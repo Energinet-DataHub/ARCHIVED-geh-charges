@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
     {
         /// <summary>Throws an <see cref="InvalidXmlValueException"/> if <paramref name="elementName"/> is an element that has an invalid value.</summary>
         /// <param name="elementName">The cim element name to validate that has an invalid value</param>
-        /// <param name="message">details on the invalid value</param>
+        /// <param name="message">Details on the invalid value</param>
         public InvalidXmlValueException(string elementName, string message)
             : base($"{elementName} element contains an invalid value. {message}")
         {
