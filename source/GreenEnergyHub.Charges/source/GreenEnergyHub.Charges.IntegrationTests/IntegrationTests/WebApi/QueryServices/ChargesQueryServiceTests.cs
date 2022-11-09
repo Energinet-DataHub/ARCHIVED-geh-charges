@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task SearchAsync_WhenNoSearchCriteria_ReturnsAll()
+        public async Task SearchAsync_WhenNoSearchCriteria_ReturnsAllChargesAndPeriods()
         {
             // Arrange
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
@@ -237,7 +237,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task SearchAsync_WhenOwnerIdsIsNull_ReturnsAll()
+        public async Task SearchAsync_WhenOwnerIdsIsNull_ReturnsAllChargesAndPeriods()
         {
             // Arrange
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
