@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             if (searchCriteria.ChargeTypes != null && searchCriteria.ChargeTypes.Any())
                 charges = SearchByChargeTypes(searchCriteria.ChargeTypes, charges);
 
-            var chargeV1Dtos = await charges.SelectManyAsChargeV1Dto().ToListAsync().ConfigureAwait(false);
+            var chargeV1Dtos = await charges.AsChargeV1Dto().ToListAsync().ConfigureAwait(false);
             var sortedChargeV1Dtos = SortCharges(chargeV1Dtos);
             return sortedChargeV1Dtos;
         }

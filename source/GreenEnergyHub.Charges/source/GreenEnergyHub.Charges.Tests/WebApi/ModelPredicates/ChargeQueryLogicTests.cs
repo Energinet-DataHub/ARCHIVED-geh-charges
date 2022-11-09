@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
     {
         [Theory]
         [InlineAutoMoqData]
-        public void SelectManyAsChargeV1Dto_SetsAllProperties(Charge charge)
+        public void AsChargeV1Dto_SetsAllProperties(Charge charge)
         {
             // Arrange
             charge.OwnerId = charge.Owner.Id;
@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
                 null);
 
             // Act
-            var actual = charges.SelectManyAsChargeV1Dto();
+            var actual = charges.AsChargeV1Dto();
 
             // Assert
             actual.Should().HaveCount(2);

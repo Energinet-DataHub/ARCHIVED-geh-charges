@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
     {
 #pragma warning disable SA1118
 
-        public static IQueryable<ChargeV1Dto> SelectManyAsChargeV1Dto(this IQueryable<Charge> queryable)
+        public static IQueryable<ChargeV1Dto> AsChargeV1Dto(this IQueryable<Charge> queryable)
         {
             var result = queryable
                 .SelectMany(c => c.ChargePeriods
