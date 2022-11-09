@@ -32,43 +32,6 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
     {
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargeV1Dto_SetsAllProperties(Charge charge)
-        {
-            // Arrange
-            charge.OwnerId = charge.Owner.Id;
-            charge.Type = 1;
-            charge.Resolution = 1;
-
-            charge.ChargePeriods.Clear();
-            charge.ChargePeriods.Add(GenerateChargePeriod(charge, InstantHelper.GetTodayAtMidnightUtc(), InstantHelper.GetEndDefault()));
-
-            var charges = new List<Charge> { charge, }.AsQueryable();
-
-            var expected = new ChargeV1Dto(
-                charge.Id,
-                (ChargeType)charge.Type,
-                (Resolution)charge.Resolution,
-                charge.SenderProvidedChargeId,
-                charge.ChargePeriods.Single().Name,
-                charge.ChargePeriods.Single().Description,
-                charge.Owner.MarketParticipantId,
-                charge.Owner.Name,
-                (VatClassification)charge.ChargePeriods.Single().VatClassification,
-                charge.TaxIndicator,
-                charge.ChargePeriods.Single().TransparentInvoicing,
-                charge.ChargePoints.Any(),
-                charge.ChargePeriods.Single().StartDateTime,
-                null);
-
-            // Act
-            var actual = charges.AsChargeV1Dto();
-
-            // Assert
-            actual.Single().Should().BeEquivalentTo(expected);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
         public void SelectManyAsChargeV1Dto_SetsAllProperties(Charge charge)
         {
             // Arrange

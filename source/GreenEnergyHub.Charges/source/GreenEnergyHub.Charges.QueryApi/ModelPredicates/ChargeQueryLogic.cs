@@ -24,57 +24,6 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
     {
 #pragma warning disable SA1118
 
-        public static IQueryable<ChargeV1Dto> AsChargeV1Dto(this IQueryable<Charge> queryable)
-        {
-            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
-
-            return queryable.Select(c => new ChargeV1Dto(
-                c.Id,
-                MapChargeType(c.GetChargeType()),
-                MapResolution(c.GetResolution()),
-                c.SenderProvidedChargeId,
-                (c.ChargePeriods
-                     .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                     .OrderByDescending(cp => cp.StartDateTime)
-                     .FirstOrDefault() ??
-                 c.ChargePeriods
-                     .OrderBy(cp => cp.StartDateTime)
-                     .First()).Name,
-                (c.ChargePeriods
-                     .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                     .OrderByDescending(cp => cp.StartDateTime)
-                     .FirstOrDefault() ??
-                 c.ChargePeriods
-                     .OrderBy(cp => cp.StartDateTime)
-                     .First()).Description,
-                c.Owner.MarketParticipantId,
-                c.Owner.Name,
-                MapVatClassification((Domain.Charges.VatClassification)(c.ChargePeriods
-                                                                            .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                                                                            .OrderByDescending(cp => cp.StartDateTime)
-                                                                            .FirstOrDefault() ??
-                                                                        c.ChargePeriods
-                                                                            .OrderBy(cp => cp.StartDateTime)
-                                                                            .First()).VatClassification),
-                c.TaxIndicator,
-                (c.ChargePeriods
-                     .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                     .OrderByDescending(cp => cp.StartDateTime)
-                     .FirstOrDefault() ??
-                 c.ChargePeriods
-                     .OrderBy(cp => cp.StartDateTime)
-                     .First()).TransparentInvoicing,
-                c.ChargePoints.Any(),
-                (c.ChargePeriods
-                     .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                     .OrderByDescending(cp => cp.StartDateTime)
-                     .FirstOrDefault() ??
-                 c.ChargePeriods
-                     .OrderBy(cp => cp.StartDateTime)
-                     .First()).StartDateTime,
-                GetValidToDate(c.ChargePeriods.OrderByDescending(cp => cp.EndDateTime).First().EndDateTime)));
-        }
-
         public static IQueryable<ChargeV1Dto> SelectManyAsChargeV1Dto(this IQueryable<Charge> queryable)
         {
             var result = queryable
