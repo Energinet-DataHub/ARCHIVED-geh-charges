@@ -56,41 +56,6 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargePriceV1Dto_WhenResolutionIsPT15M_TimeShouldNotOverlap(
-            ChargePoint chargePoint,
-            ChargePoint chargePoint2)
-        {
-            // Arrange
-            chargePoint.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 0, 0), DateTimeKind.Utc);
-            chargePoint.Charge.Resolution = (int)Resolution.PT15M;
-
-            chargePoint2.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 6, 0), DateTimeKind.Utc);
-            chargePoint2.Charge.Resolution = (int)Resolution.PT15M;
-
-            var expected = new List<ChargePriceV1Dto>
-            {
-                new(
-                    chargePoint2.Price,
-                    chargePoint2.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 15, 0), DateTimeKind.Utc)),
-                new(
-                    chargePoint.Price,
-                    chargePoint.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 6, 0), DateTimeKind.Utc)),
-            };
-
-            var chargePoints = new List<ChargePoint> { chargePoint2, chargePoint }.AsQueryable();
-            var iso8601Durations = GetIso8601Durations();
-
-            // Act
-            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
-
-            // Assert
-            actual.Should().BeEquivalentTo(expected);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
         public void AsChargePriceV1Dto_WhenResolutionIsP1M_DatesShouldNotOverlap(
             ChargePoint chargePoint,
             ChargePoint chargePoint2,
@@ -146,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             chargePoint2.Time = DateTime.SpecifyKind(new DateTime(2022, 2, 28, 23, 0, 0), DateTimeKind.Utc);
             chargePoint2.Charge.Resolution = (int)Resolution.P1M;
 
-            chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 6, 30, 23, 0, 0), DateTimeKind.Utc);
+            chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 6, 30, 22, 0, 0), DateTimeKind.Utc);
             chargePoint3.Charge.Resolution = (int)Resolution.P1M;
 
             var expected = new List<ChargePriceV1Dto>

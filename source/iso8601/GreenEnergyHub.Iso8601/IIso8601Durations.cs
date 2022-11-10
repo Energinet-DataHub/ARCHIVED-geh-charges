@@ -31,6 +31,15 @@ namespace GreenEnergyHub.Iso8601
         Instant AddDuration(Instant startInstant, string duration, int numberOfDurations);
 
         /// <summary>
+        /// When displaying in search results in GUI an end-date needs to be calculated.
+        /// This date should not go beyond the 1. in the mont.
+        /// </summary>
+        /// <param name="startInstant"></param>
+        /// <param name="duration"></param>
+        /// <returns>End time for time interval</returns>
+        Instant AddDurationIrregularSupport(Instant startInstant, string duration);
+
+        /// <summary>
         /// Retrieves the time which occur by adding the required number of durations
         /// to the start time, making sure that durations higher than 0 is at the nth start
         /// of the duration based on the local timezone
