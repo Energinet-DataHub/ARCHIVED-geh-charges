@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Application.Messaging;
@@ -38,12 +37,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
             _serviceBusMessageFactory = serviceBusMessageFactory;
         }
 
-        public async Task DispatchAsync<T>(T domainEvent, CancellationToken cancellationToken = default)
+        public async Task DispatchAsync<T>(T domainEvent)
         {
             ArgumentNullException.ThrowIfNull(domainEvent);
             var data = _jsonSerializer.Serialize(domainEvent);
             var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data, domainEvent.GetType().Name);
-            await _serviceBusDispatcher.DispatchAsync(serviceBusMessage, domainEvent.GetType(), cancellationToken).ConfigureAwait(false);
+            await _serviceBusDispatcher.DispatchAsync(serviceBusMessage).ConfigureAwait(false);
         }
     }
 }

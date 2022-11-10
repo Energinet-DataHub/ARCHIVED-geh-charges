@@ -16,12 +16,10 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.QueryApi;
-using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.QueryApi.Validation;
 using GreenEnergyHub.Charges.WebApi.Factories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
 {
@@ -31,33 +29,15 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
     public class ChargesController : ControllerBase
     {
         public const string Version1 = "1.0";
-        private readonly IData _data;
         private readonly IChargesQueryService _chargesQueryService;
         private readonly IChargeInformationCommandHandler _chargeInformationCommandHandler;
         private readonly IChargeInformationCommandFactory _chargeInformationCommandFactory;
 
-        public ChargesController(IData data, IChargesQueryService chargesQueryService, IChargeInformationCommandHandler chargeInformationCommandHandler, IChargeInformationCommandFactory chargeInformationCommandFactory)
+        public ChargesController(IChargesQueryService chargesQueryService, IChargeInformationCommandHandler chargeInformationCommandHandler, IChargeInformationCommandFactory chargeInformationCommandFactory)
         {
-            _data = data;
             _chargesQueryService = chargesQueryService;
             _chargeInformationCommandHandler = chargeInformationCommandHandler;
             _chargeInformationCommandFactory = chargeInformationCommandFactory;
-        }
-
-        /// <summary>
-        ///     Returns all charges
-        /// </summary>
-        /// <returns>Charges data or "404 Not Found"</returns>
-        [HttpGet("GetAsync")]
-        [MapToApiVersion(Version1)]
-        public async Task<IActionResult> GetAsync()
-        {
-            var charges = await _data.Charges
-                .AsChargeV1Dto()
-                .ToListAsync()
-                .ConfigureAwait(false);
-
-            return Ok(charges);
         }
 
         /// <summary>
