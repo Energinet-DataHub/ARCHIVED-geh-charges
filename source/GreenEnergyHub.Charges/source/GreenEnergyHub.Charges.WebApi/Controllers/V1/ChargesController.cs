@@ -35,7 +35,11 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         private readonly IChargeInformationCommandFactory _chargeInformationCommandFactory;
         private readonly ICorrelationContext _correlationContext;
 
-        public ChargesController(IChargesQueryService chargesQueryService, IChargeInformationCommandHandler chargeInformationCommandHandler, IChargeInformationCommandFactory chargeInformationCommandFactory, ICorrelationContext correlationContext)
+        public ChargesController(
+            IChargesQueryService chargesQueryService,
+            IChargeInformationCommandHandler chargeInformationCommandHandler,
+            IChargeInformationCommandFactory chargeInformationCommandFactory,
+            ICorrelationContext correlationContext)
         {
             _chargesQueryService = chargesQueryService;
             _chargeInformationCommandHandler = chargeInformationCommandHandler;
