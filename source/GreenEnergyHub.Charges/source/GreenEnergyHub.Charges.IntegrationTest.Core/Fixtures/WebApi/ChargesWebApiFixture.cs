@@ -81,6 +81,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         {
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();
+
+            // => Service Bus
+            await ServiceBusResourceProvider.DisposeAsync();
         }
     }
 }
