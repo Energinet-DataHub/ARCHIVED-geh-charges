@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.WebApi.Factories;
 
 public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
 {
-    private static IClock _clock;
+    private readonly IClock _clock;
 
     public ChargeInformationCommandFactory(IClock clock)
     {
@@ -44,7 +44,7 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
         return new ChargeInformationCommand(document, operations);
     }
 
-    private static DocumentDto CreateDocument(CreateChargeInformationV1Dto chargeInformation)
+    private DocumentDto CreateDocument(CreateChargeInformationV1Dto chargeInformation)
     {
         var documentId = "dh" + Guid.NewGuid().ToString("N");
 
