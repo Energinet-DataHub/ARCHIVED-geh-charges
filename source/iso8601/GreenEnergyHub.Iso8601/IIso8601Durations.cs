@@ -31,8 +31,8 @@ namespace GreenEnergyHub.Iso8601
         Instant AddDuration(Instant startInstant, string duration, int numberOfDurations);
 
         /// <summary>
-        /// When displaying in search results in GUI an end-date needs to be calculated.
-        /// This date should not go beyond the 1. in the mont.
+        /// When displaying price series results in frontend a valid to date needs to be calculated.
+        /// This method has special handling for irregular monthly price series.
         /// </summary>
         /// <param name="startInstant"></param>
         /// <param name="duration"></param>
