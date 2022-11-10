@@ -1,5 +1,18 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 6.0.0
+
+`SearchChargesAsync` now returns one `ChargeV1Dto` per period per charge.
+Removed `GetChargesAsync()` from `ChargesClient`
+
+## Version 5.0.1
+
+Added `Role` to `MarketParticipantV1Dto`
+
+## Version 5.0.0
+
+Removed `ChargeLinkV2Dto`
+
 ## Version 4.4.2
 
 `ChargeMessageType` is changed to reflect Charge BusinessReasonCode

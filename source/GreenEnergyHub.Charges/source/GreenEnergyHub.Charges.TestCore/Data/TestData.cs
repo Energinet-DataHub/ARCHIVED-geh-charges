@@ -12,19 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-
-namespace GreenEnergyHub.Charges.Application.Messaging
+namespace GreenEnergyHub.Charges.TestCore.Data
 {
     /// <summary>
-    /// Service for dispatching domain events raised during current business process
+    /// Provide a unified compile time safe way to access values corresponding to the seeded test data
+    /// in the test database.
     /// </summary>
-    public interface IDomainEventDispatcher
+    public static class TestData
     {
-        /// <summary>
-        /// Dispatch domain event
-        /// </summary>
-        /// <param name="domainEvent"></param>
-        Task DispatchAsync<T>(T domainEvent);
+        public static class Charge
+        {
+            public static class TestTar001
+            {
+                public const string SenderProvidedChargeId = "TestTar001";
+                public const string Name = "Tariff with multiple periods";
+                public const int NoOfPeriods = 4;
+                public const string ChargeOwnerId = SeededData.MarketParticipants.Provider8100000000030.Gln;
+            }
+        }
     }
 }

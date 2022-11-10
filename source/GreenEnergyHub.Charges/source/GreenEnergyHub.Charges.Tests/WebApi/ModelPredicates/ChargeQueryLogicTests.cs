@@ -20,6 +20,8 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -38,36 +40,65 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             charge.Resolution = 1;
 
             charge.ChargePeriods.Clear();
-            charge.ChargePeriods.Add(GenerateChargePeriod(charge));
+            AddTwoChargePeriods(charge);
 
-            var charges = new List<Charge> { charge, }.AsQueryable();
+            var charges = new List<Charge> { charge }.AsQueryable();
 
-            var expected = new ChargeV1Dto(
+            var expectedFirst = new ChargeV1Dto(
                 charge.Id,
                 (ChargeType)charge.Type,
                 (Resolution)charge.Resolution,
                 charge.SenderProvidedChargeId,
-                charge.ChargePeriods.Single().Name,
-                charge.ChargePeriods.Single().Description,
+                charge.ChargePeriods.First().Name,
+                charge.ChargePeriods.First().Description,
                 charge.Owner.MarketParticipantId,
                 charge.Owner.Name,
-                (VatClassification)charge.ChargePeriods.Single().VatClassification,
+                (VatClassification)charge.ChargePeriods.First().VatClassification,
                 charge.TaxIndicator,
-                charge.ChargePeriods.Single().TransparentInvoicing,
+                charge.ChargePeriods.First().TransparentInvoicing,
                 charge.ChargePoints.Any(),
-                charge.ChargePeriods.Single().StartDateTime,
+                charge.ChargePeriods.First().StartDateTime,
+                charge.ChargePeriods.First().EndDateTime);
+
+            var expectedLast = new ChargeV1Dto(
+                charge.Id,
+                (ChargeType)charge.Type,
+                (Resolution)charge.Resolution,
+                charge.SenderProvidedChargeId,
+                charge.ChargePeriods.Last().Name,
+                charge.ChargePeriods.Last().Description,
+                charge.Owner.MarketParticipantId,
+                charge.Owner.Name,
+                (VatClassification)charge.ChargePeriods.Last().VatClassification,
+                charge.TaxIndicator,
+                charge.ChargePeriods.Last().TransparentInvoicing,
+                charge.ChargePoints.Any(),
+                charge.ChargePeriods.Last().StartDateTime,
                 null);
 
             // Act
             var actual = charges.AsChargeV1Dto();
 
             // Assert
-            actual.Single().Should().BeEquivalentTo(expected);
+            actual.Should().HaveCount(2);
+            actual.First().Should().BeEquivalentTo(expectedFirst);
+            actual.Last().Should().BeEquivalentTo(expectedLast);
         }
 
-        private static ChargePeriod GenerateChargePeriod(Charge charge)
+        private static void AddTwoChargePeriods(Charge charge)
+        {
+            var firstPeriod = GenerateChargePeriod(charge, InstantHelper.GetTodayAtMidnightUtc(), InstantHelper.GetTomorrowAtMidnightUtc());
+            var secondPeriod = GenerateChargePeriod(charge, InstantHelper.GetTomorrowAtMidnightUtc(), InstantHelper.GetEndDefault());
+
+            charge.ChargePeriods.Add(firstPeriod);
+            charge.ChargePeriods.Add(secondPeriod);
+        }
+
+        private static ChargePeriod GenerateChargePeriod(Charge charge, Instant validFrom, Instant validTo)
         {
             var period = new ChargePeriodBuilder()
+                .WithStartDateTime(validFrom.ToDateTimeUtc())
+                .WithEndDateTime(validTo.ToDateTimeUtc())
                 .WithVatClassification(GreenEnergyHub.Charges.Domain.Charges.VatClassification.Vat25)
                 .Build(charge);
             return period;

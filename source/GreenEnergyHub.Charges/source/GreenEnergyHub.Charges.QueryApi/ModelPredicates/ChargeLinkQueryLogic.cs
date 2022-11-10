@@ -55,37 +55,6 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
 #pragma warning restore SA1118
         }
 
-        public static IQueryable<ChargeLinkV2Dto> AsChargeLinkV2Dto(this IQueryable<ChargeLink> queryable)
-        {
-            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
-
-#pragma warning disable SA1118
-            return queryable
-                .Select(cl => new ChargeLinkV2Dto(
-                    Map(cl.Charge.GetChargeType()),
-                    cl.Charge.SenderProvidedChargeId,
-                    (cl.Charge.ChargePeriods
-                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                         .OrderByDescending(cp => cp.StartDateTime)
-                         .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
-                         .OrderBy(cp => cp.StartDateTime)
-                         .First()).Name,
-                    cl.Charge.Owner.Id,
-                    cl.Charge.TaxIndicator,
-                    (cl.Charge.ChargePeriods
-                        .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                        .OrderByDescending(cp => cp.StartDateTime)
-                        .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
-                         .OrderBy(cp => cp.StartDateTime)
-                         .First()).TransparentInvoicing,
-                    cl.Factor,
-                    cl.StartDateTime,
-                    cl.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : cl.EndDateTime)); // Nullify "EndDefault" end dates
-#pragma warning restore SA1118
-        }
-
         private static ChargeType Map(Domain.Charges.ChargeType chargeType) => chargeType switch
         {
             Domain.Charges.ChargeType.Fee => ChargeType.D02,
