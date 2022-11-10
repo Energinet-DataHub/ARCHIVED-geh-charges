@@ -12,17 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.QueryApi.Validation;
+using GreenEnergyHub.Charges.WebApi.Factories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,12 +34,14 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         private readonly IData _data;
         private readonly IChargesQueryService _chargesQueryService;
         private readonly IChargeInformationCommandHandler _chargeInformationCommandHandler;
+        private readonly IChargeInformationCommandFactory _chargeInformationCommandFactory;
 
-        public ChargesController(IData data, IChargesQueryService chargesQueryService, IChargeInformationCommandHandler chargeInformationCommandHandler)
+        public ChargesController(IData data, IChargesQueryService chargesQueryService, IChargeInformationCommandHandler chargeInformationCommandHandler, IChargeInformationCommandFactory chargeInformationCommandFactory)
         {
             _data = data;
             _chargesQueryService = chargesQueryService;
             _chargeInformationCommandHandler = chargeInformationCommandHandler;
+            _chargeInformationCommandFactory = chargeInformationCommandFactory;
         }
 
         /// <summary>
@@ -79,44 +78,15 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         }
 
         /// <summary>
-        /// Creates charge
+        /// Sends a 'ChargeInformationCommand'
         /// </summary>
-        /// <returns>"200 OK" or "400 Bad request"</returns>
-        [HttpPost("Create")]
+        /// <returns>"200 OK"</returns>
+        [HttpPost("CreateAsync")]
         [MapToApiVersion(Version1)]
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync([FromBody] CreateChargeInformationV1Dto chargeInformation)
         {
-            //IReadOnlyCollection<ChargeInformationOperationDto> operations = new List<ChargeInformationOperationDto>
-            //{
-            //    new ChargeInformationOperationDto(
-            //        operationId,
-            //        chargeType,
-            //        senderProvidedChargeId,
-            //        chargeName,
-            //        description,
-            //        chargeOwner,
-            //        resolution,
-            //        taxIndicator,
-            //        transparentInvoicing,
-            //        vatClassification,
-            //        startDateTime,
-            //        endDateTime)
-            //};
-
-            //var document = new DocumentDto(
-            //    id,
-            //    _clock.GetCurrentInstant(),
-            //    type,
-            //    createdDateTime,
-            //    new MarketParticipantDto(Guid.NewGuid(), senderMarketParticipantId, senderBusinessProcessRole,
-            //        Guid.Empty),
-            //    new MarketParticipantDto(Guid.NewGuid(), recipientMarketParticipantId, recepientBusinessProcessRole,
-            //        Guid.Empty),
-            //    industryClassification,
-            //    businessReasonCode);
-
-            //var command = new ChargeInformationCommand(document, operations);
-            //_chargeInformationCommandHandler.HandleAsync(command);
+            var command = _chargeInformationCommandFactory.Create(chargeInformation);
+            await _chargeInformationCommandHandler.HandleAsync(command).ConfigureAwait(false);
 
             return Ok();
         }
