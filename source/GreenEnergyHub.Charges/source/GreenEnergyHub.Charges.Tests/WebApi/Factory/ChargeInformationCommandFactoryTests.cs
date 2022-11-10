@@ -20,7 +20,6 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
-using GreenEnergyHub.Charges.TestCore.Data;
 using GreenEnergyHub.Charges.WebApi.Factories;
 using Moq;
 using NodaTime;
@@ -74,12 +73,15 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
             actualOperation.Resolution.Should().Be((Resolution)chargeInformation.Resolution);
             actualOperation.ChargeDescription.Should().Be(chargeInformation.Description);
             actualOperation.ChargeName.Should().Be(chargeInformation.ChargeName);
-            actualOperation.TaxIndicator.Should().Be(chargeInformation.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax);
-            actualOperation.TransparentInvoicing.Should().Be(chargeInformation.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent);
             actualOperation.ChargeOwner.Should().Be(chargeInformation.SenderMarketParticipant.MarketParticipantId);
             actualOperation.StartDateTime.Should().Be(chargeInformation.EffectiveDate.ToInstant());
             actualOperation.SenderProvidedChargeId.Should().Be(chargeInformation.SenderProvidedChargeId);
             actualOperation.EndDateTime.Should().BeNull();
+            actualOperation.TaxIndicator.Should()
+                .Be(chargeInformation.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax);
+            actualOperation.TransparentInvoicing.Should()
+                .Be(chargeInformation.TransparentInvoicing ?
+                    TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent);
         }
     }
 }
