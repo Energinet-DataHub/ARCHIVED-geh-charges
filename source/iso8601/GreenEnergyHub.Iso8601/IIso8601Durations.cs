@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Iso8601
         /// </summary>
         /// <param name="startInstant"></param>
         /// <param name="duration"></param>
-        /// <returns>End time for time interval</returns>
+        /// <returns>The calculated Valid To</returns>
         Instant AddDurationWithIrregularSupport(Instant startInstant, string duration);
 
         /// <summary>
