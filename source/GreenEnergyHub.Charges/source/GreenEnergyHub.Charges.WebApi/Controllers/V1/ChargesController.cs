@@ -12,8 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
@@ -31,11 +36,13 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         public const string Version1 = "1.0";
         private readonly IData _data;
         private readonly IChargesQueryService _chargesQueryService;
+        private readonly IChargeInformationCommandHandler _chargeInformationCommandHandler;
 
-        public ChargesController(IData data, IChargesQueryService chargesQueryService)
+        public ChargesController(IData data, IChargesQueryService chargesQueryService, IChargeInformationCommandHandler chargeInformationCommandHandler)
         {
             _data = data;
             _chargesQueryService = chargesQueryService;
+            _chargeInformationCommandHandler = chargeInformationCommandHandler;
         }
 
         /// <summary>
@@ -69,6 +76,49 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
             var charges = await _chargesQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             return Ok(charges);
+        }
+
+        /// <summary>
+        /// Creates charge
+        /// </summary>
+        /// <returns>"200 OK" or "400 Bad request"</returns>
+        [HttpPost("Create")]
+        [MapToApiVersion(Version1)]
+        public IActionResult Create()
+        {
+            //IReadOnlyCollection<ChargeInformationOperationDto> operations = new List<ChargeInformationOperationDto>
+            //{
+            //    new ChargeInformationOperationDto(
+            //        operationId,
+            //        chargeType,
+            //        senderProvidedChargeId,
+            //        chargeName,
+            //        description,
+            //        chargeOwner,
+            //        resolution,
+            //        taxIndicator,
+            //        transparentInvoicing,
+            //        vatClassification,
+            //        startDateTime,
+            //        endDateTime)
+            //};
+
+            //var document = new DocumentDto(
+            //    id,
+            //    _clock.GetCurrentInstant(),
+            //    type,
+            //    createdDateTime,
+            //    new MarketParticipantDto(Guid.NewGuid(), senderMarketParticipantId, senderBusinessProcessRole,
+            //        Guid.Empty),
+            //    new MarketParticipantDto(Guid.NewGuid(), recipientMarketParticipantId, recepientBusinessProcessRole,
+            //        Guid.Empty),
+            //    industryClassification,
+            //    businessReasonCode);
+
+            //var command = new ChargeInformationCommand(document, operations);
+            //_chargeInformationCommandHandler.HandleAsync(command);
+
+            return Ok();
         }
     }
 }
