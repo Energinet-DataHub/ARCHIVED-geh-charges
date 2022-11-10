@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
             var sut = BuildChargeInformationCommandReceivedEventHandler();
             var receivedEvent =
-                await GetTestDataFromFile<ChargeInformationCommandReceivedEvent>("ChargeInformationTestTariff.json");
+                await GetTestDataFromFile("ChargeInformationTestTariff.json");
 
             // Act
             await sut.HandleAsync(receivedEvent);
@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             // Arrange
             await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
             var sut = BuildChargeInformationCommandReceivedEventHandler();
-            var receivedEvent = await GetTestDataFromFile<ChargeInformationCommandReceivedEvent>(
+            var receivedEvent = await GetTestDataFromFile(
                 "ChargeInformationBundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.json");
 
             // Act
@@ -118,10 +118,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             return (charge, outboxMessages);
         }
 
-        private async Task<T> GetTestDataFromFile<T>(string filename)
+        private async Task<ChargeInformationCommandReceivedEvent> GetTestDataFromFile(string filename)
         {
             var jsonString = await File.ReadAllTextAsync($"IntegrationTests\\ChargeInformation\\TestData\\{filename}");
-            return _jsonSerializer.Deserialize<T>(jsonString);
+            return _jsonSerializer.Deserialize<ChargeInformationCommandReceivedEvent>(jsonString);
         }
 
         private ChargeInformationCommandReceivedEventHandler BuildChargeInformationCommandReceivedEventHandler()
