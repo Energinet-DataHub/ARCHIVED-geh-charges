@@ -34,12 +34,6 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         public Task<IList<ChargeLinkV1Dto>> GetChargeLinksAsync(string meteringPointId);
 
         /// <summary>
-        /// Gets all charges
-        /// </summary>
-        /// <returns>A collection of Charge DTOs</returns>
-        public Task<IList<ChargeV1Dto>> GetChargesAsync();
-
-        /// <summary>
         /// Returns charges based on the search criteria.
         /// </summary>
         /// <returns>A collection of charges(Dtos)</returns>
