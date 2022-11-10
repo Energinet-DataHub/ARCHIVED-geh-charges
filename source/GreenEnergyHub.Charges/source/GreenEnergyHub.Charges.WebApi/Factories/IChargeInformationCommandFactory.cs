@@ -17,7 +17,15 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 
 namespace GreenEnergyHub.Charges.WebApi.Factories;
 
+/// <summary>
+/// Factory for creating <see cref="ChargeInformationCommand"/>
+/// </summary>
 public interface IChargeInformationCommandFactory
 {
+    /// <summary>
+    /// Factory for creating <see cref="ChargeInformationCommand"/> from <see cref="CreateChargeInformationV1Dto"/>
+    /// </summary>
+    /// <param name="chargeInformation"></param>
+    /// <returns>A <see cref="ChargeInformationCommand"/></returns>
     ChargeInformationCommand Create(CreateChargeInformationV1Dto chargeInformation);
 }

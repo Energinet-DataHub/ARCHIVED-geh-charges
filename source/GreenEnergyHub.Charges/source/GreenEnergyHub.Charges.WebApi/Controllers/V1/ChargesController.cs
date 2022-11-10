@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         }
 
         /// <summary>
-        /// Sends a 'ChargeInformationCommand' through service bus.
+        /// Creates a 'ChargeInformationCommand' for charge information handling.
         /// </summary>
         /// <returns>"200 OK"</returns>
         [HttpPost("CreateAsync")]

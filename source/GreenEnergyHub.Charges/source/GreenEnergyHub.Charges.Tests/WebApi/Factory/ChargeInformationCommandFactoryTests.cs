@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
                 .Be(MarketParticipantRoleMapper.Map(chargeInformation.SenderMarketParticipant.BusinessProcessRole));
             actualDocument.Sender.B2CActorId.Should().Be(Guid.Empty);
             actualDocument.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
-            actualDocument.Recipient.MarketParticipantId.Should().Be(SeededData.MarketParticipants.MeteringPointAdministrator.Gln);
+            actualDocument.Recipient.MarketParticipantId.Should().Be(MarketParticipantConstants.MeteringPointAdministratorGln);
             actualDocument.Recipient.B2CActorId.Should().Be(Guid.Empty);
             actualDocument.IndustryClassification.Should().Be(IndustryClassification.Electricity);
             actualDocument.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateChargeInformation);

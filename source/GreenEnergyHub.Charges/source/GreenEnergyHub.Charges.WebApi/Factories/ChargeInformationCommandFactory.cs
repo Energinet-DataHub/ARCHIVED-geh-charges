@@ -31,8 +31,6 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
 {
     private static IClock _clock;
 
-    private static string MeteringPointAdministratorGln => "5790001330552";
-
     public ChargeInformationCommandFactory(IClock clock)
     {
         _clock = clock;
@@ -62,7 +60,7 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
                 Guid.Empty),
             new MarketParticipantDto(
                 Guid.NewGuid(),
-                MeteringPointAdministratorGln,
+                MarketParticipantConstants.MeteringPointAdministratorGln,
                 MarketParticipantRole.MeteringPointAdministrator,
                 Guid.Empty),
             IndustryClassification.Electricity,
