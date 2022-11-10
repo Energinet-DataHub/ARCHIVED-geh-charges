@@ -50,18 +50,20 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
             actual.Operations.Should().NotBeNull();
             actual.Operations.Should().HaveCount(1);
 
+            var senderMarketParticipant = chargeInformation.SenderMarketParticipant;
+
             var actualDocument = actual.Document;
             actualDocument.Sender.MarketParticipantId.Should()
-                .Be(chargeInformation.SenderMarketParticipant.MarketParticipantId);
+                .Be(senderMarketParticipant.MarketParticipantId);
             actualDocument.Sender.BusinessProcessRole.Should()
-                .Be(MarketParticipantRoleMapper.Map(chargeInformation.SenderMarketParticipant.BusinessProcessRole));
+                .Be(MarketParticipantRoleMapper.Map(senderMarketParticipant.BusinessProcessRole));
             actualDocument.RequestDate.Should().Be(clock.Object.GetCurrentInstant());
             actualDocument.CreatedDateTime.Should().Be(clock.Object.GetCurrentInstant());
             actualDocument.Type.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
             actualDocument.Sender.MarketParticipantId.Should()
-                .Be(chargeInformation.SenderMarketParticipant.MarketParticipantId);
+                .Be(senderMarketParticipant.MarketParticipantId);
             actualDocument.Sender.BusinessProcessRole.Should()
-                .Be(MarketParticipantRoleMapper.Map(chargeInformation.SenderMarketParticipant.BusinessProcessRole));
+                .Be(MarketParticipantRoleMapper.Map(senderMarketParticipant.BusinessProcessRole));
             actualDocument.Sender.B2CActorId.Should().Be(Guid.Empty);
             actualDocument.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             actualDocument.Recipient.MarketParticipantId.Should().Be(MarketParticipantConstants.MeteringPointAdministratorGln);
@@ -73,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
             actualOperation.Resolution.Should().Be((Resolution)chargeInformation.Resolution);
             actualOperation.ChargeDescription.Should().Be(chargeInformation.Description);
             actualOperation.ChargeName.Should().Be(chargeInformation.ChargeName);
-            actualOperation.ChargeOwner.Should().Be(chargeInformation.SenderMarketParticipant.MarketParticipantId);
+            actualOperation.ChargeOwner.Should().Be(senderMarketParticipant.MarketParticipantId);
             actualOperation.StartDateTime.Should().Be(chargeInformation.EffectiveDate.ToInstant());
             actualOperation.SenderProvidedChargeId.Should().Be(chargeInformation.SenderProvidedChargeId);
             actualOperation.EndDateTime.Should().BeNull();
