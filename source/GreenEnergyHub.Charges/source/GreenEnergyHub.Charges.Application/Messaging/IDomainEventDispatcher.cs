@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace GreenEnergyHub.Charges.Application.Messaging
@@ -26,7 +25,6 @@ namespace GreenEnergyHub.Charges.Application.Messaging
         /// Dispatch domain event
         /// </summary>
         /// <param name="domainEvent"></param>
-        /// <param name="cancellationToken"></param>
-        Task DispatchAsync<T>(T domainEvent, CancellationToken cancellationToken = default);
+        Task DispatchAsync<T>(T domainEvent);
     }
 }

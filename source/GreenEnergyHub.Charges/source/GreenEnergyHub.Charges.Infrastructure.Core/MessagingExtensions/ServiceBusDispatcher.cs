@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 
@@ -36,10 +34,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
             _topicName = topicName;
         }
 
-        public async Task DispatchAsync(ServiceBusMessage serviceBusMessage, Type eventType, CancellationToken cancellationToken = default)
+        public async Task DispatchAsync(ServiceBusMessage serviceBusMessage)
         {
             var sender = _serviceBusClient.CreateSender(_topicName);
-            await sender.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
+            await sender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
         }
     }
 }
