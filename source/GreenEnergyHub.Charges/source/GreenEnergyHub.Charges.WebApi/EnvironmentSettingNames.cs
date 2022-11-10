@@ -32,5 +32,8 @@ namespace GreenEnergyHub.Charges.WebApi
 
         // Localization
         public const string LocalTimeZoneName = "LOCAL_TIMEZONENAME";
+
+        public const string ChargesDomainEventTopicName = "DOMAIN_EVENTS_TOPIC_NAME";
+        public const string DataHubSenderConnectionString = "INTEGRATIONEVENT_SENDER_CONNECTION_STRING";
     }
 }

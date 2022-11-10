@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
-using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.QueryApi.Validation;
 using GreenEnergyHub.Charges.WebApi.Factories;
@@ -32,12 +33,14 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         private readonly IChargesQueryService _chargesQueryService;
         private readonly IChargeInformationCommandHandler _chargeInformationCommandHandler;
         private readonly IChargeInformationCommandFactory _chargeInformationCommandFactory;
+        private readonly ICorrelationContext _correlationContext;
 
-        public ChargesController(IChargesQueryService chargesQueryService, IChargeInformationCommandHandler chargeInformationCommandHandler, IChargeInformationCommandFactory chargeInformationCommandFactory)
+        public ChargesController(IChargesQueryService chargesQueryService, IChargeInformationCommandHandler chargeInformationCommandHandler, IChargeInformationCommandFactory chargeInformationCommandFactory, ICorrelationContext correlationContext)
         {
             _chargesQueryService = chargesQueryService;
             _chargeInformationCommandHandler = chargeInformationCommandHandler;
             _chargeInformationCommandFactory = chargeInformationCommandFactory;
+            _correlationContext = correlationContext;
         }
 
         /// <summary>
@@ -58,13 +61,15 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         }
 
         /// <summary>
-        /// Sends a 'ChargeInformationCommand'
+        /// Sends a 'ChargeInformationCommand' through service bus.
         /// </summary>
         /// <returns>"200 OK"</returns>
         [HttpPost("CreateAsync")]
         [MapToApiVersion(Version1)]
         public async Task<IActionResult> CreateAsync([FromBody] CreateChargeInformationV1Dto chargeInformation)
         {
+            _correlationContext.SetId(Guid.NewGuid().ToString());
+
             var command = _chargeInformationCommandFactory.Create(chargeInformation);
             await _chargeInformationCommandHandler.HandleAsync(command).ConfigureAwait(false);
 

@@ -13,8 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
+using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.WebApi;
@@ -27,13 +31,23 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         public ChargesWebApiFixture()
         {
             DatabaseManager = new ChargesDatabaseManager();
+            IntegrationTestConfiguration = new IntegrationTestConfiguration();
             AuthorizationConfiguration =
                 AuthorizationConfigurationData.CreateAuthorizationConfiguration();
+            ServiceBusResourceProvider = new ServiceBusResourceProvider(
+                IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
 
         public ChargesDatabaseManager DatabaseManager { get; }
 
         public B2CAuthorizationConfiguration AuthorizationConfiguration { get; }
+
+        private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
+
+        private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
+
+        [NotNull]
+        private TopicResource? ChargesDomainEventTopic { get; set; }
 
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
@@ -54,6 +68,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndOpenIdUrl, AuthorizationConfiguration.FrontendOpenIdConfigurationUrl);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndServiceAppId, AuthorizationConfiguration.FrontendApp.AppId);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
+
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
+
+            ChargesDomainEventTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.ChargesDomainEventsTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargesDomainEventTopicName).CreateAsync();
         }
 
         /// <inheritdoc/>

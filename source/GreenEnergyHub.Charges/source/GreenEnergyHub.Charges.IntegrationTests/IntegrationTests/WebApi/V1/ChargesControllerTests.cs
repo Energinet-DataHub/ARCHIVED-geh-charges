@@ -124,6 +124,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             actual.ValidToDateTime.Should().Be(new DateTimeOffset(2022, 10, 31, 23, 00, 00, TimeSpan.Zero));
         }
 
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task CreateAsync_ReturnsOk(
+            CreateChargeInformationV1Dto createChargeInformation,
+            WebApiFactory factory)
+        {
+            // Arrange
+            var sut = CreateHttpClient(factory);
+
+            // Act
+            var response = await sut.PostAsJsonAsync($"{BaseUrl}/CreateAsync", createChargeInformation);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
         private static JsonSerializerOptions GetJsonSerializerOptions()
         {
             return new JsonSerializerOptions
