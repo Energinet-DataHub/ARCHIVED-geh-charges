@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -66,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 x => x.Create(chargeLinksAcceptedEvent), Times.Once);
             eventDispatcher.Verify(
                 expression: x =>
-                    x.DispatchAsync(It.IsAny<ChargeLinksDataAvailableNotifiedEvent>(), CancellationToken.None),
+                    x.DispatchAsync(It.IsAny<ChargeLinksDataAvailableNotifiedEvent>()),
                 Times.Once);
         }
 

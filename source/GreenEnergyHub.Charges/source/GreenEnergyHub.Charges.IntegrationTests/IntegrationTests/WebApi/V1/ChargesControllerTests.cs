@@ -24,8 +24,10 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
+using GreenEnergyHub.Charges.TestCore.Data;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -46,53 +48,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             ITestOutputHelper testOutputHelper)
             : base(chargesWebApiFixture, testOutputHelper)
         {
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task GetAsync_WhenChargesExists_ReturnsOkAndCorrectContentType(WebApiFactory factory)
-        {
-            // Arrange
-            var sut = CreateHttpClient(factory);
-
-            // Act
-            var response = await sut.GetAsync($"{BaseUrl}/GetAsync");
-
-            // Assert
-            var contentType = response.Content.Headers.ContentType!.ToString();
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            contentType.Should().Be("application/json; charset=utf-8");
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task GetAsync_WhenRequested_ReturnsChargeInformation(WebApiFactory factory)
-        {
-            // Arrange
-            var sut = CreateHttpClient(factory);
-
-            // Act
-            var response = await sut.GetAsync($"{BaseUrl}/GetAsync");
-
-            // Assert
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var chargesList = JsonSerializer.Deserialize<List<ChargeV1Dto>>(
-                jsonString,
-                GetJsonSerializerOptions());
-
-            chargesList.Should().HaveCountGreaterThan(0);
-            var actual = chargesList!.Single(x => x.ChargeId == "EA-001");
-            actual.ChargeType.Should().Be(ChargeType.D03);
-            actual.Resolution.Should().Be(Resolution.PT1H);
-            actual.ChargeName.Should().Be("Elafgift");
-            actual.ChargeDescription.Should().Be("Elafgiften");
-            actual.ChargeOwner.Should().Be("5790000432752");
-            actual.ChargeOwnerName.Should().Be("System Operator");
-            actual.VatClassification.Should().Be(VatClassification.Vat25);
-            actual.TaxIndicator.Should().BeTrue();
-            actual.TransparentInvoicing.Should().BeTrue();
-            actual.ValidFromDateTime.Should().Be(new DateTime(2014, 12, 31, 23, 00, 00));
-            actual.ValidToDateTime.Should().Be(null); // because it's year (9999)
         }
 
         [Theory]
@@ -135,7 +90,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task SearchAsync_WhenRequested_ReturnsChargeInformation(
+        public async Task SearchAsync_WhenRequested_ReturnsChargeV1Dtos(
             ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder,
             WebApiFactory factory)
         {
@@ -153,17 +108,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
                 jsonString,
                 GetJsonSerializerOptions());
 
+            using var assertionScope = new AssertionScope();
             chargesList.Should().HaveCountGreaterThan(0);
-            var actual = chargesList!.Single(x => x.ChargeId == "EA-001");
-            actual.ChargeType.Should().Be(ChargeType.D03);
+            chargesList.Should().BeInAscendingOrder(c => c.ChargeId).And
+                .ThenBeInDescendingOrder(c => c.ValidFromDateTime);
+            var actual = chargesList!.Last(c => c.ChargeId == TestData.Charge.TestTar001.SenderProvidedChargeId);
             actual.Resolution.Should().Be(Resolution.PT1H);
-            actual.ChargeName.Should().Be("Elafgift");
-            actual.ChargeOwner.Should().Be("5790000432752");
-            actual.ChargeOwnerName.Should().Be("System Operator");
-            actual.TaxIndicator.Should().BeTrue();
+            actual.ChargeType.Should().Be(ChargeType.D03);
+            actual.ChargeName.Should().Be(TestData.Charge.TestTar001.Name);
+            actual.ChargeOwner.Should().Be(TestData.Charge.TestTar001.ChargeOwnerId);
+            actual.ChargeOwnerName.Should().NotBeEmpty();
+            actual.TaxIndicator.Should().BeFalse();
             actual.TransparentInvoicing.Should().BeTrue();
-            actual.ValidFromDateTime.Should().Be(new DateTime(2014, 12, 31, 23, 00, 00));
-            actual.ValidToDateTime.Should().Be(null); // because it's year (9999)
+            actual.ValidFromDateTime.Should().Be(new DateTimeOffset(2021, 12, 31, 23, 00, 00, TimeSpan.Zero));
+            actual.ValidToDateTime.Should().Be(new DateTimeOffset(2022, 10, 31, 23, 00, 00, TimeSpan.Zero));
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()

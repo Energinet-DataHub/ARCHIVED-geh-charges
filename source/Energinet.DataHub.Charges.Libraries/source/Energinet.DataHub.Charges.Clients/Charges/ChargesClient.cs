@@ -61,19 +61,6 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         }
 
         /// <summary>
-        /// Gets all charges.
-        /// </summary>
-        /// <returns>A collection of charges(Dtos)</returns>
-        public async Task<IList<ChargeV1Dto>> GetChargesAsync()
-        {
-            var response = await _httpClient
-                .GetAsync(ChargesRelativeUris.GetCharges())
-                .ConfigureAwait(false);
-
-            return await HandleResultAsync<IList<ChargeV1Dto>>(response).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// Returns charges based on the search criteria.
         /// </summary>
         /// <returns>A collection of charges(Dtos)</returns>

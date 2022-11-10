@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
@@ -93,10 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             await sut.HandleAsync(createLinkCommandEvent).ConfigureAwait(false);
 
             // Assert
-            dispatcher.Verify(
-                x => x.DispatchAsync(
-                    It.IsAny<ChargeLinksReceivedEvent>(),
-                    It.IsAny<CancellationToken>()));
+            dispatcher.Verify(x => x.DispatchAsync(It.IsAny<ChargeLinksReceivedEvent>()));
         }
 
         [Theory]
@@ -146,9 +142,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             defaultChargeLinkClient.Verify(x => x.ReplyWithFailedAsync(meteringPointId, errorCode, replyTo));
 
             dispatcher.Verify(
-                x => x.DispatchAsync(
-                    It.IsAny<ChargeLinksReceivedEvent>(),
-                    It.IsAny<CancellationToken>()),
+                x => x.DispatchAsync(It.IsAny<ChargeLinksReceivedEvent>()),
                 Times.Never());
         }
 
@@ -196,9 +190,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             defaultChargeLinkClient.Verify(x => x.ReplyWithSucceededAsync(meteringPointId, false, replyTo));
 
             dispatcher.Verify(
-                x => x.DispatchAsync(
-                    It.IsAny<ChargeLinksReceivedEvent>(),
-                    It.IsAny<CancellationToken>()),
+                x => x.DispatchAsync(It.IsAny<ChargeLinksReceivedEvent>()),
                 Times.Never());
         }
     }
