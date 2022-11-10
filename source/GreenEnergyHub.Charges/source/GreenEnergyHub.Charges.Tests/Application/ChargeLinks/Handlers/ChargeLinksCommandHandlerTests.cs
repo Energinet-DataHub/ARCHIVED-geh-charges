@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
@@ -42,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             // Assert
             eventDispatcher.Verify(
                 x =>
-                    x.DispatchAsync(It.IsAny<ChargeLinksReceivedEvent>(), It.IsAny<CancellationToken>()),
+                    x.DispatchAsync(It.IsAny<ChargeLinksReceivedEvent>()),
                 Times.Once);
         }
     }
