@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Iso8601
         [InlineAutoMoqData("2023-01-14T23:00:00Z", "P1M", "2023-01-31T23:00:00Z", "irregular monthly price series")]
         [InlineAutoMoqData("2023-03-14T23:00:00Z", "P1M", "2023-03-31T22:00:00Z", "irregular monthly price series crossing daylight saving")]
         [InlineAutoMoqData("2023-10-14T22:00:00Z", "P1M", "2023-10-31T23:00:00Z", "irregular monthly price series crossing daylight saving")]
-        public void AddDurationIrregularSupport_WhenCalled_ShouldReturnCorrectlyAddedDuration(
+        public void AddDurationWithIrregularSupport_WhenCalled_ShouldReturnCorrectlyAddedDuration(
             string isoString, string duration, string expectedIsoString, string reason)
         {
             // Arrange
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Iso8601
             var expected = InstantPattern.ExtendedIso.Parse(expectedIsoString).Value;
 
             // Act
-            var actual = sut.AddDurationIrregularSupport(input, duration);
+            var actual = sut.AddDurationWithIrregularSupport(input, duration);
 
             // Assert
             actual.Should().Be(expected, reason);

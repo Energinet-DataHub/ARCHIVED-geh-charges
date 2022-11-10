@@ -33,7 +33,7 @@ public static class ChargePointQueryLogic
             .Select(cp => new ChargePriceV1Dto(
                 cp.Price,
                 cp.Time,
-                iso8601Durations.AddDurationIrregularSupport(
+                iso8601Durations.AddDurationWithIrregularSupport(
                         DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
                         ((Resolution)cp.Charge.Resolution).ToString())
                     .ToDateTimeUtc()))

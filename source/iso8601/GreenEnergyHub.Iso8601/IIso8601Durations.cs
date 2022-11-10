@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Iso8601
         /// <param name="startInstant"></param>
         /// <param name="duration"></param>
         /// <returns>End time for time interval</returns>
-        Instant AddDurationIrregularSupport(Instant startInstant, string duration);
+        Instant AddDurationWithIrregularSupport(Instant startInstant, string duration);
 
         /// <summary>
         /// Retrieves the time which occur by adding the required number of durations

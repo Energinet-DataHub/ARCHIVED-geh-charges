@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Iso8601
             };
         }
 
-        public Instant AddDurationIrregularSupport(Instant startInstant, string duration)
+        public Instant AddDurationWithIrregularSupport(Instant startInstant, string duration)
         {
             return duration switch
             {
