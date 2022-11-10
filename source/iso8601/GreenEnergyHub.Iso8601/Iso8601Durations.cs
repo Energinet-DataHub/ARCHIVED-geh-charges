@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Iso8601
             return duration switch
             {
                 "PT1H" => startInstant.Plus(Duration.FromHours(1)),
-                "PT15M" => startInstant.Plus(Duration.FromMinutes(15 * 1)),
+                "PT15M" => startInstant.Plus(Duration.FromMinutes(15)),
                 "P1D" => AddDayDuration(startInstant, 1),
                 "P1M" => GetStartOfMonth(AddMonthDuration(startInstant, 1)),
                 _ => throw new ArgumentException($"Unknown time resolution: {duration}"),
