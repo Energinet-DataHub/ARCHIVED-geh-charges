@@ -248,7 +248,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     chargeOwner = content;
                 }
-                else if (reader.Is(CimChargeCommandConstants.ChargeType))
+                else if (reader.Is(CimChargeCommandConstants.ChargeType) && reader.CanReadValue)
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     chargeType = ChargeTypeMapper.Map(content);
@@ -268,7 +268,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     description = content;
                 }
-                else if (reader.Is(CimChargeCommandConstants.Resolution))
+                else if (reader.Is(CimChargeCommandConstants.Resolution) && reader.CanReadValue)
                 {
                     var content = await reader.ReadValueAsDurationAsync().ConfigureAwait(false);
                     resolution = ResolutionMapper.Map(content);
