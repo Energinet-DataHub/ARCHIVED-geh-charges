@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 if (AuthenticatedMatchesSenderId(inboundMessage) == false)
                 {
                     return _httpResponseBuilder.CreateBadRequestB2BResponse(
-                        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, string.Empty);
+                        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
                 }
 
                 await _chargeLinksCommandBundleHandler

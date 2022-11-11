@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.Handlers
                 if (AuthenticatedMatchesSenderId(inboundMessage) == false)
                 {
                     return _httpResponseBuilder.CreateBadRequestB2BResponse(
-                        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, string.Empty);
+                        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
                 }
 
                 var bundle = inboundMessage.ValidatedMessage;

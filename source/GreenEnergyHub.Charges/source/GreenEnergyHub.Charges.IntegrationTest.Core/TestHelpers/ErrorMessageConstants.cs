@@ -16,22 +16,22 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class ErrorMessageConstants
     {
-        public static string ActorIsNotWhoTheyClaimToBeErrorMessage =>
+        public const string ActorIsNotWhoTheyClaimToBeErrorMessage =
             "The sender organization provided in the request body does not match the organization in the bearer token.";
 
-        public static string SyntaxValidationErrorMessage =>
+        public const string SyntaxValidationErrorMessage =
             "Syntax validation failed for business message.";
 
-        public static string AnElementContainsAnInvalidValue =>
+        public const string AnElementContainsAnInvalidValue =
             "{0} element contains an invalid value. ";
 
-        public static string ValueIsEmptyOrIsWhiteSpace =>
+        public const string ValueIsEmptyOrIsWhiteSpace =
             "It is either empty or contains only whitespace.";
 
-        public static string UnsupportedResolutionErrorMessage =>
-            "Provided Resolution value 'P1Y' is invalid and cannot be mapped.";
+        public const string UnsupportedResolutionErrorMessage =
+            "Provided Resolution value '{0}' is invalid and cannot be mapped.";
 
-        public static string UnsupportedBusinessReasonCodeErrorMessage =>
-            "Provided BusinessReasonCode value 'D02' is invalid and cannot be mapped.";
+        public const string UnsupportedBusinessReasonCodeErrorMessage =
+            "Provided BusinessReasonCode value '{0}' is invalid and cannot be mapped.";
     }
 }

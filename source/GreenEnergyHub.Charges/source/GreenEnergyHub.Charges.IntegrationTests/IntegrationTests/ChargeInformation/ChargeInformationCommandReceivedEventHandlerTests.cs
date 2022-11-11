@@ -98,19 +98,40 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);
 
             charge.Should().NotBeNull();
-            charge.TaxIndicator.Should().BeFalse();
+            charge?.TaxIndicator.Should().BeFalse();
             outboxMessages.Should().Contain(x => x.Type == ChargeInformationOperationsAcceptedEventFullName);
             outboxMessages.Single(x => x.Type == ChargeInformationOperationsRejectedEventFullName).Data.Should()
                 .Contain($@"ValidationRuleIdentifier"":{(int)ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed}");
         }
 
-        private (Charge Charge, IList<OutboxMessage> OutboxMessages) GetResultFromDatabase(
+        [Fact]
+        public async Task HandleAsync_ChargeInformation_WithInvalidDocument_Rejects()
+        {
+            // Arrange
+            await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
+            var sut = BuildChargeInformationCommandReceivedEventHandler();
+            var receivedEvent = await GetTestDataFromFile(
+                "ChargeInformationWithUnsupportedBusinessReasonCode.json");
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+            await _fixture.UnitOfWork.SaveChangesAsync();
+
+            // Assert
+            var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);
+
+            charge.Should().BeNull();
+            outboxMessages.Single(x => x.Type == ChargeInformationOperationsRejectedEventFullName).Data.Should()
+                .Contain($@"ValidationRuleIdentifier"":{(int)ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices}");
+        }
+
+        private (Charge? Charge, IList<OutboxMessage> OutboxMessages) GetResultFromDatabase(
             ChargeInformationCommandReceivedEvent receivedEvent,
             IChargesDatabaseContext chargesDatabaseReadContext)
         {
             var senderProvidedChargeId = receivedEvent.Command.Operations.First().SenderProvidedChargeId;
             var charge = chargesDatabaseReadContext.Charges
-                .First(x => x.SenderProvidedChargeId == senderProvidedChargeId);
+                .FirstOrDefault(x => x.SenderProvidedChargeId == senderProvidedChargeId);
 
             var outboxMessages = chargesDatabaseReadContext.OutboxMessages
                 .Where(x => x.CorrelationId == _fixture.CorrelationContext.Id).ToList();

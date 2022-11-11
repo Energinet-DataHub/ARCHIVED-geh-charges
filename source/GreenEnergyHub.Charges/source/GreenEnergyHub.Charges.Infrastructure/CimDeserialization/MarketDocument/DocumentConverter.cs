@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
@@ -56,7 +55,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             var senderMarketParticipantId = string.Empty;
             var senderBusinessProcessRole = default(MarketParticipantRole);
             var recipientMarketParticipantId = string.Empty;
-            var recepientBusinessProcessRole = default(MarketParticipantRole);
+            var recipientBusinessProcessRole = default(MarketParticipantRole);
             var createdDateTime = default(Instant);
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
@@ -67,24 +66,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Id))
                 {
-                    if (!reader.CanReadValue)
-                    {
-                        throw new InvalidXmlValueException(
-                            CimMarketDocumentConstants.Id,
-                            $"It is either empty or contains only whitespace.");
-                    }
-
+                    ValidateElementContent(reader);
                     id = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Type))
                 {
-                    if (!reader.CanReadValue)
-                    {
-                        throw new InvalidXmlValueException(
-                            CimMarketDocumentConstants.Type,
-                            $"It is either empty or contains only whitespace.");
-                    }
-
+                    ValidateElementContent(reader);
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     type = DocumentTypeMapper.Map(content);
                 }
@@ -93,12 +80,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                     if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     businessReasonCode = BusinessReasonCodeMapper.Map(content);
-                    if (businessReasonCode == BusinessReasonCode.Unknown)
-                    {
-                        throw new InvalidXmlValueException(
-                            CimMarketDocumentConstants.BusinessReasonCode,
-                            $"Provided BusinessReasonCode value '{content}' is invalid and cannot be mapped.");
-                    }
+                    ValidateBusinessReasonCode(businessReasonCode, content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.IndustryClassification))
                 {
@@ -128,7 +110,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 {
                     if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    recepientBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
+                    recipientBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.CreatedDateTime))
                 {
@@ -150,9 +132,29 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 type,
                 createdDateTime,
                 new MarketParticipantDto(Guid.NewGuid(), senderMarketParticipantId, senderBusinessProcessRole, Guid.Empty),
-                new MarketParticipantDto(Guid.NewGuid(), recipientMarketParticipantId, recepientBusinessProcessRole, Guid.Empty),
+                new MarketParticipantDto(Guid.NewGuid(), recipientMarketParticipantId, recipientBusinessProcessRole, Guid.Empty),
                 industryClassification,
                 businessReasonCode);
+        }
+
+        private static void ValidateBusinessReasonCode(BusinessReasonCode businessReasonCode, string content)
+        {
+            if (businessReasonCode == BusinessReasonCode.Unknown)
+            {
+                throw new InvalidXmlValueException(
+                    CimMarketDocumentConstants.BusinessReasonCode,
+                    $"Provided BusinessReasonCode value '{content}' is invalid and cannot be mapped.");
+            }
+        }
+
+        private static void ValidateElementContent(ISchemaValidatingReader reader)
+        {
+            if (!reader.CanReadValue)
+            {
+                throw new InvalidXmlValueException(
+                    reader.CurrentNodeName,
+                    $"It is either empty or contains only whitespace.");
+            }
         }
 
         private async Task<DocumentDto> ParseDocumentAsync(SchemaValidatingReader reader)

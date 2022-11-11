@@ -16,6 +16,7 @@ using System;
 using System.ComponentModel;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
@@ -26,19 +27,20 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
     public class B2BErrorMessageFactoryTests
     {
         [Theory]
-        [InlineAutoMoqData(B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, "B2B-008", "The sender organization provided in the request body does not match the organization in the bearer token.")]
-        [InlineAutoMoqData(B2BErrorCode.SyntaxValidationErrorMessage, "B2B-005", "Syntax validation failed for business message.")]
+        [InlineAutoMoqData(B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, B2BErrorCodeConstants.SenderIsNotAuthorized, "", ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage)]
+        [InlineAutoMoqData(B2BErrorCode.SyntaxValidationErrorMessage, B2BErrorCodeConstants.SyntaxValidation, "Extra details", ErrorMessageConstants.SyntaxValidationErrorMessage + "\r\nExtra details")]
         public void Create_WhenFactoryCreateWithValidB2BCode_ReturnCorrectErrorMessage(
             B2BErrorCode errorCode,
             string expectedCode,
+            string errorDetails,
             string expectedMessage)
         {
             // Act
-            var sut = B2BErrorMessageFactory.Create(errorCode, string.Empty);
+            var sut = B2BErrorMessageFactory.Create(errorCode, errorDetails);
 
             // Assert
             sut.Code.Should().Be(expectedCode);
-            sut.Message.Should().Be(expectedMessage);
+            Assert.Equal(expectedMessage, sut.Message, ignoreLineEndingDifferences: true);
         }
 
         [Fact]
@@ -46,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
         {
             // Assert
             var errorDetails = "This is some errorDetails";
-            var expectedMessage = "Syntax validation failed for business message." + Environment.NewLine + errorDetails;
+            var expectedMessage = ErrorMessageConstants.SyntaxValidationErrorMessage + Environment.NewLine + errorDetails;
 
             // Act
             var sut = B2BErrorMessageFactory.Create(B2BErrorCode.SyntaxValidationErrorMessage, errorDetails);

@@ -24,8 +24,8 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
                 var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                document.Element("Error")?.Element("Code")?.Value.Should().Be("B2B-008");
+                document.Element("Error")?.Element("Code")?.Value.Should().Be(B2BErrorCodeConstants.SenderIsNotAuthorized);
                 document.Element("Error")?.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
@@ -107,12 +107,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_CIMDocumentIdIsEmptyOrOnlyContainsWhitespace_Http400BadRequestWithB2B005ErrorResponse()
             {
                 // Arrange
+                var elementError = string.Format(
+                    ErrorMessageConstants.AnElementContainsAnInvalidValue,
+                    CimMarketDocumentConstants.Id);
                 var expectedMessage = string.Format(
                     ErrorMessageConstants.SyntaxValidationErrorMessage +
                     Environment.NewLine +
-                    ErrorMessageConstants.AnElementContainsAnInvalidValue +
-                    ErrorMessageConstants.ValueIsEmptyOrIsWhiteSpace,
-                    CimMarketDocumentConstants.Id);
+                    elementError +
+                    ErrorMessageConstants.ValueIsEmptyOrIsWhiteSpace);
 
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeInformationRequests.ChargeDocumentIdIsEmpty);
@@ -124,7 +126,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
                 var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                document.Element("Error")?.Element("Code")?.Value.Should().Be("B2B-005");
+                document.Element("Error")?.Element("Code")?.Value.Should().Be(B2BErrorCodeConstants.SyntaxValidation);
                 var actualMessage = document.Element("Error")?.Element("Message")?.Value;
                 Assert.Equal(expectedMessage, actualMessage, ignoreLineEndingDifferences: true);
             }
@@ -133,12 +135,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_CIMDocumentBusinessReasonCodeIsNotSupported_Http400BadRequestWithB2B005ErrorResponse()
             {
                 // Arrange
+                var elementError = string.Format(
+                    ErrorMessageConstants.AnElementContainsAnInvalidValue,
+                    CimMarketDocumentConstants.BusinessReasonCode);
+                var errorDetail = string.Format(
+                    ErrorMessageConstants.UnsupportedBusinessReasonCodeErrorMessage,
+                    "D02");
                 var expectedMessage = string.Format(
                     ErrorMessageConstants.SyntaxValidationErrorMessage +
                     Environment.NewLine +
-                    ErrorMessageConstants.AnElementContainsAnInvalidValue +
-                    ErrorMessageConstants.UnsupportedBusinessReasonCodeErrorMessage,
-                    CimMarketDocumentConstants.BusinessReasonCode);
+                    elementError +
+                    errorDetail);
 
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeInformationRequests.InvalidBusinessReasonCode);
@@ -150,7 +157,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
                 var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                document.Element("Error")?.Element("Code")?.Value.Should().Be("B2B-005");
+                document.Element("Error")?.Element("Code")?.Value.Should().Be(B2BErrorCodeConstants.SyntaxValidation);
                 var actualMessage = document.Element("Error")?.Element("Message")?.Value;
                 Assert.Equal(expectedMessage, actualMessage, ignoreLineEndingDifferences: true);
             }
@@ -159,12 +166,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_CIMResolutionIsNotSupported_Http400BadRequestWithB2B005ErrorResponse()
             {
                 // Arrange
+                var elementError = string.Format(
+                    ErrorMessageConstants.AnElementContainsAnInvalidValue,
+                    "resolution");
+                var detailError = string.Format(ErrorMessageConstants.UnsupportedResolutionErrorMessage, "P1Y");
                 var expectedMessage = string.Format(
                     ErrorMessageConstants.SyntaxValidationErrorMessage +
                     Environment.NewLine +
-                    ErrorMessageConstants.AnElementContainsAnInvalidValue +
-                    ErrorMessageConstants.UnsupportedResolutionErrorMessage,
-                    "resolution");
+                    elementError +
+                    detailError);
 
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargePricesRequests.UnsupportedResolution);
@@ -176,7 +186,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
                 var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                document.Element("Error")?.Element("Code")?.Value.Should().Be("B2B-005");
+                document.Element("Error")?.Element("Code")?.Value.Should().Be(B2BErrorCodeConstants.SyntaxValidation);
                 var actualMessage = document.Element("Error")?.Element("Message")?.Value;
                 Assert.Equal(expectedMessage, actualMessage, ignoreLineEndingDifferences: true);
             }

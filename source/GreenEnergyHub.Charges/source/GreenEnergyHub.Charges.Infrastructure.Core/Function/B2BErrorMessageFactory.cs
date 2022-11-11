@@ -25,11 +25,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             {
                 B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage =>
                     new B2BErrorMessage(
-                        "B2B-008",
+                        B2BErrorCodeConstants.SenderIsNotAuthorized,
                         "The sender organization provided in the request body does not match the organization in the bearer token."),
                 B2BErrorCode.SyntaxValidationErrorMessage =>
                     new B2BErrorMessage(
-                        "B2B-005",
+                        B2BErrorCodeConstants.SyntaxValidation,
                         "Syntax validation failed for business message." + AddDetails(errorDetails)),
                 _ =>
                     throw new InvalidEnumArgumentException($"Provided B2B error code '{code}' is invalid and cannot be mapped."),

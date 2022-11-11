@@ -84,14 +84,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             FunctionContext executionContext)
         {
             // Arrange
-            const string expectedCode = "B2B-008";
+            const string expectedCode = B2BErrorCodeConstants.SenderIsNotAuthorized;
             const string expectedMessage = "The sender organization provided in the request body does not match the organization in the bearer token.";
             var correlationContext = CorrelationContextGenerator.Create();
             var sut = new HttpResponseBuilder(correlationContext);
             var httpRequestData = CreateHttpRequestData(executionContext, "POST", "test", "http://localhost?Id=3");
 
             // Act
-            var responseData = sut.CreateBadRequestB2BResponse(httpRequestData, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, string.Empty);
+            var responseData = sut.CreateBadRequestB2BResponse(httpRequestData, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
 
             // Assert
             const string correlationIdKey = HttpRequestHeaderConstants.CorrelationId;
