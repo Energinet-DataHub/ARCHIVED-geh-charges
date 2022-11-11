@@ -24,7 +24,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.505-2|Fee must have period type Month|D23|(✓) Fee only|(✓) Fee only||
 |VR.505-3|Subscription must have period type Month|D23|(✓) Subscription only|(✓) Subscription only||
 |VR.507-1|The Tariff to which the charge price applies must have 1 price for period type Day, 24 prices for period type Hour or 96 prices for period type Quarter of Hour|E87||(✓) Tariff only||
-|VR.508|Only System Operator role is allowed to submit requests concerning tax tariffs|E0I|(✓) Tariff only|(✓) Tariff only||
+|VR.508|Only System Operator role is allowed to submit requests concerning tax tariffs|E0I|(✓) Tariff only|||
 |VR.509|The charge price must be plausible (i.e. value less than 1.000.000)|E90||✓||
 |VR.513|Charge owner must match sender of a message|E0I|✓|✓||
 |VR.531|The occurrence of a charge is mandatory|E0H|✓|✓||
@@ -51,6 +51,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.924|Price series start interval and effective date must have the same value|E0H||✓||
 |VR.925|Price series resolution must match the resolution from the charge|D14||✓||
 |VR.926|Price series must include prices|E87||✓||
+|VR.927|Charge must be created before price series can be handled |D14||✓||
 
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period

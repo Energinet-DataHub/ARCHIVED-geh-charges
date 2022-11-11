@@ -33,10 +33,9 @@ public static class ChargePointQueryLogic
             .Select(cp => new ChargePriceV1Dto(
                 cp.Price,
                 cp.Time,
-                iso8601Durations.GetTimeFixedToDuration(
+                iso8601Durations.AddDurationWithIrregularSupport(
                         DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
-                        ((Resolution)cp.Charge.Resolution).ToString(),
-                        1)
+                        ((Resolution)cp.Charge.Resolution).ToString())
                     .ToDateTimeUtc()))
             .ToList();
 
@@ -64,10 +63,7 @@ public static class ChargePointQueryLogic
                                 nextPoint.FromDateTime > chargePrice.FromDateTime;
             if (isOverlapping)
             {
-                return new ChargePriceV1Dto(
-                    chargePrice.Price,
-                    chargePrice.FromDateTime,
-                    nextPoint.FromDateTime);
+                return chargePrice with { ToDateTime = nextPoint.FromDateTime };
             }
         }
 
