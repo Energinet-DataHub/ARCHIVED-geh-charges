@@ -34,17 +34,17 @@
     "INTEGRATION_EVENT_TOPIC_NAME": "sbt-sharedres-integrationevent-received",
 
     // Integration, metering point domain
-    "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "metering-point-created",
-    "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-links-request",
-    "CREATE_LINKS_REPLY_QUEUE_NAME": "create-links-reply",
+    "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "sbtsub-charges-metering-point-created",
+    "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-link-request",
+    "CREATE_LINKS_REPLY_QUEUE_NAME": "create-link-reply",
 
     // Integration, market participant domain
-    "MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME": "market-part-created",
-    "MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME": "market-part-status-changed",
-    "GRID_AREA_OWNER_ADDED_SUBSCRIPTION_NAME": "grid-area-owner-added",
-    "GRID_AREA_OWNER_REMOVED_SUBSCRIPTION_NAME": "grid-area-owner-removed",
-    "MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME": "market-part-b2c-actor-id-changed",
-    "MARKET_PARTICIPANT_NAME_CHANGED_SUBSCRIPTION_NAME": "market-part-name-changed",
+    "MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME": "sbtsub-charges-market-part-created",
+    "MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME": "sbtsub-charges-market-part-status-changed",
+    "GRID_AREA_OWNER_ADDED_SUBSCRIPTION_NAME": "sbtsub-charges-grid-area-owner-added",
+    "GRID_AREA_OWNER_REMOVED_SUBSCRIPTION_NAME": "sbtsub-charges-grid-area-owner-removed",
+    "MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME": "sbtsub-charges-market-part-b2c-actor-id-changed",
+    "MARKET_PARTICIPANT_NAME_CHANGED_SUBSCRIPTION_NAME": "sbtsub-charges-market-part-name-changed",
 
     // Integration, message hub
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",
@@ -69,7 +69,7 @@
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted",
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-publish",
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PERSIST_MESSAGE_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-persist",
-    
+
     // Internal, charge, rejected
     "CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-rejected",
 
