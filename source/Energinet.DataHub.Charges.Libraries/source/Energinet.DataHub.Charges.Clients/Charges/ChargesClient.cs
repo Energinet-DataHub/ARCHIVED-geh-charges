@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -110,6 +111,22 @@ namespace Energinet.DataHub.Charges.Clients.Charges
                 .ConfigureAwait(false);
 
             return await HandleResultAsync<ChargePricesV1Dto>(response).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Creates a 'ChargeInformationCommand' for charge information handling.
+        /// </summary>
+        public async Task CreateChargeInformationAsync(CreateChargeInformationV1Dto createChargeInformation)
+        {
+            var response = await _httpClient
+                .PostAsJsonAsync(ChargesRelativeUris.CreateChargeInformation(), createChargeInformation)
+                .ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                throw new Exception($"Charges backend returned HTTP status code {(int)response.StatusCode} with message {message}");
+            }
         }
 
         private static async Task<TModel> HandleResultAsync<TModel>(HttpResponseMessage response)
