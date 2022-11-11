@@ -29,14 +29,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         public void IsValid_WhenCalledWithCharge_ReturnsTrue(ChargeBuilder chargeBuilder)
         {
             var charge = chargeBuilder.Build();
-            var sut = new ChargeMustExistRule(charge);
+            var sut = new ChargeMustExistOnLinkStartDateRule(charge);
             sut.IsValid.Should().BeTrue();
         }
 
         [Fact]
         public void IsValid_WhenCalledWithNull_ReturnsFalse()
         {
-            var sut = new ChargeMustExistRule(null);
+            var sut = new ChargeMustExistOnLinkStartDateRule(null);
             sut.IsValid.Should().BeFalse();
         }
     }
