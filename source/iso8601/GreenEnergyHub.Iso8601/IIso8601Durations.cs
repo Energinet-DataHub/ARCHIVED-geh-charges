@@ -31,6 +31,15 @@ namespace GreenEnergyHub.Iso8601
         Instant AddDuration(Instant startInstant, string duration, int numberOfDurations);
 
         /// <summary>
+        /// When displaying price series results in frontend a valid to date needs to be calculated.
+        /// This method has special handling for irregular monthly price series.
+        /// </summary>
+        /// <param name="startInstant"></param>
+        /// <param name="duration"></param>
+        /// <returns>The calculated Valid To</returns>
+        Instant AddDurationWithIrregularSupport(Instant startInstant, string duration);
+
+        /// <summary>
         /// Retrieves the time which occur by adding the required number of durations
         /// to the start time, making sure that durations higher than 0 is at the nth start
         /// of the duration based on the local timezone

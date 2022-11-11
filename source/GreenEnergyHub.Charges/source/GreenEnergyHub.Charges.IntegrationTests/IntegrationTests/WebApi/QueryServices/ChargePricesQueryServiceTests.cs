@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
                 expectedPoint.Time.ToDateTimeOffset(),
-                _iso8601Durations.GetTimeFixedToDuration(
+                _iso8601Durations.AddDuration(
                     expectedPoint.Time,
                     charge.Resolution.ToString(),
                     1)
@@ -145,7 +145,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
                 expectedPoint.Time.ToDateTimeOffset(),
-                _iso8601Durations.GetTimeFixedToDuration(
+                _iso8601Durations.AddDuration(
                         expectedPoint.Time,
                         charge.Resolution.ToString(),
                         1)
