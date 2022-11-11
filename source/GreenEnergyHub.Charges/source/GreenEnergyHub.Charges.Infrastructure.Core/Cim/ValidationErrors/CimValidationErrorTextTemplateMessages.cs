@@ -125,8 +125,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string MeteringPointDoesNotExistValidationErrorText =
             "Metering point ID {{MeteringPointId}} is unknown: The specified metering point has not been registered in the system on the charge link start date.";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
-        public const string ChargeDoesNotExistValidationErrorText =
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExistOnLinkStartDate)]
+        public const string ChargeDoesNotExistOnLinkStartDateValidationErrorText =
             "Charge ID {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeLinkStartDate}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported)]
@@ -217,9 +217,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string PointsIsRequiredErrorText =
             "Price series with transaction id {{ChargeOperationId}} does not contain any prices for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.PriceSeriesChargeDoesNotExist)]
-        public const string PriceSeriesChargeDoesNotExistErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}} does not exist. Therefore price series with business code D08 can not be created.";
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
+        public const string ChargeDoesNotExistErrorText =
+            "Charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}} does not exist.";
 
         public const string Unknown = "unknown";
     }

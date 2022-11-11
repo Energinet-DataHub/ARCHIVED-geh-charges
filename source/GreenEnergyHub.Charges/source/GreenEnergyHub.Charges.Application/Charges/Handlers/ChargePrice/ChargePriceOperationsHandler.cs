@@ -84,10 +84,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
                 try
                 {
                     var charge = await GetChargeAsync(operation).ConfigureAwait(false);
-                    var chargeExist = new PriceSeriesChargeMustExistRule(charge);
-                    if (!chargeExist.IsValid)
+                    if (charge == null)
                     {
-                        var failure = CreateFailure(chargeExist, operation);
+                        var failure = CreateFailure(new ChargeDoesNotExistRule(), operation);
                         throw new ChargeOperationFailedException(failure.InvalidRules);
                     }
 

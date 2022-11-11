@@ -12,22 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class PriceSeriesChargeMustExistRule : IValidationRule
+    public class ChargeDoesNotExistRule : IValidationRule
     {
-        private readonly Charge? _existingCharge;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeDoesNotExist;
 
-        public PriceSeriesChargeMustExistRule(Charge? existingCharge)
-        {
-            _existingCharge = existingCharge;
-        }
-
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.PriceSeriesChargeDoesNotExist;
-
-        public bool IsValid => _existingCharge is not null;
+        public bool IsValid => false;
     }
 }

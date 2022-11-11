@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.MeteringPointDoesNotExist, ReasonCode.E10)]
-        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExist, ReasonCode.E0I)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExistOnLinkStartDate, ReasonCode.E0I)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported, ReasonCode.D13)]
         [InlineAutoMoqData(ValidationRuleIdentifier.SubsequentBundleOperationsFail, ReasonCode.D14)]
         [InlineAutoMoqData(ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee, ReasonCode.D67)]
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator, ReasonCode.E0I)]
         [InlineAutoMoqData(ValidationRuleIdentifier.PriceSeriesResolutionMustMatchChargeResolution, ReasonCode.D14)]
         [InlineAutoMoqData(ValidationRuleIdentifier.PointsRequired, ReasonCode.E87)]
-        [InlineAutoMoqData(ValidationRuleIdentifier.PriceSeriesChargeDoesNotExist, ReasonCode.D14)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExist, ReasonCode.D14)]
         public void Create_ReturnsExpectedCode(
             ValidationRuleIdentifier identifier,
             ReasonCode expected,

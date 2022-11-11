@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargePriceMaximumDigitsAndDecimals = 24, // VR457 / E86
         CommandSenderMustBeAnExistingMarketParticipant = 27, // VR152 / D02
         MeteringPointDoesNotExist = 29, // VR200 / E10
-        ChargeDoesNotExist = 30, // VR679 / E0I
+        ChargeDoesNotExistOnLinkStartDate = 30, // VR679 / E0I
         ChargeLinkUpdateNotYetSupported = 31, // VR902 / D13
         UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate = 32, // VR905 / D14
         SubsequentBundleOperationsFail = 33, // VR906 / D14
@@ -64,6 +64,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         EffectiveDateMustMatchPriceSeriesStartInterval = 54, // VR924 / E0H
         PriceSeriesResolutionMustMatchChargeResolution = 55, // VR925 / D14
         PointsRequired = 56, // VR926 / E87
-        PriceSeriesChargeDoesNotExist = 57, // VR927 / D14
+        ChargeDoesNotExist = 57, // VR927 / D14
     }
 }
