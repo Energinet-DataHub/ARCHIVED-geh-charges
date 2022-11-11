@@ -14,8 +14,9 @@
 
 using System;
 using System.Linq;
-using DbUp.Engine;
+using DbUp.Reboot.Engine;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
+using Microsoft.Data.SqlClient;
 
 namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp
 {
@@ -25,6 +26,8 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp
         {
             var connectionString = ConnectionStringFactory.GetConnectionString(args);
             var isDryRun = args.Contains("dryRun");
+
+            SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryInteractive, new SqlAppAuthenticationProvider());
 
             var preDeployResult = PerformUpgrade(connectionString, EnvironmentFilter.GetPreDeployFilter(args), isDryRun);
             if (!preDeployResult.Successful) { return ResultReporter.ReportResult(preDeployResult); }
