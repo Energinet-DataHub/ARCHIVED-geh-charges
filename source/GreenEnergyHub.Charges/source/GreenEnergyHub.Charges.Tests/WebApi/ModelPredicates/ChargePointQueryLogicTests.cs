@@ -56,41 +56,6 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargePriceV1Dto_WhenResolutionIsPT15M_TimeShouldNotOverlap(
-            ChargePoint chargePoint,
-            ChargePoint chargePoint2)
-        {
-            // Arrange
-            chargePoint.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 0, 0), DateTimeKind.Utc);
-            chargePoint.Charge.Resolution = (int)Resolution.PT15M;
-
-            chargePoint2.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 6, 0), DateTimeKind.Utc);
-            chargePoint2.Charge.Resolution = (int)Resolution.PT15M;
-
-            var expected = new List<ChargePriceV1Dto>
-            {
-                new(
-                    chargePoint2.Price,
-                    chargePoint2.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 15, 0), DateTimeKind.Utc)),
-                new(
-                    chargePoint.Price,
-                    chargePoint.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 6, 0), DateTimeKind.Utc)),
-            };
-
-            var chargePoints = new List<ChargePoint> { chargePoint2, chargePoint }.AsQueryable();
-            var iso8601Durations = GetIso8601Durations();
-
-            // Act
-            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
-
-            // Assert
-            actual.Should().BeEquivalentTo(expected);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
         public void AsChargePriceV1Dto_WhenResolutionIsP1M_DatesShouldNotOverlap(
             ChargePoint chargePoint,
             ChargePoint chargePoint2,
@@ -146,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             chargePoint2.Time = DateTime.SpecifyKind(new DateTime(2022, 2, 28, 23, 0, 0), DateTimeKind.Utc);
             chargePoint2.Charge.Resolution = (int)Resolution.P1M;
 
-            chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 6, 30, 23, 0, 0), DateTimeKind.Utc);
+            chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 6, 30, 22, 0, 0), DateTimeKind.Utc);
             chargePoint3.Charge.Resolution = (int)Resolution.P1M;
 
             var expected = new List<ChargePriceV1Dto>
@@ -163,92 +128,6 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
                     chargePoint3.Price,
                     chargePoint3.Time,
                     DateTime.SpecifyKind(new DateTime(2022, 7, 31, 22, 0, 0), DateTimeKind.Utc)),
-            };
-
-            var chargePoints = new List<ChargePoint> { chargePoint, chargePoint2, chargePoint3 }.AsQueryable();
-            var iso8601Durations = GetIso8601Durations();
-
-            // Act
-            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
-
-            // Assert
-            actual.ToList().Should().BeEquivalentTo(expected);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public void AsChargePriceV1Dto_WhenResolutionIsPT1H_TimeShouldNotOverlap(
-            ChargePoint chargePoint,
-            ChargePoint chargePoint2,
-            ChargePoint chargePoint3)
-        {
-            // Arrange
-            chargePoint.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 0, 0), DateTimeKind.Utc);
-            chargePoint.Charge.Resolution = (int)Resolution.PT1H;
-
-            chargePoint2.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 20, 0), DateTimeKind.Utc);
-            chargePoint2.Charge.Resolution = (int)Resolution.PT1H;
-
-            chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 2, 0, 0), DateTimeKind.Utc);
-            chargePoint3.Charge.Resolution = (int)Resolution.PT1H;
-
-            var expected = new List<ChargePriceV1Dto>
-            {
-                new(
-                    chargePoint.Price,
-                    chargePoint.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 20, 0), DateTimeKind.Utc)),
-                new(
-                    chargePoint2.Price,
-                    chargePoint2.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 1, 2, 0, 0), DateTimeKind.Utc)),
-                new(
-                    chargePoint3.Price,
-                    chargePoint3.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 1, 3, 0, 0), DateTimeKind.Utc)),
-            };
-
-            var chargePoints = new List<ChargePoint> { chargePoint, chargePoint2, chargePoint3 }.AsQueryable();
-            var iso8601Durations = GetIso8601Durations();
-
-            // Act
-            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
-
-            // Assert
-            actual.ToList().Should().BeEquivalentTo(expected);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public void AsChargePriceV1Dto_WhenResolutionIsP1D_DatesShouldNotOverlap(
-            ChargePoint chargePoint,
-            ChargePoint chargePoint2,
-            ChargePoint chargePoint3)
-        {
-            // Arrange
-            chargePoint.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 23, 0, 0), DateTimeKind.Utc);
-            chargePoint.Charge.Resolution = (int)Resolution.P1D;
-
-            chargePoint2.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 2, 14, 0, 0), DateTimeKind.Utc);
-            chargePoint2.Charge.Resolution = (int)Resolution.P1D;
-
-            chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 2, 23, 0, 0), DateTimeKind.Utc);
-            chargePoint3.Charge.Resolution = (int)Resolution.P1D;
-
-            var expected = new List<ChargePriceV1Dto>
-            {
-                new(
-                    chargePoint.Price,
-                    chargePoint.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 2, 14, 0, 0), DateTimeKind.Utc)),
-                new(
-                    chargePoint2.Price,
-                    chargePoint2.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 2, 23, 0, 0), DateTimeKind.Utc)),
-                new(
-                    chargePoint3.Price,
-                    chargePoint3.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 3, 23, 0, 0), DateTimeKind.Utc)),
             };
 
             var chargePoints = new List<ChargePoint> { chargePoint, chargePoint2, chargePoint3 }.AsQueryable();
