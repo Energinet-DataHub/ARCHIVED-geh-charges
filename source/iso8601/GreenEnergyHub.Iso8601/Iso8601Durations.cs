@@ -38,6 +38,18 @@ namespace GreenEnergyHub.Iso8601
             };
         }
 
+        public Instant AddDurationWithIrregularSupport(Instant startInstant, string duration)
+        {
+            return duration switch
+            {
+                "PT1H" => startInstant.Plus(Duration.FromHours(1)),
+                "PT15M" => startInstant.Plus(Duration.FromMinutes(15)),
+                "P1D" => AddDayDuration(startInstant, 1),
+                "P1M" => GetStartOfMonth(AddMonthDuration(startInstant, 1)),
+                _ => throw new ArgumentException($"Unknown time resolution: {duration}"),
+            };
+        }
+
         public Instant GetTimeFixedToDuration(Instant startInstant, string duration, int numberOfDurations)
         {
             if (numberOfDurations == 0)
