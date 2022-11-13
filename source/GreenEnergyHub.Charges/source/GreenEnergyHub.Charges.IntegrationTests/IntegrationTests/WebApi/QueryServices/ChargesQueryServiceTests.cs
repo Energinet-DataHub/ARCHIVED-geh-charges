@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.Data;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.EntityFrameworkCore;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
@@ -277,6 +278,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             actual.Count.Should().NotBe(0);
             actual.Should().BeInAscendingOrder(c => c.ChargeId).And
                 .ThenBeInDescendingOrder(c => c.ValidFromDateTime);
+        }
+
+        [Fact]
+        public async Task GetAsOfAsync_WhenDateTimeOffsetNotNow_ReturnsChargesAndPeriodsFromHistory()
+        {
+            // Arrange
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var charge = await chargesDatabaseQueryContext.Charges.SingleAsync(
+                c => c.SenderProvidedChargeId == TestData.Charge.TestTar001.SenderProvidedChargeId);
+            var newChargePeriod = new ChargePeriodBuilder()
+                .WithName("Period 5")
+                .WithStartDateTime(InstantPattern.General.Parse("2023-05-31T22:00:00Z").Value.ToDateTimeUtc())
+                .WithEndDateTime(InstantPattern.General.Parse("2024-01-31T23:00:00Z").Value.ToDateTimeUtc())
+                .Build(charge);
+            await chargesDatabaseQueryContext.ChargePeriods.AddAsync(newChargePeriod);
+            await chargesDatabaseQueryContext.SaveChangesAsync();
+
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            // Act
+            var actual = await sut.GetAsOfAsync(charge.Id, DateTimeOffset.Now);
+
+            // Assert
         }
 
         private static ChargesQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)

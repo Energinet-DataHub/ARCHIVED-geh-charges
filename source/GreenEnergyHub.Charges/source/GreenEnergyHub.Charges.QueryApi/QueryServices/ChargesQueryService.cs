@@ -50,6 +50,20 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             return sortedChargeV1Dtos;
         }
 
+        public async Task<IList<ChargeV1Dto>> GetAsOfAsync(Guid chargeId, DateTimeOffset asOf)
+        {
+            var chargePeriods = _data.ChargePeriods.TemporalAsOf(asOf.UtcDateTime);
+
+            var chargeV1Dtos = await chargePeriods
+                .Where(cp => cp.ChargeId == chargeId)
+                .Select(x => x.Charge)
+                .AsChargeV1Dto()
+                .ToListAsync()
+                .ConfigureAwait(false);
+            var sortedChargeV1Dtos = SortCharges(chargeV1Dtos);
+            return sortedChargeV1Dtos;
+        }
+
         private static IList<ChargeV1Dto> SortCharges(IEnumerable<ChargeV1Dto> chargeV1Dtos)
         {
             return chargeV1Dtos

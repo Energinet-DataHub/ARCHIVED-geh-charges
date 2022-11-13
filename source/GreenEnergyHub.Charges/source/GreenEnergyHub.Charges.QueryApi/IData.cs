@@ -25,6 +25,8 @@ namespace GreenEnergyHub.Charges.QueryApi
 
         public IQueryable<Charge> Charges { get; }
 
+        public IQueryable<ChargePeriod> ChargePeriods { get; } // TODO: Remove
+
         public IQueryable<ChargePoint> ChargePoints { get; }
 
         public IQueryable<ChargeMessage> ChargeMessages { get; }

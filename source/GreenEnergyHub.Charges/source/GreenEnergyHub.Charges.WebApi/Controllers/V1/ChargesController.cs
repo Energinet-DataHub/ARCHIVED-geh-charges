@@ -14,7 +14,6 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
-using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.QueryApi.Validation;
 using Microsoft.AspNetCore.Mvc;

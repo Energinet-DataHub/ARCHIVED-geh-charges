@@ -31,6 +31,8 @@ namespace GreenEnergyHub.Charges.QueryApi
 
         public IQueryable<Charge> Charges => _context.Charges.AsNoTracking();
 
+        public IQueryable<ChargePeriod> ChargePeriods => _context.ChargePeriods.AsNoTracking();  // TODO: Remove
+
         public IQueryable<ChargePoint> ChargePoints => _context.ChargePoints.AsNoTracking();
 
         public IQueryable<ChargeMessage> ChargeMessages => _context.ChargeMessages.AsNoTracking();

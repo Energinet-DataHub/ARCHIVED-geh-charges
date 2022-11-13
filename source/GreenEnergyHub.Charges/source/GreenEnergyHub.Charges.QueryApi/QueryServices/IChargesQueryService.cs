@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
@@ -21,4 +22,6 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 public interface IChargesQueryService
 {
     Task<IList<ChargeV1Dto>> SearchAsync(ChargeSearchCriteriaV1Dto searchCriteria);
+
+    Task<IList<ChargeV1Dto>> GetAsOfAsync(Guid chargeId, DateTimeOffset asOf);
 }
