@@ -36,7 +36,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInformation
 {
     /// <summary>
-    /// Tests ChargeInformation flow with managed dependencies
+    /// Tests ChargeInformation flow with managed dependencies.
     /// </summary>
     [IntegrationTest]
     public class ChargeInformationCommandReceivedEventHandlerTests : IClassFixture<ChargesManagedDependenciesTestFixture>, IAsyncLifetime
