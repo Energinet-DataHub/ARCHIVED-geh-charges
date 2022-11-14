@@ -32,6 +32,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
     [UnitTest]
     public class ChargeFactoryTests
     {
+        [Fact]
+        public async Task FailingTest()
+        {
+            var result = 1 + 1;
+            Assert.Equal(3, result);
+        }
+
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
