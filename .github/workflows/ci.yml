@@ -51,7 +51,7 @@ jobs:
   unit_test:
     needs: changes
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v9
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@djorgensen/test-dotnet-coverage-17.5.0
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.Tests\bin\Release\net6.0\GreenEnergyHub.Charges.Tests.dll'
       DOWNLOAD_ATTEMPT_LIMIT: 12
