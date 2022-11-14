@@ -18,9 +18,9 @@ using System;
 namespace Energinet.DataHub.Charges.Contracts.Charge
 {
     public record CreateChargeInformationV1Dto(
+        string SenderProvidedChargeId,
         string ChargeName,
         string Description,
-        string SenderProvidedChargeId,
         bool TaxIndicator,
         bool TransparentInvoicing,
         DateTimeOffset EffectiveDate,

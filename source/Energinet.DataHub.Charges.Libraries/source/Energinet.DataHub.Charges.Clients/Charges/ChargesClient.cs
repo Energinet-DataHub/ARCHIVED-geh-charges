@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -116,7 +115,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// <summary>
         /// Creates a 'ChargeInformationCommand' for charge information handling.
         /// </summary>
-        public async Task CreateChargeInformationAsync(CreateChargeInformationV1Dto createChargeInformation)
+        public async Task CreateChargeAsync(CreateChargeInformationV1Dto createChargeInformation)
         {
             var response = await _httpClient
                 .PostAsJsonAsync(ChargesRelativeUris.CreateChargeInformation(), createChargeInformation)

@@ -51,7 +51,7 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
         var document = new DocumentDto(
             documentId,
             _clock.GetCurrentInstant(),
-            DocumentType.RejectRequestChangeOfPriceList,
+            DocumentType.RequestChangeOfPriceList,
             _clock.GetCurrentInstant(),
             new MarketParticipantDto(
                 Guid.NewGuid(),

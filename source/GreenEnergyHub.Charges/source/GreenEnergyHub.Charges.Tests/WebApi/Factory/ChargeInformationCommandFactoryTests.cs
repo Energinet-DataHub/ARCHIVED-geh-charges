@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
     {
         [Theory]
         [InlineAutoData]
-        public void Create_ReturnsChargeInformationCommand_BasedOnCreateChargeInformationV1Dto(
+        public void Create_CreateChargeInformationV1Dto_ReturnsChargeInformationCommand(
             [Frozen] Mock<IClock> clock,
             CreateChargeInformationV1Dto chargeInformation)
         {
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
                 .Be(MarketParticipantRoleMapper.Map(senderMarketParticipant.BusinessProcessRole));
             actualDocument.RequestDate.Should().Be(clock.Object.GetCurrentInstant());
             actualDocument.CreatedDateTime.Should().Be(clock.Object.GetCurrentInstant());
-            actualDocument.Type.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
+            actualDocument.Type.Should().Be(DocumentType.RequestChangeOfPriceList);
             actualDocument.Sender.MarketParticipantId.Should()
                 .Be(senderMarketParticipant.MarketParticipantId);
             actualDocument.Sender.BusinessProcessRole.Should()

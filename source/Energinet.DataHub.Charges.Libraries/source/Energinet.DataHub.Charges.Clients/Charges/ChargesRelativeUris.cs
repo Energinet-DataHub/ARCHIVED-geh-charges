@@ -68,7 +68,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         }
 
         /// <summary>
-        /// Provides the relative uri for creating a charge information
+        /// Provides the relative uri for creating a charge
         /// </summary>
         /// <returns>Relative URI</returns>
         public static Uri CreateChargeInformation()
