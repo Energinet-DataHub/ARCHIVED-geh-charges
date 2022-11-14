@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
             actualOperation.ChargeDescription.Should().Be(chargeInformation.Description);
             actualOperation.ChargeName.Should().Be(chargeInformation.ChargeName);
             actualOperation.ChargeOwner.Should().Be(senderMarketParticipant.MarketParticipantId);
-            actualOperation.StartDateTime.Should().Be(chargeInformation.EffectiveDate.ToInstant());
+            actualOperation.StartDateTime.Should().Be(chargeInformation.EffectiveDate.UtcDateTime.ToInstant());
             actualOperation.SenderProvidedChargeId.Should().Be(chargeInformation.SenderProvidedChargeId);
             actualOperation.EndDateTime.Should().BeNull();
             actualOperation.TaxIndicator.Should()

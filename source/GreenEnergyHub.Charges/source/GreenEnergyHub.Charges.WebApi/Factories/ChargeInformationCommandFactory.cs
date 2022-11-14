@@ -86,7 +86,7 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
                 chargeInformation.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 chargeInformation.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent,
                 (VatClassification)chargeInformation.VatClassification,
-                chargeInformation.EffectiveDate.ToInstant(),
+                chargeInformation.EffectiveDate.UtcDateTime.ToInstant(),
                 null),
         };
 
