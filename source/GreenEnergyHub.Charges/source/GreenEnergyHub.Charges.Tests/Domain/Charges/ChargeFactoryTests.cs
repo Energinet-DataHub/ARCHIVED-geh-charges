@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
     public class ChargeFactoryTests
     {
         [Fact]
-        public async Task FailingTest()
+        public void FailingTest()
         {
             var result = 1 + 1;
             Assert.Equal(3, result);
