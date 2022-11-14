@@ -16,7 +16,6 @@ using System;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.JsonSerialization;
-using Energinet.DataHub.MessageHub.Client.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
@@ -57,6 +56,15 @@ namespace GreenEnergyHub.Charges.WebApi
                 return new ServiceBusClient(connectionString);
             });
 
+            // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
+            serviceCollection.AddSingleton<IServiceBusDispatcher>(
+                sp =>
+                {
+                    var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
+                    var serviceBusClient = sp.GetRequiredService<ServiceBusClient>();
+                    return new ServiceBusDispatcher(serviceBusClient, topicName);
+                });
+
             serviceCollection.AddScoped<IData, Data>();
             serviceCollection.AddScoped<IChargesQueryService, ChargesQueryService>();
             serviceCollection.AddScoped<IMarketParticipantQueryService, MarketParticipantQueryService>();
@@ -72,42 +80,9 @@ namespace GreenEnergyHub.Charges.WebApi
 
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
 
-            AddServiceBus(serviceCollection);
-
             ConfigureIso8601Services(serviceCollection, configuration);
 
             return serviceCollection;
-        }
-
-        private static void AddServiceBus(IServiceCollection serviceCollection)
-        {
-            // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
-            serviceCollection.AddSingleton<IServiceBusDispatcher>(
-                sp =>
-                {
-                    var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
-                    var serviceBusClient = sp.GetRequiredService<ServiceBusClient>();
-                    return new ServiceBusDispatcher(serviceBusClient, topicName);
-                });
-
-            serviceCollection.AddSingleton<IServiceBusClientFactory>(_ =>
-            {
-                var serviceBusConnectionString =
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
-                if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
-                {
-                    throw new InvalidOperationException(
-                        "Please specify a valid ServiceBus in the appSettings.json file or your Azure Functions Settings.");
-                }
-
-                return new ServiceBusClientFactory(serviceBusConnectionString);
-            });
-
-            serviceCollection.AddSingleton<IMessageBusFactory>(provider =>
-            {
-                var serviceBusClientFactory = provider.GetRequiredService<IServiceBusClientFactory>();
-                return new AzureServiceBusFactory(serviceBusClientFactory);
-            });
         }
 
         private static void ConfigureIso8601Services(IServiceCollection serviceCollection, IConfiguration configuration)
