@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.LogError(e, "Failed reading Correlation Id");
             }
 
             logger.LogInformation(
