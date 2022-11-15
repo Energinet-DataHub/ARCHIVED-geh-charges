@@ -50,33 +50,36 @@ namespace GreenEnergyHub.Charges.WebApi
                     options.UseSqlServer(connectionString);
                 });
 
-            //serviceCollection.AddSingleton(_ =>
-            //{
-            //    var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
-            //    return new ServiceBusClient(connectionString);
-            //});
+            serviceCollection.AddSingleton(_ =>
+            {
+                var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
+                return new ServiceBusClient(connectionString);
+            });
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
-            //serviceCollection.AddSingleton<IServiceBusDispatcher>(
-            //    sp =>
-            //    {
-            //        var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
-            //        var serviceBusClient = sp.GetRequiredService<ServiceBusClient>();
-            //        return new ServiceBusDispatcher(serviceBusClient, topicName);
-            //    });
+            serviceCollection.AddSingleton<IServiceBusDispatcher>(
+                sp =>
+                {
+                    var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
+                    var serviceBusClient = sp.GetRequiredService<ServiceBusClient>();
+                    return new ServiceBusDispatcher(serviceBusClient, topicName);
+                });
+
             serviceCollection.AddScoped<IData, Data>();
             serviceCollection.AddScoped<IChargesQueryService, ChargesQueryService>();
             serviceCollection.AddScoped<IMarketParticipantQueryService, MarketParticipantQueryService>();
             serviceCollection.AddScoped<IChargePriceQueryService, ChargePriceQueryService>();
             serviceCollection.AddScoped<IChargeMessageQueryService, ChargeMessageQueryService>();
-            //serviceCollection.AddScoped<IChargeInformationCommandFactory, ChargeInformationCommandFactory>();
-            //serviceCollection.AddScoped<IChargeInformationCommandHandler, ChargeInformationCommandHandler>();
-            //serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
-            //serviceCollection.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
-            //serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
-            //serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
-            //serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            //serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
+            serviceCollection.AddScoped<IChargeInformationCommandFactory, ChargeInformationCommandFactory>();
+            serviceCollection.AddScoped<IChargeInformationCommandHandler, ChargeInformationCommandHandler>();
+            serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+            serviceCollection.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
+            serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
+            serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
+            serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
+
+            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
+
             ConfigureIso8601Services(serviceCollection, configuration);
 
             return serviceCollection;

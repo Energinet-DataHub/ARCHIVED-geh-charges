@@ -31,23 +31,23 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         public ChargesWebApiFixture()
         {
             DatabaseManager = new ChargesDatabaseManager();
-            //IntegrationTestConfiguration = new IntegrationTestConfiguration();
+            IntegrationTestConfiguration = new IntegrationTestConfiguration();
             AuthorizationConfiguration =
                 AuthorizationConfigurationData.CreateAuthorizationConfiguration();
-            //ServiceBusResourceProvider = new ServiceBusResourceProvider(
-            //    IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
+            ServiceBusResourceProvider = new ServiceBusResourceProvider(
+                IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
 
         public ChargesDatabaseManager DatabaseManager { get; }
 
         public B2CAuthorizationConfiguration AuthorizationConfiguration { get; }
 
-        //private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
+        private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
 
-        //private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
+        private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
 
-        //[NotNull]
-        //private TopicResource? ChargesDomainEventTopic { get; set; }
+        [NotNull]
+        private TopicResource? ChargesDomainEventTopic { get; set; }
 
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
@@ -69,18 +69,18 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndServiceAppId, AuthorizationConfiguration.FrontendApp.AppId);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
 
-            //Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
 
-            //ChargesDomainEventTopic = await ServiceBusResourceProvider
-            //    .BuildTopic(ChargesServiceBusResourceNames.ChargesDomainEventsTopicKey)
-            //    .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargesDomainEventTopicName).CreateAsync();
+            ChargesDomainEventTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.ChargesDomainEventsTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargesDomainEventTopicName).CreateAsync();
         }
 
         /// <inheritdoc/>
         protected override async Task OnDisposeWebApiDependenciesAsync()
         {
             // => Service Bus
-            //await ServiceBusResourceProvider.DisposeAsync();
+            await ServiceBusResourceProvider.DisposeAsync();
 
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();
