@@ -20,6 +20,8 @@ namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 {
     public static class FunctionHostEnvironmentSettingHelper
     {
+        private const string ApplicationInsightsConnectionString = "APPLICATIONINSIGHTS_CONNECTION_STRING";
+
         private static readonly string[] _serviceBusConnectionStrings = new[]
         {
             "DOMAINEVENT_LISTENER_CONNECTION_STRING",
@@ -40,6 +42,11 @@ namespace GreenEnergyHub.Charges.TestCore.TestHelpers
                 if (_serviceBusConnectionStrings.Contains(variable.Key))
                 {
                     value = "Endpoint=sb://sb-mybus.servicebus.windows.net/;SharedAccessKeyName=accessKeyName;SharedAccessKey=accessKey";
+                }
+
+                if (ApplicationInsightsConnectionString == variable.Key)
+                {
+                    value = "InstrumentationKey=f0dc2f33-b1dd-4792-a0d1-f79f3ae02644;";
                 }
 
                 Environment.SetEnvironmentVariable(key, value);
