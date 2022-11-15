@@ -2,7 +2,7 @@
 
 ## Version 6.1.0
 
-Added `CreateChargeInformationAsync` to `ChargesClient`.
+Added `CreateChargeAsync` to `ChargesClient`.
 
 ## Version 6.0.0
 
