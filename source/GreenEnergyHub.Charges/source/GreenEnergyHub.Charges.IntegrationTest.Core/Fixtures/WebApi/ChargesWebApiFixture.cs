@@ -79,11 +79,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         /// <inheritdoc/>
         protected override async Task OnDisposeWebApiDependenciesAsync()
         {
-            // => Database
-            await DatabaseManager.DeleteDatabaseAsync();
-
             // => Service Bus
             await ServiceBusResourceProvider.DisposeAsync();
+
+            // => Database
+            await DatabaseManager.DeleteDatabaseAsync();
         }
     }
 }
