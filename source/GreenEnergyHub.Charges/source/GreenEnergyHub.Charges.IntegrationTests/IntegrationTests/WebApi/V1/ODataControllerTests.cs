@@ -25,6 +25,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 {
     [IntegrationTest]
     [Collection(nameof(ChargesWebApiCollectionFixture))]
+    [Trait("Category", "WebApiTests")]
     public class ChargeLinksV1ControllerTests :
         WebApiTestBase<ChargesWebApiFixture>,
         IClassFixture<ChargesWebApiFixture>,
