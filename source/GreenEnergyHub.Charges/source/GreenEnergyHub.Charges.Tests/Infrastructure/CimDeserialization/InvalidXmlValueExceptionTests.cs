@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.ComponentModel;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -62,6 +63,19 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization
                 exception.Should().BeOfType<InvalidXmlValueException>();
                 exception.Message.Should().Be(expectedErrorMessage.WriteAsXmlString());
             }
+        }
+
+        [Fact]
+        public void InvalidXmlValueException_WhenConstructorIsCalledWithInvalidB2BCode_ThenInvalidEnumArgumentExceptionIsThrown()
+        {
+            // Arrange
+            const B2BErrorCode invalidB2BCode = 0;
+            const string errorIdentifier = "process.processType";
+            const string errorContent = "D17";
+
+            // Act & Assert
+            Assert.Throws<InvalidEnumArgumentException>(() =>
+                new InvalidXmlValueException(invalidB2BCode, errorIdentifier, errorContent));
         }
     }
 }
