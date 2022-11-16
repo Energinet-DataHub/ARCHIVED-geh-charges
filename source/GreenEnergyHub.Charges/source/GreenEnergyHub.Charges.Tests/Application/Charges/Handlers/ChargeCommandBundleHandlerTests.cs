@@ -29,16 +29,16 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargeIngestionHandlerTests
+    public class ChargeCommandBundleHandlerTests
     {
         [Theory]
         [AutoMoqData]
-        public async Task IngestionHandler_ChargeCommandBundleIsChargeInformation_ChargeInformationBundleHandlerExecuted(
+        public async Task ChargeCommandBundleHandler_ChargeCommandBundleIsChargeInformation_ChargeInformationBundleHandlerExecuted(
             [Frozen] Mock<IChargeInformationCommandBundleHandler> chargeInformationCommandBundleHandler,
             DocumentDtoBuilder documentDtoBuilder,
             ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeInformationCommandBundleBuilder chargeInformationCommandBundleBuilder,
-            ChargeIngestionBundleHandler sut)
+            ChargeCommandBundleHandler sut)
         {
             // Arrange
             var bundle = chargeInformationCommandBundleBuilder
@@ -56,12 +56,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
         [Theory]
         [AutoMoqData]
-        public async Task IngestionHandler_ChargeCommandBundleIsChargePrice_ChargePriceBundleHandlerExecuted(
+        public async Task ChargeCommandBundleHandler_ChargeCommandBundleIsChargePrice_ChargePriceBundleHandlerExecuted(
             [Frozen] Mock<IChargePriceCommandBundleHandler> chargePriceCommandBundleHandler,
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceCommandBuilder chargePriceCommandBuilder,
             ChargePriceCommandBundleBuilder chargePriceCommandBundleBuilder,
-            ChargeIngestionBundleHandler sut)
+            ChargeCommandBundleHandler sut)
         {
             // Arrange
             var bundle = chargePriceCommandBundleBuilder

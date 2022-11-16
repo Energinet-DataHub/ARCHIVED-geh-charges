@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         private readonly IHttpResponseBuilder _httpResponseBuilder;
         private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
         private readonly IActorContext _actorContext;
-        private readonly IChargeIngestionBundleHandler _chargeIngestionBundleHandler;
+        private readonly IChargeCommandBundleHandler _chargeCommandBundleHandler;
 
         public ChargeIngestion(
             ILoggerFactory loggerFactory,
@@ -44,14 +44,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             IHttpResponseBuilder httpResponseBuilder,
             ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor,
             IActorContext actorContext,
-            IChargeIngestionBundleHandler chargeIngestionBundleHandler)
+            IChargeCommandBundleHandler chargeCommandBundleHandler)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargeIngestion));
             _correlationContext = correlationContext;
             _httpResponseBuilder = httpResponseBuilder;
             _messageExtractor = messageExtractor;
             _actorContext = actorContext;
-            _chargeIngestionBundleHandler = chargeIngestionBundleHandler;
+            _chargeCommandBundleHandler = chargeCommandBundleHandler;
         }
 
         [Function(IngestionFunctionNames.ChargeIngestion)]
@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             }
 
             var bundle = inboundMessage.ValidatedMessage;
-            await _chargeIngestionBundleHandler.HandleAsync(bundle).ConfigureAwait(false);
+            await _chargeCommandBundleHandler.HandleAsync(bundle).ConfigureAwait(false);
             return _httpResponseBuilder.CreateAcceptedResponse(request);
         }
 

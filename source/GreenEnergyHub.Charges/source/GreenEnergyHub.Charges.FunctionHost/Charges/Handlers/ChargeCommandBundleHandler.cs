@@ -21,12 +21,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges.Handlers
 {
-    public class ChargeIngestionBundleHandler : IChargeIngestionBundleHandler
+    public class ChargeCommandBundleHandler : IChargeCommandBundleHandler
     {
         private readonly IChargeInformationCommandBundleHandler _chargeInformationCommandBundleHandler;
         private readonly IChargePriceCommandBundleHandler _chargePriceCommandBundleHandler;
 
-        public ChargeIngestionBundleHandler(
+        public ChargeCommandBundleHandler(
             IChargeInformationCommandBundleHandler chargeInformationCommandBundleHandler,
             IChargePriceCommandBundleHandler chargePriceCommandBundleHandler)
         {

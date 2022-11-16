@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges.Handlers
 {
-    public interface IChargeIngestionBundleHandler
+    public interface IChargeCommandBundleHandler
     {
         Task HandleAsync(ChargeCommandBundle chargeCommandBundle);
     }
