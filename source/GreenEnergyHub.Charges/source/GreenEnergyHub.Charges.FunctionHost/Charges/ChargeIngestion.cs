@@ -74,11 +74,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                         .ConfigureAwait(false);
                 }
 
-                //if (AuthenticatedMatchesSenderId(inboundMessage) == false)
-                //{
-                //    return _httpResponseBuilder.CreateBadRequestB2BResponse(
-                //        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
-                //}
+                if (AuthenticatedMatchesSenderId(inboundMessage) == false)
+                {
+                    return _httpResponseBuilder.CreateBadRequestB2BResponse(
+                        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+                }
+
                 var bundle = inboundMessage.ValidatedMessage;
                 switch (bundle)
                 {

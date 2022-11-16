@@ -16,6 +16,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 {
     public static class TimerTriggerTimeConstants
     {
-        public const string Every10Seconds = "*/3600 * * * * *";
+        public const string Every10Seconds = "*/10 * * * * *";
     }
 }

@@ -16,10 +16,10 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Application.Persistence;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 
@@ -55,8 +55,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         }
 
         [Function(FunctionName)]
-        public async Task RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            HttpRequestData request)
+        public async Task RunAsync([TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo)
         {
             OutboxMessage? outboxMessage;
 
