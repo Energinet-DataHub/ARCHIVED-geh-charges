@@ -14,22 +14,23 @@
 
 using System;
 using System.Runtime.Serialization;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument
 {
     [Serializable]
     public class InvalidXmlValueException : Exception
     {
-        /// <summary>Throws an <see cref="InvalidXmlValueException"/> if <paramref name="elementName"/> is an element that has an invalid value.</summary>
-        /// <param name="elementName">The cim element name to validate that has an invalid value</param>
-        /// <param name="message">Details on the invalid value</param>
-        public InvalidXmlValueException(string elementName, string message)
-            : base($"{elementName} element contains an invalid value. {message}")
+        /// <summary>Throws an <see cref="InvalidXmlValueException"/> if <paramref name="errorIdentifier"/> is an element that has an invalid value.</summary>
+        /// <param name="errorCode">Defines what type of XmlError that triggered the exception</param>
+        /// <param name="errorIdentifier">The cim element name to validate that has an invalid value</param>
+        /// <param name="errorContent">The invalid value</param>
+        public InvalidXmlValueException(B2BErrorCode errorCode, string errorIdentifier, string errorContent)
+            : base(B2BErrorMessageFactory.Create(errorCode, errorIdentifier, errorContent).WriteAsXmlString())
         {
         }
 
         protected InvalidXmlValueException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
         {
         }
     }

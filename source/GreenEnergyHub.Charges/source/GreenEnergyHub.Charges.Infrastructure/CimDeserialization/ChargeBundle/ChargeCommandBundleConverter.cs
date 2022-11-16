@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Iso8601;
 using NodaTime;
 
@@ -357,8 +358,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             if (priceResolution == Resolution.Unknown)
             {
                 throw new InvalidXmlValueException(
+                    B2BErrorCode.CouldNotMapEnumErrorMessage,
                     CimChargeCommandConstants.PriceResolution,
-                    $"Provided Resolution value '{content}' is invalid and cannot be mapped.");
+                    content);
             }
         }
 

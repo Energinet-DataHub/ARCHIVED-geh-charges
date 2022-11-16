@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Microsoft.Azure.Functions.Worker.Http;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges.Handlers
 {
-    public interface IChargeIngestionHandler
+    public interface IChargeIngestionBundleHandler
     {
-        Task<HttpResponseData> HandleAsync(HttpRequestData request);
+        Task HandleAsync(ChargeCommandBundle chargeCommandBundle);
     }
 }

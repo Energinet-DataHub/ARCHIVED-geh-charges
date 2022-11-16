@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument
@@ -142,8 +143,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             if (businessReasonCode == BusinessReasonCode.Unknown)
             {
                 throw new InvalidXmlValueException(
+                    B2BErrorCode.CouldNotMapEnumErrorMessage,
                     CimMarketDocumentConstants.BusinessReasonCode,
-                    $"Provided BusinessReasonCode value '{content}' is invalid and cannot be mapped.");
+                    content);
             }
         }
 
@@ -152,8 +154,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             if (!reader.CanReadValue)
             {
                 throw new InvalidXmlValueException(
+                    B2BErrorCode.IsEmptyOrWhitespaceErrorMessage,
                     reader.CurrentNodeName,
-                    $"It is either empty or contains only whitespace.");
+                    string.Empty);
             }
         }
 

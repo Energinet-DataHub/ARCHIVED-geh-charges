@@ -15,6 +15,7 @@
 using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,19 +28,19 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization
         public void InvalidXmlValueException_WhenConstructorIsCalled_ThenExceptionWithCorrectMessage()
         {
             // Arrange
-            const string elementName = "reasoncode";
-            const string detailedError = "this is the detailed error message";
-            var expectedErrorMessage = $"{elementName} element contains an invalid value. {detailedError}";
+            const string errorIdentifier = "reasoncode";
+            const string errorContent = "D17";
+            var expectedErrorMessage = B2BErrorMessageFactory.Create(B2BErrorCode.CouldNotMapEnumErrorMessage, errorIdentifier, errorContent);
 
             // Act & Assert
             try
             {
-                throw new InvalidXmlValueException(elementName, detailedError);
+                throw new InvalidXmlValueException(B2BErrorCode.CouldNotMapEnumErrorMessage, errorIdentifier, errorContent);
             }
             catch (Exception exception)
             {
                 exception.Should().BeOfType<InvalidXmlValueException>();
-                exception.Message.Should().Be(expectedErrorMessage);
+                exception.Message.Should().Be(expectedErrorMessage.WriteAsXmlString());
             }
         }
     }

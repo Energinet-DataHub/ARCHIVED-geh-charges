@@ -24,12 +24,10 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges.PriceSeries;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using Xunit;
@@ -107,14 +105,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_CIMDocumentIdIsEmptyOrOnlyContainsWhitespace_Http400BadRequestWithB2B005ErrorResponse()
             {
                 // Arrange
-                var elementError = string.Format(
-                    ErrorMessageConstants.AnElementContainsAnInvalidValue,
-                    CimMarketDocumentConstants.Id);
                 var expectedMessage = string.Format(
                     ErrorMessageConstants.SyntaxValidationErrorMessage +
                     Environment.NewLine +
-                    elementError +
-                    ErrorMessageConstants.ValueIsEmptyOrIsWhiteSpace);
+                    ErrorMessageConstants.ValueIsEmptyOrIsWhiteSpace,
+                    "mRID");
 
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeInformationRequests.ChargeDocumentIdIsEmpty);
@@ -132,52 +127,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task Ingestion_CIMDocumentBusinessReasonCodeIsNotSupported_Http400BadRequestWithB2B005ErrorResponse()
+            public async Task Ingestion_CIMDocumentBusinessReasonCodeIsUnsupported_Http400BadRequestWithB2B005ErrorResponse()
             {
                 // Arrange
-                var elementError = string.Format(
-                    ErrorMessageConstants.AnElementContainsAnInvalidValue,
-                    CimMarketDocumentConstants.BusinessReasonCode);
-                var errorDetail = string.Format(
-                    ErrorMessageConstants.UnsupportedBusinessReasonCodeErrorMessage,
-                    "D02");
                 var expectedMessage = string.Format(
                     ErrorMessageConstants.SyntaxValidationErrorMessage +
                     Environment.NewLine +
-                    elementError +
-                    errorDetail);
+                    ErrorMessageConstants.UnsupportedEnumErrorMessage,
+                    "process.processType",
+                    "D02");
 
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeInformationRequests.InvalidBusinessReasonCode);
-
-                // Act
-                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                // Assert
-                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-                var errorMessage = await actual.Content.ReadAsStreamAsync();
-                var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                document.Element("Error")?.Element("Code")?.Value.Should().Be(B2BErrorCodeConstants.SyntaxValidation);
-                var actualMessage = document.Element("Error")?.Element("Message")?.Value;
-                Assert.Equal(expectedMessage, actualMessage, ignoreLineEndingDifferences: true);
-            }
-
-            [Fact]
-            public async Task Ingestion_CIMResolutionIsNotSupported_Http400BadRequestWithB2B005ErrorResponse()
-            {
-                // Arrange
-                var elementError = string.Format(
-                    ErrorMessageConstants.AnElementContainsAnInvalidValue,
-                    "resolution");
-                var detailError = string.Format(ErrorMessageConstants.UnsupportedResolutionErrorMessage, "P1Y");
-                var expectedMessage = string.Format(
-                    ErrorMessageConstants.SyntaxValidationErrorMessage +
-                    Environment.NewLine +
-                    elementError +
-                    detailError);
-
-                var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargePricesRequests.UnsupportedResolution);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.ComponentModel;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -27,34 +26,24 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
     public class B2BErrorMessageFactoryTests
     {
         [Theory]
-        [InlineAutoMoqData(B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, B2BErrorCodeConstants.SenderIsNotAuthorized, "", ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage)]
-        [InlineAutoMoqData(B2BErrorCode.SyntaxValidationErrorMessage, B2BErrorCodeConstants.SyntaxValidation, "Extra details", ErrorMessageConstants.SyntaxValidationErrorMessage + "\r\nExtra details")]
+        [InlineAutoMoqData(B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage, "", "", B2BErrorCodeConstants.SenderIsNotAuthorized, ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage)]
+        [InlineAutoMoqData(B2BErrorCode.CouldNotMapEnumErrorMessage, "reason", "D17", B2BErrorCodeConstants.SyntaxValidation, ErrorMessageConstants.SyntaxValidationErrorMessage + "\r\n" + ErrorMessageConstants.UnsupportedEnumErrorMessage)]
+        [InlineAutoMoqData(B2BErrorCode.IsEmptyOrWhitespaceErrorMessage, "mRID", "", B2BErrorCodeConstants.SyntaxValidation, ErrorMessageConstants.SyntaxValidationErrorMessage + "\r\n" + ErrorMessageConstants.ValueIsEmptyOrIsWhiteSpace)]
         public void Create_WhenFactoryCreateWithValidB2BCode_ReturnCorrectErrorMessage(
             B2BErrorCode errorCode,
+            string errorIdentifier,
+            string errorContent,
             string expectedCode,
-            string errorDetails,
-            string expectedMessage)
+            string expectedMessageUnformatted)
         {
+            //Arrange
+            var expectedMessageFormattet = string.Format(expectedMessageUnformatted, errorIdentifier, errorContent);
             // Act
-            var sut = B2BErrorMessageFactory.Create(errorCode, errorDetails);
+            var sut = B2BErrorMessageFactory.Create(errorCode, errorIdentifier, errorContent);
 
             // Assert
             sut.Code.Should().Be(expectedCode);
-            Assert.Equal(expectedMessage, sut.Message, ignoreLineEndingDifferences: true);
-        }
-
-        [Fact]
-        public void Create_WhenFactoryCreateWithValidB2BCodeAndErrorDetails_ReturnCorrectErrorMessage()
-        {
-            // Assert
-            var errorDetails = "This is some errorDetails";
-            var expectedMessage = ErrorMessageConstants.SyntaxValidationErrorMessage + Environment.NewLine + errorDetails;
-
-            // Act
-            var sut = B2BErrorMessageFactory.Create(B2BErrorCode.SyntaxValidationErrorMessage, errorDetails);
-
-            // Assert
-            sut.Message.Should().Be(expectedMessage);
+            Assert.Equal(expectedMessageFormattet, sut.Message, ignoreLineEndingDifferences: true);
         }
 
         [Fact]
@@ -63,8 +52,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             // Arrange
             var invalidB2BCode = (B2BErrorCode)0;
 
-            // Assert
-            Assert.Throws<InvalidEnumArgumentException>(() => B2BErrorMessageFactory.Create(invalidB2BCode, string.Empty));
+            // Act + Assert
+            Assert.Throws<InvalidEnumArgumentException>(() => B2BErrorMessageFactory.Create(invalidB2BCode, string.Empty, string.Empty));
         }
     }
 }

@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePriceCommandHandler, ChargePriceCommandHandler>();
             serviceCollection.AddScoped<IDocumentValidationRulesFactory, DocumentValidationRulesFactory>();
             serviceCollection.AddScoped<IDocumentValidator, DocumentValidator>();
-            serviceCollection.AddScoped<IChargeIngestionHandler, ChargeIngestionHandler>();
+            serviceCollection.AddScoped<IChargeIngestionBundleHandler, ChargeIngestionBundleHandler>();
         }
     }
 }

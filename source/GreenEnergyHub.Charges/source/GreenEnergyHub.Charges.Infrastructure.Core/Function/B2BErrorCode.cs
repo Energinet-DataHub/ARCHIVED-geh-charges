@@ -17,6 +17,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
     public enum B2BErrorCode
     {
         ActorIsNotWhoTheyClaimToBeErrorMessage = 1,
-        SyntaxValidationErrorMessage = 2,
+        IsEmptyOrWhitespaceErrorMessage = 2,
+        CouldNotMapEnumErrorMessage = 3,
     }
 }

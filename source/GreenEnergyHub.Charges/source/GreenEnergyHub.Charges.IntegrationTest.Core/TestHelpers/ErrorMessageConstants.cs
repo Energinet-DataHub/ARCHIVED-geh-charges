@@ -22,16 +22,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public const string SyntaxValidationErrorMessage =
             "Syntax validation failed for business message.";
 
-        public const string AnElementContainsAnInvalidValue =
-            "{0} element contains an invalid value. ";
+        public const string ValueIsEmptyOrIsWhiteSpace = "'{0}' is either empty or contains only whitespace.";
 
-        public const string ValueIsEmptyOrIsWhiteSpace =
-            "It is either empty or contains only whitespace.";
-
-        public const string UnsupportedResolutionErrorMessage =
-            "Provided Resolution value '{0}' is invalid and cannot be mapped.";
-
-        public const string UnsupportedBusinessReasonCodeErrorMessage =
-            "Provided BusinessReasonCode value '{0}' is invalid and cannot be mapped.";
+        public const string UnsupportedEnumErrorMessage = "Provided '{0}' value '{1}' is invalid.";
     }
 }
