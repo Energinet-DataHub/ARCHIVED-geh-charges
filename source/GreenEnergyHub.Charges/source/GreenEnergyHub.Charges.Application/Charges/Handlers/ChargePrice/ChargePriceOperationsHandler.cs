@@ -81,16 +81,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
                     break;
                 }
 
-                var charge = await GetChargeAsync(operation).ConfigureAwait(false);
-
                 try
                 {
-                    if (charge is null)
+                    var charge = await GetChargeAsync(operation).ConfigureAwait(false);
+                    if (charge == null)
                     {
-                        throw new InvalidOperationException($"Charge ID '{operation.SenderProvidedChargeId}' does not exist.");
+                        var failure = CreateFailure(new ChargeDoesNotExistRule(), operation);
+                        throw new ChargeOperationFailedException(failure.InvalidRules);
                     }
 
-                    charge.UpdatePrices(
+                    charge?.UpdatePrices(
                         operation.Resolution,
                         operation.PointsStartInterval,
                         operation.PointsEndInterval,
@@ -114,6 +114,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
 
             HandleConfirmations(document, operationsToBeConfirmed);
             HandleRejections(document, operationsToBeRejected, rejectionRules);
+        }
+
+        private static ValidationResult CreateFailure(
+            IValidationRule chargeExist,
+            ChargePriceOperationDto operation)
+        {
+            var rules = new List<IValidationRuleContainer>
+            {
+                new OperationValidationRuleContainer(
+                    chargeExist,
+                    operation.OperationId),
+            };
+
+            var failure = ValidationResult.CreateFailure(rules);
+            return failure;
         }
 
         private void HandleConfirmations(

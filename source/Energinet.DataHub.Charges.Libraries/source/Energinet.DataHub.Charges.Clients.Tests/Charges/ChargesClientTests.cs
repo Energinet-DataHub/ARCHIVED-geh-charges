@@ -98,60 +98,6 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task GetChargesAsync_WhenSuccess_ReturnsCharges(
-            ChargeV1Dto chargeDto,
-            Mock<IChargesClientFactory> chargesClientFactory)
-        {
-            // Arrange
-            var chargesDto = new List<ChargeV1Dto> { chargeDto };
-            var responseContent = CreateValidResponseContent(chargesDto);
-            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
-            var httpClient = CreateHttpClient(mockHttpMessageHandler);
-            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
-                .Returns(new ChargesClient(httpClient));
-
-            var sut = chargesClientFactory.Object.CreateClient(httpClient);
-
-            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.GetCharges()}");
-
-            // Act
-            var result = await sut.GetChargesAsync().ConfigureAwait(false);
-
-            // Assert
-            result.Should().NotBeNull();
-            result[0].ChargeId.Should().Be(chargeDto.ChargeId);
-            result[0].ChargeType.Should().Be(chargeDto.ChargeType);
-            result[0].ChargeName.Should().Be(chargeDto.ChargeName);
-
-            mockHttpMessageHandler.Protected().Verify(
-                "SendAsync",
-                Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri == expectedUri),
-                ItExpr.IsAny<CancellationToken>());
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public async Task GetChargesAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
-            Mock<IChargesClientFactory> chargesClientFactory)
-        {
-            // Arrange
-            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, "[]");
-            var httpClient = CreateHttpClient(mockHttpMessageHandler);
-            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
-                .Returns(new ChargesClient(httpClient));
-
-            var sut = chargesClientFactory.Object.CreateClient(httpClient);
-
-            // Act
-            var result = await sut.GetChargesAsync().ConfigureAwait(false);
-
-            // Assert
-            result.Should().BeEmpty();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public async Task SearchChargesAsync_WhenResponseIsNotSuccess_ThrowsException(
             Mock<IChargesClientFactory> chargesClientFactory,
             ChargeSearchCriteriaV1Dto searchCriteria)

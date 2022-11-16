@@ -26,53 +26,25 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
 
         public static IQueryable<ChargeV1Dto> AsChargeV1Dto(this IQueryable<Charge> queryable)
         {
-            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
+            var result = queryable
+                .SelectMany(c => c.ChargePeriods
+                    .Select(cp => new ChargeV1Dto(
+                        c.Id,
+                        MapChargeType(c.GetChargeType()),
+                        MapResolution(c.GetResolution()),
+                        c.SenderProvidedChargeId,
+                        cp.Name,
+                        cp.Description,
+                        c.Owner.MarketParticipantId,
+                        c.Owner.Name,
+                        MapVatClassification((Domain.Charges.VatClassification)cp.VatClassification),
+                        c.TaxIndicator,
+                        cp.TransparentInvoicing,
+                        c.ChargePoints.Any(),
+                        DateTime.SpecifyKind(cp.StartDateTime, DateTimeKind.Utc),
+                        GetValidToDate(cp.EndDateTime) == null ? null : DateTime.SpecifyKind(cp.EndDateTime, DateTimeKind.Utc))));
 
-            return queryable.Select(c => new ChargeV1Dto(
-                c.Id,
-                MapChargeType(c.GetChargeType()),
-                MapResolution(c.GetResolution()),
-                c.SenderProvidedChargeId,
-                (c.ChargePeriods
-                     .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                     .OrderByDescending(cp => cp.StartDateTime)
-                     .FirstOrDefault() ??
-                 c.ChargePeriods
-                     .OrderBy(cp => cp.StartDateTime)
-                     .First()).Name,
-                (c.ChargePeriods
-                     .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                     .OrderByDescending(cp => cp.StartDateTime)
-                     .FirstOrDefault() ??
-                 c.ChargePeriods
-                     .OrderBy(cp => cp.StartDateTime)
-                     .First()).Description,
-                c.Owner.MarketParticipantId,
-                c.Owner.Name,
-                MapVatClassification((Domain.Charges.VatClassification)(c.ChargePeriods
-                                                                            .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                                                                            .OrderByDescending(cp => cp.StartDateTime)
-                                                                            .FirstOrDefault() ??
-                                                                        c.ChargePeriods
-                                                                            .OrderBy(cp => cp.StartDateTime)
-                                                                            .First()).VatClassification),
-                c.TaxIndicator,
-                (c.ChargePeriods
-                     .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                     .OrderByDescending(cp => cp.StartDateTime)
-                     .FirstOrDefault() ??
-                 c.ChargePeriods
-                     .OrderBy(cp => cp.StartDateTime)
-                     .First()).TransparentInvoicing,
-                c.ChargePoints.Any(),
-                (c.ChargePeriods
-                     .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                     .OrderByDescending(cp => cp.StartDateTime)
-                     .FirstOrDefault() ??
-                 c.ChargePeriods
-                     .OrderBy(cp => cp.StartDateTime)
-                     .First()).StartDateTime,
-                GetValidToDate(c.ChargePeriods.OrderByDescending(cp => cp.EndDateTime).First().EndDateTime)));
+            return result;
         }
 
         private static VatClassification MapVatClassification(Domain.Charges.VatClassification vatClassification) =>
