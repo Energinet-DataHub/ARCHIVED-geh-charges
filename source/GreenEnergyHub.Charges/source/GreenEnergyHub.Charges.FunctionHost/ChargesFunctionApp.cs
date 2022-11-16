@@ -23,6 +23,8 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 
 namespace GreenEnergyHub.Charges.FunctionHost
 {
@@ -46,6 +48,11 @@ namespace GreenEnergyHub.Charges.FunctionHost
                     worker.UseMiddleware<RequestResponseLoggingMiddleware>();
                     worker.UseMiddleware<JwtTokenMiddleware>();
                     worker.UseMiddleware<ActorMiddleware>();
+                }).ConfigureLogging(builder =>
+                {
+                    builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
+                    builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Error);
+                    builder.AddSystemdConsole();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
