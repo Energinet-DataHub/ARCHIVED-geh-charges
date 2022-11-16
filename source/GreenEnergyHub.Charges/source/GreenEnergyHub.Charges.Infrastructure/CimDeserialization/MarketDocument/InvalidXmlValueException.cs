@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
         }
 
         protected InvalidXmlValueException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
         {
         }
     }
