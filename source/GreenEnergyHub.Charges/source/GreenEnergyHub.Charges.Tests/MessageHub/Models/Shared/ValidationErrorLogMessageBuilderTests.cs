@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             var violatedRules = new List<IValidationRuleContainer>()
             {
                 new OperationValidationRuleContainer(
-                    new ChargeMustExistRule(null), "operationId1"),
+                    new ChargeMustExistOnLinkStartDateRule(null), "operationId1"),
                 new OperationValidationRuleContainer(
                     new PreviousOperationsMustBeValidRule(chargeInformationOperationDto), "operationId2"),
             };

@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         }
 
         [Theory]
-        [InlineAutoMoqData(typeof(ChargeMustExistRule))]
+        [InlineAutoMoqData(typeof(ChargeMustExistOnLinkStartDateRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenChargeDoesNotExistForLinks_ReturnsExpectedMandatoryRules(
             Type expectedRule,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         }
 
         [Theory]
-        [InlineAutoMoqData(typeof(ChargeMustExistRule))]
+        [InlineAutoMoqData(typeof(ChargeMustExistOnLinkStartDateRule))]
         [InlineAutoMoqData(typeof(ChargeLinksUpdateNotYetSupportedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenChargeDoesExist_ReturnsExpectedMandatoryRulesForSingleChargeLinks(
             Type expectedRule,

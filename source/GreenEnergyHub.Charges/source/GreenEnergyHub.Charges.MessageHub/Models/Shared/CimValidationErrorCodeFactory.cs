@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals => ReasonCode.E86,
                 ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant => ReasonCode.D02,
                 ValidationRuleIdentifier.MeteringPointDoesNotExist => ReasonCode.E10,
-                ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.E0I,
+                ValidationRuleIdentifier.ChargeDoesNotExistOnLinkStartDate => ReasonCode.E0I,
                 ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported => ReasonCode.D13,
                 ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate => ReasonCode.D14,
                 ValidationRuleIdentifier.SubsequentBundleOperationsFail => ReasonCode.D14,
@@ -68,11 +68,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeOperationIdLengthValidation => ReasonCode.E86,
                 ValidationRuleIdentifier.ChargeOwnerMustMatchSender => ReasonCode.E0I,
                 ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator => ReasonCode.E0I,
-                ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator => ReasonCode.E0I,
                 ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate => ReasonCode.D14,
                 ValidationRuleIdentifier.EffectiveDateMustMatchPriceSeriesStartInterval => ReasonCode.E0H,
                 ValidationRuleIdentifier.PriceSeriesResolutionMustMatchChargeResolution => ReasonCode.D14,
                 ValidationRuleIdentifier.PointsRequired => ReasonCode.E87,
+                ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.D14,
                 _ => throw new NotImplementedException(),
             };
         }
