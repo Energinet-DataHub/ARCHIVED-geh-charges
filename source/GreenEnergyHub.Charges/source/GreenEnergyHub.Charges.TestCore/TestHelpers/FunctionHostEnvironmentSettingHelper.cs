@@ -46,7 +46,8 @@ namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 
                 if (ApplicationInsightsConnectionString == variable.Key)
                 {
-                    value = "InstrumentationKey=f0dc2f33-b1dd-4792-a0d1-f79f3ae02644;";
+                    var guid = Guid.NewGuid();
+                    value = $"InstrumentationKey={guid}";
                 }
 
                 Environment.SetEnvironmentVariable(key, value);
