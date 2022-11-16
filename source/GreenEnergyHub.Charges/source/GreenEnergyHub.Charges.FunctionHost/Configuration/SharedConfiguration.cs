@@ -58,6 +58,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NodaTime;
+using IRequestResponseLogging = GreenEnergyHub.Charges.FunctionHost.RequestResponseMiddleware.Storage.IRequestResponseLogging;
+using RequestResponseLoggingBlobStorage = GreenEnergyHub.Charges.FunctionHost.RequestResponseMiddleware.Storage.RequestResponseLoggingBlobStorage;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {

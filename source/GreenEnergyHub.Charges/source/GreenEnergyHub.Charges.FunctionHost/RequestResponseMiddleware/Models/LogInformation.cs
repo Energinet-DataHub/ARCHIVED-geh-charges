@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.FunctionHost.Common
+using System.Collections.Generic;
+using System.IO;
+
+namespace GreenEnergyHub.Charges.FunctionHost.RequestResponseMiddleware.Models
 {
-    public static class TimerTriggerTimeConstants
-    {
-        public const string Every10Seconds = "*/3600 * * * * *";
-    }
+    internal record LogInformation(
+        Stream LogStream,
+        Dictionary<string, string> MetaData,
+        Dictionary<string, string> IndexTags,
+        string UniqueLogName);
 }
