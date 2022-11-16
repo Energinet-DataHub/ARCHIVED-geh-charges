@@ -49,9 +49,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
         /// Creates a bad request response asynchronously
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="code"></param>
         /// <returns>400 B2B bad request response data</returns>
-        HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code);
+        HttpResponseData CreateBadRequestB2BSenderIsNotAuthorizedResponse(HttpRequestData request);
 
         /// <summary>
         /// Creates a bad request response asynchronously, with error details

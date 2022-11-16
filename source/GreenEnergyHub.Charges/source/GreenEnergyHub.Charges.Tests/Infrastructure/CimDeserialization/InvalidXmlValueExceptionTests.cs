@@ -25,12 +25,32 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization
     public class InvalidXmlValueExceptionTests
     {
         [Fact]
-        public void InvalidXmlValueException_WhenConstructorIsCalled_ThenExceptionWithCorrectMessage()
+        public void InvalidXmlValueException_WhenConstructorIsCalledWithEmptyContent_ThenExceptionWithCorrectMessage()
         {
             // Arrange
-            const string errorIdentifier = "reasoncode";
+            const string errorIdentifier = "mRID";
+            const string errorContent = "";
+            var expectedErrorMessage = B2BErrorMessageFactory.CreateIsEmptyOrWhitespaceErrorMessage(errorIdentifier);
+
+            // Act & Assert
+            try
+            {
+                throw new InvalidXmlValueException(B2BErrorCode.IsEmptyOrWhitespaceErrorMessage, errorIdentifier, errorContent);
+            }
+            catch (Exception exception)
+            {
+                exception.Should().BeOfType<InvalidXmlValueException>();
+                exception.Message.Should().Be(expectedErrorMessage.WriteAsXmlString());
+            }
+        }
+
+        [Fact]
+        public void InvalidXmlValueException_WhenConstructorIsCalledWithInvalidEnum_ThenExceptionWithCorrectMessage()
+        {
+            // Arrange
+            const string errorIdentifier = "process.processType";
             const string errorContent = "D17";
-            var expectedErrorMessage = B2BErrorMessageFactory.Create(B2BErrorCode.CouldNotMapEnumErrorMessage, errorIdentifier, errorContent);
+            var expectedErrorMessage = B2BErrorMessageFactory.CreateCouldNotMapEnumErrorMessage(errorIdentifier, errorContent);
 
             // Act & Assert
             try
