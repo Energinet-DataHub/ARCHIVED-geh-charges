@@ -45,6 +45,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             await next(context).ConfigureAwait(false);
 
             var correlationId = string.Empty;
+
+            // Do not log CorrelationId when running Outbox as outbox might process multiple items with different CorrelationId
+            if (functionEndpointName == "OutboxMessageProcessorEndpoint")
+            {
+                logger.LogInformation(
+                    "Function {FunctionName} ended to process a request with invocation ID {InvocationId}",
+                    functionEndpointName,
+                    context.InvocationId);
+                return;
+            }
+
             try
             {
                 correlationId = _correlationContext.Id;
