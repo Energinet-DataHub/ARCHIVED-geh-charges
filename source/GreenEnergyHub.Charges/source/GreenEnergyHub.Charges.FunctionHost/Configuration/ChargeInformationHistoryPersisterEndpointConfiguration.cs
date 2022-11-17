@@ -12,11 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence
+using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    public static class DatabaseSchemaNames
+    internal static class ChargeInformationHistoryPersisterEndpointConfiguration
     {
-        public const string CommandModel = "Charges";
-        public const string QueryModel = "ChargesQuery";
+        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IChargeInformationHistoryPersister, ChargeInformationHistoryPersister>();
+        }
     }
 }

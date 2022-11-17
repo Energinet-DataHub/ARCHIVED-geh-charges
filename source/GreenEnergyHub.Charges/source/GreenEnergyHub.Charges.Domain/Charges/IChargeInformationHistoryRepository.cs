@@ -12,11 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence
+using System.Threading.Tasks;
+
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public static class DatabaseSchemaNames
+    /// <summary>
+    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charge history data store.
+    /// </summary>
+    public interface IChargeInformationHistoryRepository
     {
-        public const string CommandModel = "Charges";
-        public const string QueryModel = "ChargesQuery";
+        /// <summary>
+        /// Add a ChargeInformationHistory.
+        /// </summary>
+        /// <param name="chargeInformationHistory"></param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        Task AddAsync(ChargeInformationHistory chargeInformationHistory);
     }
 }

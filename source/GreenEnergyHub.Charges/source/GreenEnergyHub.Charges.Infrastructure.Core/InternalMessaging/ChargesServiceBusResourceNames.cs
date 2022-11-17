@@ -77,6 +77,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         public const string ChargeInformationOperationsAcceptedPublishSubscriptionName = "sbtsub-charges-info-operations-accepted-publish";
         [DomainEventSetting]
         public const string ChargeInformationOperationsAcceptedPersistMessageSubscriptionName = "sbtsub-charges-info-operations-accepted-persist";
+        [DomainEventSetting]
+        public const string ChargeInformationOperationsAcceptedPersistHistorySubscriptionName = "sbtsub-charges-info-operations-accepted-persist-hi";
 
         // Domain event, charge, rejected
         [DomainEventSetting]
