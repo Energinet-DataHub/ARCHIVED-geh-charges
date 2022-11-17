@@ -118,7 +118,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         public async Task CreateChargeAsync(CreateChargeInformationV1Dto createChargeInformation)
         {
             var response = await _httpClient
-                .PostAsJsonAsync(ChargesRelativeUris.CreateChargeInformation(), createChargeInformation)
+                .PostAsJsonAsync(ChargesRelativeUris.CreateCharge(), createChargeInformation)
                 .ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)

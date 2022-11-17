@@ -71,7 +71,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// Provides the relative uri for creating a charge
         /// </summary>
         /// <returns>Relative URI</returns>
-        public static Uri CreateChargeInformation()
+        public static Uri CreateCharge()
         {
             return new Uri("v1/Charges/CreateAsync", UriKind.Relative);
         }
