@@ -80,18 +80,48 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
 
         [Theory]
         [InlineAutoMoqData]
-        public void CreateBadRequestResponseWithText_WhenBadRequest_CreatesResponseWithTextInXmlBody(
+        public void CreateBadRequestResponseWithSenderIsNotAuthorized_WhenBadRequest_CreatesResponseWithTextInXmlBody(
             FunctionContext executionContext)
         {
             // Arrange
-            const string expectedCode = "B2B-008";
-            const string expectedMessage = "The sender organization provided in the request body does not match the organization in the bearer token.";
+            const string expectedCode = B2BErrorCodeConstants.SenderIsNotAuthorized;
             var correlationContext = CorrelationContextGenerator.Create();
             var sut = new HttpResponseBuilder(correlationContext);
             var httpRequestData = CreateHttpRequestData(executionContext, "POST", "test", "http://localhost?Id=3");
+            var message = B2BErrorMessageFactory.CreateSenderNotAuthorizedErrorMessage().WriteAsXmlString();
 
             // Act
-            var responseData = sut.CreateBadRequestB2BResponse(httpRequestData, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            var responseData = sut.CreateBadRequestB2BResponse(httpRequestData, message);
+
+            // Assert
+            const string correlationIdKey = HttpRequestHeaderConstants.CorrelationId;
+            responseData.Headers.Should().ContainKey(correlationIdKey);
+            responseData.Headers
+                .First(x => x.Key == correlationIdKey).Value
+                .First().Should().Be(correlationContext.Id);
+            responseData.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            responseData.Body.Position = 0;
+            var xmlMessage = XDocument.Load(responseData.Body);
+            xmlMessage.Element("Code")?.Value.Should().Be(expectedCode);
+            xmlMessage.Element("Message")?.Value.Should().Be(message);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void CreateBadRequestResponse_WhenBadRequestIsException_CreatesResponseWithTextInXmlBody(
+            FunctionContext executionContext)
+        {
+            // Arrange
+            const string expectedCode = B2BErrorCodeConstants.SyntaxValidation;
+            const string expectedMessage = "Syntax validation failed for business message.\r\n'mRID' is either empty or contains only whitespace.";
+            var correlationContext = CorrelationContextGenerator.Create();
+            var sut = new HttpResponseBuilder(correlationContext);
+            var httpRequestData = CreateHttpRequestData(executionContext, "POST", "test", "http://localhost?Id=3");
+            var errorMessageAsXml =
+                B2BErrorMessageFactory.CreateIsEmptyOrWhitespaceErrorMessage("mRID").WriteAsXmlString();
+
+            // Act
+            var responseData = sut.CreateBadRequestB2BResponse(httpRequestData, errorMessageAsXml);
 
             // Assert
             const string correlationIdKey = HttpRequestHeaderConstants.CorrelationId;

@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Iso8601;
 using NodaTime;
 
@@ -98,6 +99,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             {
                 if (reader.Is(CimChargeCommandConstants.Id))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     operationId = content;
                 }
@@ -247,7 +249,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     chargeOwner = content;
                 }
-                else if (reader.Is(CimChargeCommandConstants.ChargeType))
+                else if (reader.Is(CimChargeCommandConstants.ChargeType) && reader.CanReadValue)
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     chargeType = ChargeTypeMapper.Map(content);
@@ -267,7 +269,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     description = content;
                 }
-                else if (reader.Is(CimChargeCommandConstants.Resolution))
+                else if (reader.Is(CimChargeCommandConstants.Resolution) && reader.CanReadValue)
                 {
                     var content = await reader.ReadValueAsDurationAsync().ConfigureAwait(false);
                     resolution = ResolutionMapper.Map(content);
@@ -328,6 +330,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 {
                     var content = await reader.ReadValueAsDurationAsync().ConfigureAwait(false);
                     priceResolution = ResolutionMapper.Map(content);
+                    ValidatePriceResolutionCode(priceResolution, content);
                 }
                 else if (reader.Is(CimChargeCommandConstants.TimeInterval))
                 {
@@ -348,6 +351,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             }
 
             return new ParseSeriesPeriodResult(points, priceResolution, startDateTime, endDateTime);
+        }
+
+        private static void ValidatePriceResolutionCode(Resolution priceResolution, string content)
+        {
+            if (priceResolution == Resolution.Unknown)
+            {
+                throw new InvalidXmlValueException(
+                    B2BErrorCode.CouldNotMapEnumErrorMessage,
+                    CimChargeCommandConstants.PriceResolution,
+                    content);
+            }
         }
 
         private static async Task<(Instant StartDateTime, Instant EndDateTime)> ParseTimeIntervalAsync(SchemaValidatingReader reader, Instant intervalStartDateTime)

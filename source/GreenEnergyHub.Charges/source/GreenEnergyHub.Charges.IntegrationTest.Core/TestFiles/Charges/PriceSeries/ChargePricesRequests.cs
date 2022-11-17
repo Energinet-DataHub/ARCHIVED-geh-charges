@@ -26,10 +26,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges.PriceSer
         public const string TariffPriceSeriesInvalidNumberOfPoints = "TestFiles/Charges/PriceSeries/TariffPriceSeriesInvalidNumberOfPointsMatchTimeIntervalAndResolution.xml";
         public const string TariffPriceSeriesInvalidPointsStart = "TestFiles/Charges/PriceSeries/TariffPriceSeriesInvalidPointsStart.xml";
         public const string TariffPriceSeriesWithInvalidRecipientType = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidRecipientType.xml";
-        public const string TariffPriceSeriesWithInvalidBusinessReasonCode = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidBusinessReasonCode.xml";
         public const string TaxTariffPriceSeriesWithInformationToBeIgnored = "TestFiles/Charges/PriceSeries/TaxTariffPriceSeriesWithInformationToBeIgnored.xml";
         public const string TaxTariffPriceSeries = "TestFiles/Charges/PriceSeries/TaxTariffPriceSeries.xml";
         public const string IrregularPriceSeriesInvalidEndDate = "TestFiles/Charges/PriceSeries/IrregularPriceSeriesInvalidEndDate.xml";
+        public const string UnsupportedResolution = "TestFiles/Charges/PriceSeries/UnsupportedResolution.xml";
 
         public const string BundledTariffPriceSeriesFirstOperationInvalidMaximumPrice = "TestFiles/Charges/PriceSeries/BundledTariffPriceSeriesFirstOperationInvalidMaximumPrice.xml";
         public const string BundledSubscriptionPriceSeriesSecondOperationChargeOwnerMismatch = "TestFiles/Charges/PriceSeries/BundledSubscriptionPriceSeriesSecondOperationChargeOwnerMismatch.xml";

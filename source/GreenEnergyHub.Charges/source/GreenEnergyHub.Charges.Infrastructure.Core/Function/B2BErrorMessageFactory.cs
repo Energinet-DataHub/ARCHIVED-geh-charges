@@ -12,24 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.ComponentModel;
+using System;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
     public static class B2BErrorMessageFactory
     {
-        public static B2BErrorMessage Create(B2BErrorCode code)
+        public static B2BErrorMessage CreateSenderNotAuthorizedErrorMessage()
         {
-            return code switch
-            {
-                B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage =>
-                    new B2BErrorMessage(
-                        "B2B-008",
-                        "The sender organization provided in the request body does not match the organization in the bearer token."),
+            return new B2BErrorMessage(
+                B2BErrorCodeConstants.SenderIsNotAuthorized,
+                "The sender organization provided in the request body does not match the organization in the bearer token.");
+        }
 
-                _ =>
-                    throw new InvalidEnumArgumentException($"Provided B2B error code '{code}' is invalid and cannot be mapped."),
-            };
+        public static B2BErrorMessage CreateIsEmptyOrWhitespaceErrorMessage(string errorIdentifier)
+        {
+            return new B2BErrorMessage(
+                B2BErrorCodeConstants.SyntaxValidation,
+                $"Syntax validation failed for business message.{Environment.NewLine}'{errorIdentifier}' is either empty or contains only whitespace.");
+        }
+
+        public static B2BErrorMessage CreateCouldNotMapEnumErrorMessage(string errorIdentifier, string errorContent)
+        {
+            return new B2BErrorMessage(
+                B2BErrorCodeConstants.SyntaxValidation,
+                $"Syntax validation failed for business message.{Environment.NewLine}Provided '{errorIdentifier}' value '{errorContent}' is invalid.");
         }
     }
 }
