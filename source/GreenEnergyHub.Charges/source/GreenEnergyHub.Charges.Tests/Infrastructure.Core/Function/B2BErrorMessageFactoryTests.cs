@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.ComponentModel;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
@@ -24,28 +24,51 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
     public class B2BErrorMessageFactoryTests
     {
         [Fact]
-        public void Create_WhenFactoryCreateWithValidB2BCode_ReturnCorrectErrorMessage()
+        public void Create_WhenFactoryCreateWithActorIsNotWhoTheyClaimToBe_ReturnCorrectErrorMessage()
         {
             // Arrange
-            var expectedCode = "B2B-008";
-            var expectedMessage = "The sender organization provided in the request body does not match the organization in the bearer token.";
+            var expectedCode = B2BErrorCodeConstants.SenderIsNotAuthorized;
+            var expectedMessage = ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage;
 
             // Act
-            var sut = B2BErrorMessageFactory.Create(B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            var sut = B2BErrorMessageFactory.CreateSenderNotAuthorizedErrorMessage();
 
             // Assert
             sut.Code.Should().Be(expectedCode);
-            sut.Message.Should().Be(expectedMessage);
+            Assert.Equal(expectedMessage, sut.Message, ignoreLineEndingDifferences: true);
         }
 
         [Fact]
-        public void Create_WhenFactoryCreateWithInvalidB2BCode_ThrowsException()
+        public void Create_WhenFactoryCreateWithIsEmptyOrWhitespace_ReturnCorrectErrorMessage()
         {
             // Arrange
-            var invalidB2BCode = (B2BErrorCode)0;
+            var errorIdentifier = "mRID";
+            var expectedCode = B2BErrorCodeConstants.SyntaxValidation;
+            var expectedMessage = string.Format(ErrorMessageConstants.SyntaxValidationErrorMessage + "\r\n" + ErrorMessageConstants.ValueIsEmptyOrIsWhiteSpace, errorIdentifier);
+
+            // Act
+            var sut = B2BErrorMessageFactory.CreateIsEmptyOrWhitespaceErrorMessage(errorIdentifier);
 
             // Assert
-            Assert.Throws<InvalidEnumArgumentException>(() => B2BErrorMessageFactory.Create(invalidB2BCode));
+            sut.Code.Should().Be(expectedCode);
+            Assert.Equal(expectedMessage, sut.Message, ignoreLineEndingDifferences: true);
+        }
+
+        [Fact]
+        public void Create_WhenFactoryCreateWithUnsupportedEnum_ReturnCorrectErrorMessage()
+        {
+            // Arrange
+            var errorIdentifier = "mRID";
+            var errorContent = "D17";
+            var expectedCode = B2BErrorCodeConstants.SyntaxValidation;
+            var expectedMessage = string.Format(ErrorMessageConstants.SyntaxValidationErrorMessage + "\r\n" + ErrorMessageConstants.UnsupportedEnumErrorMessage, errorIdentifier, errorContent);
+
+            // Act
+            var sut = B2BErrorMessageFactory.CreateCouldNotMapEnumErrorMessage(errorIdentifier, errorContent);
+
+            // Assert
+            sut.Code.Should().Be(expectedCode);
+            Assert.Equal(expectedMessage, sut.Message, ignoreLineEndingDifferences: true);
         }
     }
 }

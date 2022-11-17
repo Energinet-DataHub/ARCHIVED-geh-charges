@@ -88,11 +88,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task Ingestion_InvalidBusinessReasonCode_Http400BadRequestWithB2B005ErrorResponse()
+            public async Task Ingestion_InvalidResolutionCode_Http400BadRequestWithB2B005ErrorResponse()
             {
                 // Arrange
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargePricesRequests.TariffPriceSeriesWithInvalidBusinessReasonCode);
+                    EndpointUrl, ChargePricesRequests.UnsupportedResolution);
 
                 // Act
                 var response = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var responseAsString = await response.Content.ReadAsStringAsync();
                 responseAsString.Should().Contain("<Code>B2B-005</Code>");
-                responseAsString.Should().Contain("process.processType' element is invalid - The value 'A99' is invalid according to its datatype");
+                responseAsString.Should().Contain("Provided 'resolution' value 'P1Y' is invalid.");
             }
 
             /* CONFIRMATIONS - PLEASE REFER TO SAMPLES BELOW */

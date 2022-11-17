@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument
@@ -55,7 +56,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             var senderMarketParticipantId = string.Empty;
             var senderBusinessProcessRole = default(MarketParticipantRole);
             var recipientMarketParticipantId = string.Empty;
-            var recepientBusinessProcessRole = default(MarketParticipantRole);
+            var recipientBusinessProcessRole = default(MarketParticipantRole);
             var createdDateTime = default(Instant);
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
@@ -66,20 +67,25 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Id))
                 {
+                    ValidateElementContent(reader);
                     id = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Type))
                 {
+                    ValidateElementContent(reader);
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     type = DocumentTypeMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.BusinessReasonCode))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     businessReasonCode = BusinessReasonCodeMapper.Map(content);
+                    ValidateBusinessReasonCode(businessReasonCode, content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.IndustryClassification))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     industryClassification = IndustryClassificationMapper.Map(content);
                 }
@@ -91,6 +97,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderBusinessProcessRole))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     senderBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
@@ -102,11 +109,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientBusinessProcessRole))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    recepientBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
+                    recipientBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.CreatedDateTime))
                 {
+                    if (!reader.CanReadValue) continue;
                     createdDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
                 else if (reader.IsElement())
@@ -124,9 +133,31 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 type,
                 createdDateTime,
                 new MarketParticipantDto(Guid.NewGuid(), senderMarketParticipantId, senderBusinessProcessRole, Guid.Empty),
-                new MarketParticipantDto(Guid.NewGuid(), recipientMarketParticipantId, recepientBusinessProcessRole, Guid.Empty),
+                new MarketParticipantDto(Guid.NewGuid(), recipientMarketParticipantId, recipientBusinessProcessRole, Guid.Empty),
                 industryClassification,
                 businessReasonCode);
+        }
+
+        private static void ValidateBusinessReasonCode(BusinessReasonCode businessReasonCode, string content)
+        {
+            if (businessReasonCode == BusinessReasonCode.Unknown)
+            {
+                throw new InvalidXmlValueException(
+                    B2BErrorCode.CouldNotMapEnumErrorMessage,
+                    CimMarketDocumentConstants.BusinessReasonCode,
+                    content);
+            }
+        }
+
+        private static void ValidateElementContent(ISchemaValidatingReader reader)
+        {
+            if (!reader.CanReadValue)
+            {
+                throw new InvalidXmlValueException(
+                    B2BErrorCode.IsEmptyOrWhitespaceErrorMessage,
+                    reader.CurrentNodeName,
+                    string.Empty);
+            }
         }
 
         private async Task<DocumentDto> ParseDocumentAsync(SchemaValidatingReader reader)
