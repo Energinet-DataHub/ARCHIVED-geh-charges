@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                              cm.Type == charge.Type &&
                              cm.MarketParticipantId == marketParticipant.MarketParticipantId)
                 .Where(cm => cm.MessageDateTime >= searchCriteria.FromDateTime &&
-                             cm.MessageDateTime < searchCriteria.ToDateTime.AddDays(1));
+                             cm.MessageDateTime < searchCriteria.ToDateTime);
         }
 
         private static IOrderedQueryable<ChargeMessage> SortChargeMessages(
