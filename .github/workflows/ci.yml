@@ -45,7 +45,7 @@ jobs:
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-build-prerelease.yml@v9
     with:
-      SOLUTION_FILE_PATH: "source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln"
+      SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
 
   # Run all tests in 'Tests.dll'
   unit_test:
@@ -64,7 +64,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v9
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
-      TESTS_FILTER_EXPRESSION: "Category=ChargeIngestionTestsChargeInformation"
+      TESTS_FILTER_EXPRESSION: 'Category=ChargeIngestionTestsChargeInformation'
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
@@ -83,7 +83,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v9
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
-      TESTS_FILTER_EXPRESSION: "Category=ChargeIngestionTestsChargePrices"
+      TESTS_FILTER_EXPRESSION: 'Category=ChargeIngestionTestsChargePrices'
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
@@ -102,7 +102,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v9
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
-      TESTS_FILTER_EXPRESSION: "Category=WebApiTests"
+      TESTS_FILTER_EXPRESSION: 'Category=WebApiTests'
       ASPNETCORE_TEST_CONTENTROOT_VARIABLE_NAME: ASPNETCORE_TEST_CONTENTROOT_GREENENERGYHUB_CHARGES_WEBAPI
       ASPNETCORE_TEST_CONTENTROOT_VARIABLE_VALUE: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.WebApi'
       DOWNLOAD_ATTEMPT_LIMIT: 12
@@ -123,7 +123,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v9
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
-      TESTS_FILTER_EXPRESSION: "Category!=ChargeIngestionTestsChargeInformation&Category!=ChargeIngestionTestsChargePrices&Category!=WebApiTests"
+      TESTS_FILTER_EXPRESSION: 'Category!=ChargeIngestionTestsChargeInformation&Category!=ChargeIngestionTestsChargePrices&Category!=WebApiTests'
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
