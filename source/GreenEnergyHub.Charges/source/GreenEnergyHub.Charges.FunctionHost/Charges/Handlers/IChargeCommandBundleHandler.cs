@@ -12,11 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+
+namespace GreenEnergyHub.Charges.FunctionHost.Charges.Handlers
 {
-    public static class ErrorMessageConstants
+    /// <summary>
+    /// Handler for handling ChargeCommandBundle
+    /// </summary>
+    public interface IChargeCommandBundleHandler
     {
-        public static string ActorIsNotWhoTheyClaimToBeErrorMessage =>
-            "The sender organization provided in the request body does not match the organization in the bearer token.";
+        Task HandleAsync(ChargeCommandBundle chargeCommandBundle);
     }
 }

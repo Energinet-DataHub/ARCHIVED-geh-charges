@@ -27,6 +27,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
+using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Iso8601;
@@ -326,6 +327,60 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             chargeCommandWithTwoOperations.Operations.Should().HaveCount(2);
             chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.OperationId == "Operation1");
             chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.OperationId == "Operation4");
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ConvertAsync_WhenCalledWithInvalidResolution_ThrowsAnInvalidXmlException(
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandBundleConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
+            SetupTest(context, iso8601Durations, correlationId, expectedTime);
+            using var memoryStream = new MemoryStream();
+            var reader = GetReader(memoryStream, "TestFiles/Invalid_CIM_ChargePrice_UnsupportedPriceResolution.xml");
+
+            // Act + Assert
+            await Assert.ThrowsAsync<InvalidXmlValueException>(() => sut.ConvertAsync(reader));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ConvertAsync_WhenCalledWithInvalidBusinessReasonCode_ThrowsAnInvalidXmlException(
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandBundleConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
+            SetupTest(context, iso8601Durations, correlationId, expectedTime);
+            using var memoryStream = new MemoryStream();
+            var reader = GetReader(memoryStream, "TestFiles/Invalid_CIM_Charge_UnsupportedBusinessReasonCode.xml");
+
+            // Act + Assert
+            await Assert.ThrowsAsync<InvalidXmlValueException>(() => sut.ConvertAsync(reader));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ConvertAsync_WhenCalledWithEmptyId_ThrowsAnInvalidXmlException(
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandBundleConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
+            SetupTest(context, iso8601Durations, correlationId, expectedTime);
+            using var memoryStream = new MemoryStream();
+            var reader = GetReader(memoryStream, "TestFiles/Invalid_CIM_Charge_EmptyId.xml");
+
+            // Act + Assert
+            await Assert.ThrowsAsync<InvalidXmlValueException>(() => sut.ConvertAsync(reader));
         }
 
         private static SchemaValidatingReader GetReader(Stream memoryStream, string filePath)

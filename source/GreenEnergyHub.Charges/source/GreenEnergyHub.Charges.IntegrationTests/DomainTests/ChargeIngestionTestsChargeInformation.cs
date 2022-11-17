@@ -24,11 +24,13 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -96,8 +98,59 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
                 var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                document.Element("Code")?.Value.Should().Be("B2B-008");
-                document.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
+                document.Element("Error")?.Element("Code")?.Value.Should().Be(B2BErrorCodeConstants.SenderIsNotAuthorized);
+                document.Element("Error")?.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            }
+
+            [Fact]
+            public async Task Ingestion_CIMDocumentIdIsEmptyOrOnlyContainsWhitespace_Http400BadRequestWithB2B005ErrorResponse()
+            {
+                // Arrange
+                var expectedMessage = string.Format(
+                    ErrorMessageConstants.SyntaxValidationErrorMessage +
+                    Environment.NewLine +
+                    ErrorMessageConstants.ValueIsEmptyOrIsWhiteSpace,
+                    "mRID");
+
+                var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeInformationRequests.ChargeDocumentIdIsEmpty);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStreamAsync();
+                var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
+                document.Element("Error")?.Element("Code")?.Value.Should().Be(B2BErrorCodeConstants.SyntaxValidation);
+                var actualMessage = document.Element("Error")?.Element("Message")?.Value;
+                Assert.Equal(expectedMessage, actualMessage, ignoreLineEndingDifferences: true);
+            }
+
+            [Fact]
+            public async Task Ingestion_CIMDocumentBusinessReasonCodeIsUnsupported_Http400BadRequestWithB2B005ErrorResponse()
+            {
+                // Arrange
+                var expectedMessage = string.Format(
+                    ErrorMessageConstants.SyntaxValidationErrorMessage +
+                    Environment.NewLine +
+                    ErrorMessageConstants.UnsupportedEnumErrorMessage,
+                    "process.processType",
+                    "D02");
+
+                var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeInformationRequests.InvalidBusinessReasonCode);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStreamAsync();
+                var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
+                document.Element("Error")?.Element("Code")?.Value.Should().Be(B2BErrorCodeConstants.SyntaxValidation);
+                var actualMessage = document.Element("Error")?.Element("Message")?.Value;
+                Assert.Equal(expectedMessage, actualMessage, ignoreLineEndingDifferences: true);
             }
 
             /* CONFIRMATIONS - PLEASE REFER TO SAMPLES BELOW */

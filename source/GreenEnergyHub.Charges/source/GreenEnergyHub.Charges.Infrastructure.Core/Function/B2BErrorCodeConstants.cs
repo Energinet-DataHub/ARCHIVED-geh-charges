@@ -14,10 +14,10 @@
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
-    public enum B2BErrorCode
+    public static class B2BErrorCodeConstants
     {
-        ActorIsNotWhoTheyClaimToBeErrorMessage = 1,
-        IsEmptyOrWhitespaceErrorMessage = 2,
-        CouldNotMapEnumErrorMessage = 3,
+        public const string SyntaxValidation = "B2B-005";
+
+        public const string SenderIsNotAuthorized = "B2B-008";
     }
 }
