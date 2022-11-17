@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -32,16 +31,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization
             const string errorContent = "";
             var expectedErrorMessage = B2BErrorMessageFactory.CreateIsEmptyOrWhitespaceErrorMessage(errorIdentifier);
 
-            // Act & Assert
-            try
-            {
-                throw new InvalidXmlValueException(B2BErrorCode.IsEmptyOrWhitespaceErrorMessage, errorIdentifier, errorContent);
-            }
-            catch (Exception exception)
-            {
-                exception.Should().BeOfType<InvalidXmlValueException>();
-                exception.Message.Should().Be(expectedErrorMessage.WriteAsXmlString());
-            }
+            // Act
+            var exception = new InvalidXmlValueException(B2BErrorCode.IsEmptyOrWhitespaceErrorMessage, errorIdentifier, errorContent);
+
+            // Assert
+            exception.Should().BeOfType<InvalidXmlValueException>();
+            exception.Message.Should().Be(expectedErrorMessage.WriteAsXmlString());
         }
 
         [Fact]
@@ -52,16 +47,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization
             const string errorContent = "D17";
             var expectedErrorMessage = B2BErrorMessageFactory.CreateCouldNotMapEnumErrorMessage(errorIdentifier, errorContent);
 
-            // Act & Assert
-            try
-            {
-                throw new InvalidXmlValueException(B2BErrorCode.CouldNotMapEnumErrorMessage, errorIdentifier, errorContent);
-            }
-            catch (Exception exception)
-            {
-                exception.Should().BeOfType<InvalidXmlValueException>();
-                exception.Message.Should().Be(expectedErrorMessage.WriteAsXmlString());
-            }
+            // Act
+            var exception = new InvalidXmlValueException(B2BErrorCode.CouldNotMapEnumErrorMessage, errorIdentifier, errorContent);
+
+            // Assert
+            exception.Should().BeOfType<InvalidXmlValueException>();
+            exception.Message.Should().Be(expectedErrorMessage.WriteAsXmlString());
         }
     }
 }

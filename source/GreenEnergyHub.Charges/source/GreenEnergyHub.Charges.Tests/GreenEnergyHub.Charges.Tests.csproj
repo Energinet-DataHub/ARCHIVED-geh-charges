@@ -41,7 +41,6 @@ limitations under the License.
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.IntegrationTest.Core\GreenEnergyHub.Charges.IntegrationTest.Core.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.WebApi\GreenEnergyHub.Charges.WebApi.csproj" />
     </ItemGroup>
@@ -74,7 +73,16 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
+      <Content Include="TestFiles\Invalid_CIM_Charge_EmptyId.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\Invalid_CIM_Charge_UnsupportedBusinessReasonCode.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
       <Content Include="TestFiles\TariffPriceSeriesBundle.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\Invalid_CIM_ChargePrice_UnsupportedPriceResolution.xml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <Content Include="TestFiles\Valid_CIM_ChargeLink.xml">

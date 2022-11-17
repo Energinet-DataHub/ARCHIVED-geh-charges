@@ -14,7 +14,7 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 

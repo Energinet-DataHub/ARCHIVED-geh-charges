@@ -85,13 +85,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
         {
             // Arrange
             const string expectedCode = B2BErrorCodeConstants.SenderIsNotAuthorized;
-            const string expectedMessage = "The sender organization provided in the request body does not match the organization in the bearer token.";
             var correlationContext = CorrelationContextGenerator.Create();
             var sut = new HttpResponseBuilder(correlationContext);
             var httpRequestData = CreateHttpRequestData(executionContext, "POST", "test", "http://localhost?Id=3");
+            var message = B2BErrorMessageFactory.CreateSenderNotAuthorizedErrorMessage().WriteAsXmlString();
 
             // Act
-            var responseData = sut.CreateBadRequestB2BSenderIsNotAuthorizedResponse(httpRequestData);
+            var responseData = sut.CreateBadRequestB2BResponse(httpRequestData, message);
 
             // Assert
             const string correlationIdKey = HttpRequestHeaderConstants.CorrelationId;
@@ -103,7 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             responseData.Body.Position = 0;
             var xmlMessage = XDocument.Load(responseData.Body);
             xmlMessage.Element("Code")?.Value.Should().Be(expectedCode);
-            xmlMessage.Element("Message")?.Value.Should().Be(expectedMessage);
+            xmlMessage.Element("Message")?.Value.Should().Be(message);
         }
 
         [Theory]

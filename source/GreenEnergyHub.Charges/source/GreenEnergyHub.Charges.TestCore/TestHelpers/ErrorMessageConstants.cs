@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
+namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 {
     public static class ErrorMessageConstants
     {
