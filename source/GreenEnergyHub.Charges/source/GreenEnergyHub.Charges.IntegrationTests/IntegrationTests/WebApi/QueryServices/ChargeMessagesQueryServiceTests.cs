@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                              && cm.Type == expectedCharge.Type
                              && cm.MarketParticipantId == MarketParticipantId)
                 .Where(cm => cm.MessageDateTime >= searchFromDateTime
-                             && cm.MessageDateTime < searchToDateTime.PlusDays(1))
+                             && cm.MessageDateTime < searchToDateTime)
                 .Select(x => x.MessageId)
                 .ToList();
 
@@ -385,21 +385,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     MarketParticipantId,
                     "MessageId3",
                     BusinessReasonCode.UpdateChargePrices,
-                    now.Plus(Duration.FromDays(1))),
+                    now.Plus(Duration.FromDays(1).Plus(Duration.FromSeconds(-2)))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     MarketParticipantId,
                     "MessageId4",
                     BusinessReasonCode.UpdateChargePrices,
-                    now.Plus(Duration.FromDays(2)).Plus(Duration.FromSeconds(-1))),
+                    now.Plus(Duration.FromDays(1)).Plus(Duration.FromSeconds(-1))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     MarketParticipantId,
                     "MessageId5",
                     BusinessReasonCode.UpdateChargePrices,
-                    now.Plus(Duration.FromDays(2))),
+                    now.Plus(Duration.FromDays(1))),
 
                 // Does not match SenderProvidedChargeId
                 Domain.Charges.ChargeMessage.Create(
