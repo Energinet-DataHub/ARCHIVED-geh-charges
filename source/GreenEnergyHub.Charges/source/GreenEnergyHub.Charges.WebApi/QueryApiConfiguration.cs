@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.WebApi
 
             serviceCollection.AddSingleton(_ =>
             {
-                var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
+                var connectionString = configuration.GetValue<string>(EnvironmentSettingNames.DataHubSenderConnectionString);
                 return new ServiceBusClient(connectionString);
             });
 
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.WebApi
             serviceCollection.AddSingleton<IServiceBusDispatcher>(
                 sp =>
                 {
-                    var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
+                    var topicName = configuration.GetValue<string>(EnvironmentSettingNames.ChargesDomainEventTopicName);
                     var serviceBusClient = sp.GetRequiredService<ServiceBusClient>();
                     return new ServiceBusDispatcher(serviceBusClient, topicName);
                 });
