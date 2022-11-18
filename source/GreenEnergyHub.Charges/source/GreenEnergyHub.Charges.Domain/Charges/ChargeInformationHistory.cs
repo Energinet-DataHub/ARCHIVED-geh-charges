@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public string Name { get; }
 
         [Required]
-        [StringLength(255)]
+        [StringLength(2048)]
         public string Description { get; }
 
         [Required]
