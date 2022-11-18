@@ -25,7 +25,7 @@ public interface IChargeInformationCommandFactory
     /// <summary>
     /// Factory for creating <see cref="ChargeInformationCommand"/> from <see cref="CreateChargeV1Dto"/>
     /// </summary>
-    /// <param name="charge"></param>
+    /// <param name="createChargeV1Dto"></param>
     /// <returns>A <see cref="ChargeInformationCommand"/></returns>
-    ChargeInformationCommand Create(CreateChargeV1Dto charge);
+    ChargeInformationCommand Create(CreateChargeV1Dto createChargeV1Dto);
 }

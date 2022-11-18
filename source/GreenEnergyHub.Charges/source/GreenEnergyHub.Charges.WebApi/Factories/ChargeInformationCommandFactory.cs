@@ -38,10 +38,10 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
         _meteringPointAdministratorGln = meteringPointAdministratorGln;
     }
 
-    public ChargeInformationCommand Create(CreateChargeV1Dto charge)
+    public ChargeInformationCommand Create(CreateChargeV1Dto createChargeV1Dto)
     {
-        var operations = CreateOperation(charge);
-        var document = CreateDocument(charge);
+        var operations = CreateOperation(createChargeV1Dto);
+        var document = CreateDocument(createChargeV1Dto);
 
         return new ChargeInformationCommand(document, operations);
     }

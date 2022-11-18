@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
     {
         [Theory]
         [InlineAutoData]
-        public void Create_CreateChargeInformationV1Dto_ReturnsChargeInformationCommand(
+        public void Create_CreateChargeV1Dto_ReturnsChargeInformationCommand(
             [Frozen] Mock<IClock> clock,
             CreateChargeV1Dto charge,
             string meteringPointAdministratorGln)
