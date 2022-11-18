@@ -189,8 +189,8 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Data
     <Compile Include="..\..\..\Contracts\ChargePrice\ChargePriceSortColumnName.cs">
       <Link>Charges\Model\ChargePrice\ChargePriceSortColumnName.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Contracts\Charge\CreateChargeInformationV1Dto.cs">
-      <Link>Charges\Model\Charge\CreateChargeInformationV1Dto.cs</Link>
+    <Compile Include="..\..\..\Contracts\Charge\CreateChargeV1Dto.cs">
+      <Link>Charges\Model\Charge\CreateChargeV1Dto.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

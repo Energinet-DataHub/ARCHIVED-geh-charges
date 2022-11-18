@@ -115,7 +115,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// <summary>
         /// Creates a 'ChargeInformationCommand' for charge information handling.
         /// </summary>
-        public async Task CreateChargeAsync(CreateChargeInformationV1Dto createChargeInformation)
+        public async Task CreateChargeAsync(CreateChargeV1Dto createChargeInformation)
         {
             var response = await _httpClient
                 .PostAsJsonAsync(ChargesRelativeUris.CreateCharge(), createChargeInformation)

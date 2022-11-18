@@ -60,6 +60,6 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// <summary>
         /// Creates a 'ChargeInformationCommand' for charge information handling.
         /// </summary>
-        Task CreateChargeAsync(CreateChargeInformationV1Dto createChargeInformation);
+        Task CreateChargeAsync(CreateChargeV1Dto createChargeInformation);
     }
 }
