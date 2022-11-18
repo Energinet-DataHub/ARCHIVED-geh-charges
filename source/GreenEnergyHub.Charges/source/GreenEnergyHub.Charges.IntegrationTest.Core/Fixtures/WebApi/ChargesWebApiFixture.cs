@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndServiceAppId, AuthorizationConfiguration.FrontendApp.AppId);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
 
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DomainEventSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
 
             ChargesDomainEventTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargesDomainEventsTopicKey)

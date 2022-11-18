@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.WebApi
 
             serviceCollection.AddSingleton(_ =>
             {
-                var connectionString = configuration.GetValue<string>(EnvironmentSettingNames.DomainEventSenderConnectionString);
+                var connectionString = configuration.GetValue<string>(EnvironmentSettingNames.DataHubSenderConnectionString);
                 return new ServiceBusClient(connectionString);
             });
 
