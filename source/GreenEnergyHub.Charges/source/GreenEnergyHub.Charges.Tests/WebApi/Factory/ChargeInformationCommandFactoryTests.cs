@@ -37,10 +37,11 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
         [InlineAutoData]
         public void Create_CreateChargeInformationV1Dto_ReturnsChargeInformationCommand(
             [Frozen] Mock<IClock> clock,
-            CreateChargeV1Dto charge)
+            CreateChargeV1Dto charge,
+            string meteringPointAdministratorGln)
         {
             // Arrange
-            var sut = new ChargeInformationCommandFactory(clock.Object);
+            var sut = new ChargeInformationCommandFactory(clock.Object, meteringPointAdministratorGln);
 
             // Act
             var actual = sut.Create(charge);
@@ -66,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
                 .Be(MarketParticipantRoleMapper.Map(senderMarketParticipant.BusinessProcessRole));
             actualDocument.Sender.B2CActorId.Should().Be(Guid.Empty);
             actualDocument.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
-            actualDocument.Recipient.MarketParticipantId.Should().Be(MarketParticipantConstants.MeteringPointAdministratorGln);
+            actualDocument.Recipient.MarketParticipantId.Should().Be(meteringPointAdministratorGln);
             actualDocument.Recipient.B2CActorId.Should().Be(Guid.Empty);
             actualDocument.IndustryClassification.Should().Be(IndustryClassification.Electricity);
             actualDocument.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateChargeInformation);

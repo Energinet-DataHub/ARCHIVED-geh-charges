@@ -35,5 +35,7 @@ namespace GreenEnergyHub.Charges.WebApi
 
         public const string ChargesDomainEventTopicName = "DOMAIN_EVENTS_TOPIC_NAME";
         public const string DomainEventSenderConnectionString = "DOMAINEVENT_SENDER_CONNECTION_STRING";
+
+        public const string MeteringPointAdministratorGln = "METERING_POINT_ADMINISTRATOR_GLN";
     }
 }

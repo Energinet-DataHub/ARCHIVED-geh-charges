@@ -30,10 +30,12 @@ namespace GreenEnergyHub.Charges.WebApi.Factories;
 public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
 {
     private readonly IClock _clock;
+    private readonly string _meteringPointAdministratorGln;
 
-    public ChargeInformationCommandFactory(IClock clock)
+    public ChargeInformationCommandFactory(IClock clock, string meteringPointAdministratorGln)
     {
         _clock = clock;
+        _meteringPointAdministratorGln = meteringPointAdministratorGln;
     }
 
     public ChargeInformationCommand Create(CreateChargeV1Dto charge)
@@ -60,7 +62,7 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
                 Guid.Empty),
             new MarketParticipantDto(
                 Guid.Empty,
-                MarketParticipantConstants.MeteringPointAdministratorGln,
+                _meteringPointAdministratorGln,
                 MarketParticipantRole.MeteringPointAdministrator,
                 Guid.Empty),
             IndustryClassification.Electricity,

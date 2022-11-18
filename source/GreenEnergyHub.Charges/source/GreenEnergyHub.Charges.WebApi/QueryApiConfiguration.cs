@@ -64,12 +64,18 @@ namespace GreenEnergyHub.Charges.WebApi
                     return new ServiceBusDispatcher(serviceBusClient, topicName);
                 });
 
+            serviceCollection.AddScoped<IChargeInformationCommandFactory>((sp) =>
+            {
+                var meteringPointAdministratorGln = configuration.GetValue<string>(EnvironmentSettingNames.MeteringPointAdministratorGln);
+                var clock = sp.GetRequiredService<IClock>();
+                return new ChargeInformationCommandFactory(clock, meteringPointAdministratorGln);
+            });
+
             serviceCollection.AddScoped<IData, Data>();
             serviceCollection.AddScoped<IChargesQueryService, ChargesQueryService>();
             serviceCollection.AddScoped<IMarketParticipantQueryService, MarketParticipantQueryService>();
             serviceCollection.AddScoped<IChargePriceQueryService, ChargePriceQueryService>();
             serviceCollection.AddScoped<IChargeMessageQueryService, ChargeMessageQueryService>();
-            serviceCollection.AddScoped<IChargeInformationCommandFactory, ChargeInformationCommandFactory>();
             serviceCollection.AddScoped<IChargeInformationCommandHandler, ChargeInformationCommandHandler>();
             serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
             serviceCollection.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
