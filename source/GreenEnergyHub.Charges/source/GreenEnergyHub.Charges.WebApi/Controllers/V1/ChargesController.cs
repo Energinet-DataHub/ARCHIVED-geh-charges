@@ -70,11 +70,11 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         /// <returns>"200 OK"</returns>
         [HttpPost("CreateAsync")]
         [MapToApiVersion(Version1)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateChargeInformationV1Dto chargeInformation)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateChargeV1Dto charge)
         {
             _correlationContext.SetId(Guid.NewGuid().ToString());
 
-            var command = _chargeInformationCommandFactory.Create(chargeInformation);
+            var command = _chargeInformationCommandFactory.Create(charge);
             await _chargeInformationCommandHandler.HandleAsync(command).ConfigureAwait(false);
 
             return Ok();

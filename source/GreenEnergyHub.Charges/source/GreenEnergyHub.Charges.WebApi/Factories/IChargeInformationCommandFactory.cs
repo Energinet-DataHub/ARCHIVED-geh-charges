@@ -23,9 +23,9 @@ namespace GreenEnergyHub.Charges.WebApi.Factories;
 public interface IChargeInformationCommandFactory
 {
     /// <summary>
-    /// Factory for creating <see cref="ChargeInformationCommand"/> from <see cref="CreateChargeInformationV1Dto"/>
+    /// Factory for creating <see cref="ChargeInformationCommand"/> from <see cref="CreateChargeV1Dto"/>
     /// </summary>
-    /// <param name="chargeInformation"></param>
+    /// <param name="charge"></param>
     /// <returns>A <see cref="ChargeInformationCommand"/></returns>
-    ChargeInformationCommand Create(CreateChargeInformationV1Dto chargeInformation);
+    ChargeInformationCommand Create(CreateChargeV1Dto charge);
 }

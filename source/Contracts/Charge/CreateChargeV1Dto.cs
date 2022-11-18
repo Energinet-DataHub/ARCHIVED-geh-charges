@@ -17,7 +17,7 @@ using System;
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.DataHub.Charges.Contracts.Charge
 {
-    public record CreateChargeInformationV1Dto(
+    public record CreateChargeV1Dto(
         string SenderProvidedChargeId,
         string ChargeName,
         string Description,

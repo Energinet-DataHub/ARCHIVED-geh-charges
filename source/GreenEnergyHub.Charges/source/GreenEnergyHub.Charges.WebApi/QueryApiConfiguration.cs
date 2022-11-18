@@ -22,7 +22,6 @@ using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
@@ -52,7 +51,7 @@ namespace GreenEnergyHub.Charges.WebApi
 
             serviceCollection.AddSingleton(_ =>
             {
-                var connectionString = configuration.GetValue<string>(EnvironmentSettingNames.DataHubSenderConnectionString);
+                var connectionString = configuration.GetValue<string>(EnvironmentSettingNames.DomainEventSenderConnectionString);
                 return new ServiceBusClient(connectionString);
             });
 

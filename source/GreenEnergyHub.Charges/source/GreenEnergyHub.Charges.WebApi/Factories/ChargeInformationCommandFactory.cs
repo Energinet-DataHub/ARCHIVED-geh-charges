@@ -36,17 +36,17 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
         _clock = clock;
     }
 
-    public ChargeInformationCommand Create(CreateChargeInformationV1Dto chargeInformation)
+    public ChargeInformationCommand Create(CreateChargeV1Dto charge)
     {
-        var operations = CreateOperation(chargeInformation);
-        var document = CreateDocument(chargeInformation);
+        var operations = CreateOperation(charge);
+        var document = CreateDocument(charge);
 
         return new ChargeInformationCommand(document, operations);
     }
 
-    private DocumentDto CreateDocument(CreateChargeInformationV1Dto chargeInformation)
+    private DocumentDto CreateDocument(CreateChargeV1Dto charge)
     {
-        var documentId = "dh" + Guid.NewGuid().ToString("N");
+        var documentId = $"geh{Guid.NewGuid():N}";
 
         var document = new DocumentDto(
             documentId,
@@ -54,12 +54,12 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
             DocumentType.RequestChangeOfPriceList,
             _clock.GetCurrentInstant(),
             new MarketParticipantDto(
-                Guid.NewGuid(),
-                chargeInformation.SenderMarketParticipant.MarketParticipantId,
-                MarketParticipantRoleMapper.Map(chargeInformation.SenderMarketParticipant.BusinessProcessRole),
+                Guid.Empty,
+                charge.SenderMarketParticipant.MarketParticipantId,
+                MarketParticipantRoleMapper.Map(charge.SenderMarketParticipant.BusinessProcessRole),
                 Guid.Empty),
             new MarketParticipantDto(
-                Guid.NewGuid(),
+                Guid.Empty,
                 MarketParticipantConstants.MeteringPointAdministratorGln,
                 MarketParticipantRole.MeteringPointAdministrator,
                 Guid.Empty),
@@ -69,24 +69,24 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
         return document;
     }
 
-    private static IReadOnlyCollection<ChargeInformationOperationDto> CreateOperation(CreateChargeInformationV1Dto chargeInformation)
+    private static IReadOnlyCollection<ChargeInformationOperationDto> CreateOperation(CreateChargeV1Dto charge)
     {
-        var operationId = Guid.NewGuid().ToString("N");
+        var operationId = $"{Guid.NewGuid():N}";
 
         IReadOnlyCollection<ChargeInformationOperationDto> operations = new List<ChargeInformationOperationDto>
         {
             new ChargeInformationOperationDto(
                 operationId,
-                (ChargeType)chargeInformation.ChargeType,
-                chargeInformation.SenderProvidedChargeId,
-                chargeInformation.ChargeName,
-                chargeInformation.Description,
-                chargeInformation.SenderMarketParticipant.MarketParticipantId,
-                (Resolution)chargeInformation.Resolution,
-                chargeInformation.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
-                chargeInformation.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent,
-                (VatClassification)chargeInformation.VatClassification,
-                chargeInformation.EffectiveDate.UtcDateTime.ToInstant(),
+                (ChargeType)charge.ChargeType,
+                charge.SenderProvidedChargeId,
+                charge.ChargeName,
+                charge.Description,
+                charge.SenderMarketParticipant.MarketParticipantId,
+                (Resolution)charge.Resolution,
+                charge.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
+                charge.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent,
+                (VatClassification)charge.VatClassification,
+                charge.EffectiveDate.UtcDateTime.ToInstant(),
                 null),
         };
 

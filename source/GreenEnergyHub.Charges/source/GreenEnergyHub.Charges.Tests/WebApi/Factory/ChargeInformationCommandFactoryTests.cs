@@ -37,20 +37,20 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
         [InlineAutoData]
         public void Create_CreateChargeInformationV1Dto_ReturnsChargeInformationCommand(
             [Frozen] Mock<IClock> clock,
-            CreateChargeInformationV1Dto chargeInformation)
+            CreateChargeV1Dto charge)
         {
             // Arrange
             var sut = new ChargeInformationCommandFactory(clock.Object);
 
             // Act
-            var actual = sut.Create(chargeInformation);
+            var actual = sut.Create(charge);
 
             // Assert
             actual.Document.Should().NotBeNull();
             actual.Operations.Should().NotBeNull();
             actual.Operations.Should().HaveCount(1);
 
-            var senderMarketParticipant = chargeInformation.SenderMarketParticipant;
+            var senderMarketParticipant = charge.SenderMarketParticipant;
 
             var actualDocument = actual.Document;
             actualDocument.Sender.MarketParticipantId.Should()
@@ -71,18 +71,18 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Factory
             actualDocument.IndustryClassification.Should().Be(IndustryClassification.Electricity);
             actualDocument.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateChargeInformation);
 
-            var actualOperation = actual.Operations.First();
-            actualOperation.Resolution.Should().Be((Resolution)chargeInformation.Resolution);
-            actualOperation.ChargeDescription.Should().Be(chargeInformation.Description);
-            actualOperation.ChargeName.Should().Be(chargeInformation.ChargeName);
+            var actualOperation = actual.Operations.Single();
+            actualOperation.Resolution.Should().Be((Resolution)charge.Resolution);
+            actualOperation.ChargeDescription.Should().Be(charge.Description);
+            actualOperation.ChargeName.Should().Be(charge.ChargeName);
             actualOperation.ChargeOwner.Should().Be(senderMarketParticipant.MarketParticipantId);
-            actualOperation.StartDateTime.Should().Be(chargeInformation.EffectiveDate.UtcDateTime.ToInstant());
-            actualOperation.SenderProvidedChargeId.Should().Be(chargeInformation.SenderProvidedChargeId);
+            actualOperation.StartDateTime.Should().Be(charge.EffectiveDate.UtcDateTime.ToInstant());
+            actualOperation.SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
             actualOperation.EndDateTime.Should().BeNull();
             actualOperation.TaxIndicator.Should()
-                .Be(chargeInformation.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax);
+                .Be(charge.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax);
             actualOperation.TransparentInvoicing.Should()
-                .Be(chargeInformation.TransparentInvoicing ?
+                .Be(charge.TransparentInvoicing ?
                     TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent);
         }
     }

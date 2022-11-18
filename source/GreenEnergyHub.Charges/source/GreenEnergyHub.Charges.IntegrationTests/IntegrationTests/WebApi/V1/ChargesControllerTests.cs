@@ -128,14 +128,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task CreateAsync_ReturnsOk(
-            CreateChargeInformationV1Dto createChargeInformation,
+            CreateChargeV1Dto createCharge,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
 
             // Act
-            var response = await sut.PostAsJsonAsync($"{BaseUrl}/CreateAsync", createChargeInformation);
+            var response = await sut.PostAsJsonAsync($"{BaseUrl}/CreateAsync", createCharge);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

@@ -59,8 +59,8 @@ limitations under the License.
 
 
   <ItemGroup>
-    <Compile Include="..\..\..\Contracts\Charge\CreateChargeInformationV1Dto.cs">
-      <Link>Dtos\Charge\CreateChargeInformationV1Dto.cs</Link>
+    <Compile Include="..\..\..\Contracts\Charge\CreateChargeV1Dto.cs">
+      <Link>Dtos\Charge\CreateChargeV1Dto.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>
