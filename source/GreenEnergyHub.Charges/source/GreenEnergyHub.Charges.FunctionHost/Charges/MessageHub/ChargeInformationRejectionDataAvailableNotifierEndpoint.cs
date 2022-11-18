@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
                 "%" + EnvironmentSettingNames.ChargeInformationOperationsRejectedSubscriptionName + "%",
-                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
+                Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
             var rejectedEvent = await _deserializer
