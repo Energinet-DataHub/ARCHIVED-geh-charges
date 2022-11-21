@@ -1,0 +1,74 @@
+﻿// Copyright 2020 Energinet DataHub A/S
+//
+// Licensed under the Apache License, Version 2.0 (the "License2");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.ChargeHistory;
+using GreenEnergyHub.Charges.QueryApi.Model;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
+
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices
+{
+    public class ChargeHistoryQueryService : IChargeHistoryQueryService
+    {
+        private readonly IData _data;
+
+        public ChargeHistoryQueryService(IData data)
+        {
+            _data = data;
+        }
+
+        public async Task<IList<ChargeHistoryV1Dto>> GetAsync(ChargeHistorySearchCriteriaV1Dto searchCriteria)
+        {
+            var chargeHistories = await _data.ChargeHistories
+                .Where(c => c.SenderProvidedChargeId == searchCriteria.ChargeId
+                            && (ChargeType)c.Type == searchCriteria.ChargeType
+                            && c.Owner == searchCriteria.ChargeOwner)
+                .ToListAsync().ConfigureAwait(false);
+
+            // var dto = new ChargeHistoryV1Dto(
+            //     DateTimeOffset.Now,
+            //     DateTimeOffset.Now.AddDays(1),
+            //     "Name",
+            //     "Description",
+            //     Resolution.PT1H,
+            //     VatClassification.Vat25,
+            //     false,
+            //     false,
+            //     ChargeType.D03,
+            //     "Owner");
+            return MapToChargeHistoryV1Dtos(chargeHistories);
+        }
+
+        private static IList<ChargeHistoryV1Dto> MapToChargeHistoryV1Dtos(IEnumerable<ChargeHistory> chargeHistories)
+        {
+            return chargeHistories.Select(ch => new ChargeHistoryV1Dto(
+                DateTime.SpecifyKind(ch.StartDateTime, DateTimeKind.Utc),
+                DateTime.SpecifyKind(ch.EndDateTime, DateTimeKind.Utc),
+                ch.Name,
+                ch.Description,
+                (Resolution)ch.Resolution,
+                (VatClassification)ch.VatClassification,
+                ch.TaxIndicator,
+                ch.TransparentInvoicing,
+                (ChargeType)ch.Type,
+                ch.Owner))
+                .ToList();
+        }
+    }
+}
