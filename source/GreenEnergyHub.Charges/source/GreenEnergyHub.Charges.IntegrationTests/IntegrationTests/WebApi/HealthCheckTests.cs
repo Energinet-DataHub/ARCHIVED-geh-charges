@@ -28,6 +28,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 {
     [IntegrationTest]
     [Collection(nameof(ChargesWebApiCollectionFixture))]
+    [Trait("Category", "WebApiTests")]
     public class HealthCheckTests :
         WebApiTestBase<ChargesWebApiFixture>,
         IClassFixture<ChargesWebApiFixture>,
@@ -80,7 +81,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Healthy));
         }
 
-        [Fact]
+        [Fact(Skip = "Skipped for now because it is inconsistent")]
         public async Task When_ChargeDatabaseIsDeletedAndRequestReadinessStatus_Then_ResponseIsServiceUnavailableAndUnhealthy()
         {
             try

@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 6.1.0
+
+Added `CreateChargeAsync` to `ChargesClient`.
+
 ## Version 6.0.0
 
 `SearchChargesAsync` now returns one `ChargeV1Dto` per period per charge.
