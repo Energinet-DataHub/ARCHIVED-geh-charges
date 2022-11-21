@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
-using GreenEnergyHub.Charges.QueryApi;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.QueryApi.Validation;
+using GreenEnergyHub.Charges.WebApi.Factories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
@@ -28,10 +31,20 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
     {
         public const string Version1 = "1.0";
         private readonly IChargesQueryService _chargesQueryService;
+        private readonly IChargeInformationCommandHandler _chargeInformationCommandHandler;
+        private readonly IChargeInformationCommandFactory _chargeInformationCommandFactory;
+        private readonly ICorrelationContext _correlationContext;
 
-        public ChargesController(IChargesQueryService chargesQueryService)
+        public ChargesController(
+            IChargesQueryService chargesQueryService,
+            IChargeInformationCommandHandler chargeInformationCommandHandler,
+            IChargeInformationCommandFactory chargeInformationCommandFactory,
+            ICorrelationContext correlationContext)
         {
             _chargesQueryService = chargesQueryService;
+            _chargeInformationCommandHandler = chargeInformationCommandHandler;
+            _chargeInformationCommandFactory = chargeInformationCommandFactory;
+            _correlationContext = correlationContext;
         }
 
         /// <summary>
@@ -49,6 +62,22 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
             var charges = await _chargesQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             return Ok(charges);
+        }
+
+        /// <summary>
+        /// Creates a 'ChargeInformationCommand' for charge information handling.
+        /// </summary>
+        /// <returns>"200 OK"</returns>
+        [HttpPost("CreateAsync")]
+        [MapToApiVersion(Version1)]
+        public async Task<IActionResult> CreateAsync([FromBody] CreateChargeV1Dto charge)
+        {
+            _correlationContext.SetId(Guid.NewGuid().ToString());
+
+            var command = _chargeInformationCommandFactory.Create(charge);
+            await _chargeInformationCommandHandler.HandleAsync(command).ConfigureAwait(false);
+
+            return Ok();
         }
     }
 }

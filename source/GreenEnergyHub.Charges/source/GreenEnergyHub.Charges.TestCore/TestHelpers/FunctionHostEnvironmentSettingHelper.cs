@@ -24,9 +24,6 @@ namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 
         private static readonly string[] _serviceBusConnectionStrings = new[]
         {
-            "DOMAINEVENT_LISTENER_CONNECTION_STRING",
-            "DOMAINEVENT_MANAGER_CONNECTION_STRING",
-            "DOMAINEVENT_SENDER_CONNECTION_STRING",
             "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING",
             "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING",
             "INTEGRATIONEVENT_SENDER_CONNECTION_STRING",

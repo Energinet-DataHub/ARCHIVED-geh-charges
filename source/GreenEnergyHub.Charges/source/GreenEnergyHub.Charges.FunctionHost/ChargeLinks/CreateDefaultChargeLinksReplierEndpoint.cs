@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
                 "%" + EnvironmentSettingNames.DefaultChargeLinksDataAvailableSubscriptionName + "%",
-                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
+                Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
             var notifierEvent = await _deserializer

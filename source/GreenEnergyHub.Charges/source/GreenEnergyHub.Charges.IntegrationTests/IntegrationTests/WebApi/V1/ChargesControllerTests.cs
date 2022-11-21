@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 {
     [IntegrationTest]
     [Collection(nameof(ChargesWebApiCollectionFixture))]
+    [Trait("Category", "WebApiTests")]
     public class ChargesControllerTests :
         WebApiTestBase<ChargesWebApiFixture>,
         IClassFixture<ChargesWebApiFixture>,
@@ -122,6 +123,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             actual.TransparentInvoicing.Should().BeTrue();
             actual.ValidFromDateTime.Should().Be(new DateTimeOffset(2021, 12, 31, 23, 00, 00, TimeSpan.Zero));
             actual.ValidToDateTime.Should().Be(new DateTimeOffset(2022, 10, 31, 23, 00, 00, TimeSpan.Zero));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task CreateAsync_ReturnsOk(
+            CreateChargeV1Dto createCharge,
+            WebApiFactory factory)
+        {
+            // Arrange
+            var sut = CreateHttpClient(factory);
+
+            // Act
+            var response = await sut.PostAsJsonAsync($"{BaseUrl}/CreateAsync", createCharge);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()
