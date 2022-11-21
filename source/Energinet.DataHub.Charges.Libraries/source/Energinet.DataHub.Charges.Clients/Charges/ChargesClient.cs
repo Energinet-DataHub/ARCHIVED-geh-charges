@@ -112,6 +112,22 @@ namespace Energinet.DataHub.Charges.Clients.Charges
             return await HandleResultAsync<ChargePricesV1Dto>(response).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Creates a 'ChargeInformationCommand' for charge information handling.
+        /// </summary>
+        public async Task CreateChargeAsync(CreateChargeV1Dto createChargeV1Dto)
+        {
+            var response = await _httpClient
+                .PostAsJsonAsync(ChargesRelativeUris.CreateCharge(), createChargeV1Dto)
+                .ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                throw new Exception($"Charges backend returned HTTP status code {(int)response.StatusCode} with message {message}");
+            }
+        }
+
         private static async Task<TModel> HandleResultAsync<TModel>(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)

@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 {
     [IntegrationTest]
     [Collection(nameof(ChargesWebApiCollectionFixture))]
+    [Trait("Category", "WebApiTests")]
     public class SwaggerTests :
         WebApiTestBase<ChargesWebApiFixture>,
         IClassFixture<ChargesWebApiFixture>,
