@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.WebApi
 {
     public static class QueryApiConfiguration
     {
-        public static IServiceCollection AddQueryApi(this IServiceCollection serviceCollection, IConfiguration configuration)
+        public static void AddQueryApi(this IServiceCollection serviceCollection, IConfiguration configuration)
         {
             serviceCollection.AddDbContext<QueryDbContext>(
                 options =>
@@ -64,7 +64,8 @@ namespace GreenEnergyHub.Charges.WebApi
                     return new ServiceBusDispatcher(serviceBusClient, topicName);
                 });
 
-            serviceCollection.AddScoped<IChargeInformationCommandFactory>((sp) =>
+            serviceCollection.AddScoped<IChargeInformationCommandFactory>(
+                sp =>
             {
                 var meteringPointAdministratorGln = configuration.GetValue<string>(EnvironmentSettingNames.MeteringPointAdministratorGln);
                 var clock = sp.GetRequiredService<IClock>();
@@ -86,8 +87,6 @@ namespace GreenEnergyHub.Charges.WebApi
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
 
             ConfigureIso8601Services(serviceCollection, configuration);
-
-            return serviceCollection;
         }
 
         private static void ConfigureIso8601Services(IServiceCollection serviceCollection, IConfiguration configuration)
