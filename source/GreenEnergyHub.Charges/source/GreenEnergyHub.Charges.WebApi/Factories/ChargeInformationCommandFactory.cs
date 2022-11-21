@@ -48,7 +48,7 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
 
     private DocumentDto CreateDocument(CreateChargeV1Dto charge)
     {
-        var documentId = $"geh{Guid.NewGuid():N}";
+        var documentId = $"gehUI{Guid.NewGuid():N}";
 
         var document = new DocumentDto(
             documentId,
@@ -73,7 +73,7 @@ public class ChargeInformationCommandFactory : IChargeInformationCommandFactory
 
     private static IReadOnlyCollection<ChargeInformationOperationDto> CreateOperation(CreateChargeV1Dto charge)
     {
-        var operationId = $"{Guid.NewGuid():N}";
+        var operationId = $"gehUI{Guid.NewGuid():N}";
 
         IReadOnlyCollection<ChargeInformationOperationDto> operations = new List<ChargeInformationOperationDto>
         {
