@@ -161,7 +161,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             Mock<IChargeLinkFactory> chargeLinkFactory,
             Mock<IChargeLinksRepository> chargeLinksRepository,
             Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
-            Mock<IUnitOfWork> unitOfWork,
+            Mock<IChargesUnitOfWork> unitOfWork,
             ChargeLinksReceivedEvent receivedEvent)
         {
             // Arrange

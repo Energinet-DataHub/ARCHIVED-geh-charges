@@ -22,21 +22,21 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
-    public class ChargeInformationHistoryPersisterEndpoint
+    public class ChargeHistoryPersisterEndpoint
     {
-        private const string FunctionName = nameof(ChargeInformationHistoryPersisterEndpoint);
+        private const string FunctionName = nameof(ChargeHistoryPersisterEndpoint);
         private readonly JsonMessageDeserializer _deserializer;
-        private readonly IChargeInformationHistoryPersister _chargeInformationHistoryPersister;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IChargeHistoryPersister _chargeHistoryPersister;
+        private readonly IQueryUnitOfWork _queryUnitOfWork;
 
-        public ChargeInformationHistoryPersisterEndpoint(
+        public ChargeHistoryPersisterEndpoint(
             JsonMessageDeserializer deserializer,
-            IChargeInformationHistoryPersister chargeInformationHistoryPersister,
-            IUnitOfWork unitOfWork)
+            IChargeHistoryPersister chargeHistoryPersister,
+            IQueryUnitOfWork queryUnitOfWork)
         {
             _deserializer = deserializer;
-            _chargeInformationHistoryPersister = chargeInformationHistoryPersister;
-            _unitOfWork = unitOfWork;
+            _chargeHistoryPersister = chargeHistoryPersister;
+            _queryUnitOfWork = queryUnitOfWork;
         }
 
         [Function(FunctionName)]
@@ -50,8 +50,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var chargeCommandAcceptedEvent = await _deserializer
                 .FromBytesAsync<ChargeInformationOperationsAcceptedEvent>(message).ConfigureAwait(false);
 
-            await _chargeInformationHistoryPersister.PersistHistoryAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            await _chargeHistoryPersister.PersistHistoryAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
+            await _queryUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

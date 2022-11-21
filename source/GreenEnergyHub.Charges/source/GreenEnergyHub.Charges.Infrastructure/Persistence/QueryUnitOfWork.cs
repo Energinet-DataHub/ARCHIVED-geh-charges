@@ -13,20 +13,22 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using GreenEnergyHub.Charges.Application.Persistence;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
-    /// <summary>
-    /// Persist message with relation to charge
-    /// </summary>
-    public interface IChargeInformationHistoryPersister
+    public class QueryUnitOfWork : IQueryUnitOfWork
     {
-        /// <summary>
-        /// Persists message related to a charge
-        /// </summary>
-        /// <param name="chargeInformationOperationsAcceptedEvent"></param>
-        /// <returns>A <see cref="Task"/>.</returns>
-        Task PersistHistoryAsync(ChargeInformationOperationsAcceptedEvent chargeInformationOperationsAcceptedEvent);
+        private readonly IChargesQueryDatabaseContext _chargesQueryDatabaseContext;
+
+        public QueryUnitOfWork(IChargesQueryDatabaseContext chargesQueryDatabaseContext)
+        {
+            _chargesQueryDatabaseContext = chargesQueryDatabaseContext;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _chargesQueryDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
+        }
     }
 }

@@ -18,11 +18,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 {
-    public class ChargeInformationHistoryEntityConfiguration : IEntityTypeConfiguration<ChargeInformationHistory>
+    public class ChargeHistoryEntityConfiguration : IEntityTypeConfiguration<ChargeHistory>
     {
-        public void Configure(EntityTypeBuilder<ChargeInformationHistory> builder)
+        public void Configure(EntityTypeBuilder<ChargeHistory> builder)
         {
-            builder.ToTable(nameof(ChargeInformationHistory));
+            builder.ToTable(nameof(ChargeHistory));
 
             builder.HasKey(c => c.Id);
 

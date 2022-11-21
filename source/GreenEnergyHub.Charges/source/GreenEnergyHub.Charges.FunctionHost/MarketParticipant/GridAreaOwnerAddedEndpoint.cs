@@ -28,16 +28,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         private const string FunctionName = nameof(GridAreaOwnerAddedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IGridAreaOwnerAddedCommandHandler _gridAreaOwnerAddedCommandHandler;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IChargesUnitOfWork _chargesUnitOfWork;
 
         public GridAreaOwnerAddedEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
             IGridAreaOwnerAddedCommandHandler gridAreaOwnerAddedCommandHandler,
-            IUnitOfWork unitOfWork)
+            IChargesUnitOfWork chargesUnitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
             _gridAreaOwnerAddedCommandHandler = gridAreaOwnerAddedCommandHandler;
-            _unitOfWork = unitOfWork;
+            _chargesUnitOfWork = chargesUnitOfWork;
         }
 
         [Function(FunctionName)]
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             var gridAreaAddedEvent = (GridAreaAddedToActorIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
             var command = MarketParticipantIntegrationEventMapper.Map(gridAreaAddedEvent);
             await _gridAreaOwnerAddedCommandHandler.HandleAsync(command).ConfigureAwait(false);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            await _chargesUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

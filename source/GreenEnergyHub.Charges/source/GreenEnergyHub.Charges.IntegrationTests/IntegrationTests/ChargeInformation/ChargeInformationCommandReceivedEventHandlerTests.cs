@@ -65,14 +65,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
         public async Task HandleAsync_WhenValidChargeInformationCommandReceivedEvent_ThenChargeIsPersisted()
         {
             // Arrange
-            await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
+            await using var chargesDatabaseReadContext = _fixture.ChargesDatabaseManager.CreateDbContext();
             var sut = BuildChargeInformationCommandReceivedEventHandler();
             var receivedEvent =
                 await GetTestDataFromFile("ChargeInformationTestTariff.json");
 
             // Act
             await sut.HandleAsync(receivedEvent);
-            await _fixture.UnitOfWork.SaveChangesAsync();
+            await _fixture.ChargesUnitOfWork.SaveChangesAsync();
 
             // Assert
             var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);
@@ -85,14 +85,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
         public async Task HandleAsync_BundleWithTwoOperationsForSameTariffWhere2ndIsInvalid_Confirms1st_Rejects2nd_And_NotifiesAbout1st()
         {
             // Arrange
-            await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
+            await using var chargesDatabaseReadContext = _fixture.ChargesDatabaseManager.CreateDbContext();
             var sut = BuildChargeInformationCommandReceivedEventHandler();
             var receivedEvent = await GetTestDataFromFile(
                 "ChargeInformationBundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.json");
 
             // Act
             await sut.HandleAsync(receivedEvent);
-            await _fixture.UnitOfWork.SaveChangesAsync();
+            await _fixture.ChargesUnitOfWork.SaveChangesAsync();
 
             // Assert
             var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);
@@ -108,14 +108,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
         public async Task HandleAsync_ChargeInformation_WithInvalidDocument_Rejects()
         {
             // Arrange
-            await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
+            await using var chargesDatabaseReadContext = _fixture.ChargesDatabaseManager.CreateDbContext();
             var sut = BuildChargeInformationCommandReceivedEventHandler();
             var receivedEvent = await GetTestDataFromFile(
                 "ChargeInformationWithUnsupportedBusinessReasonCode.json");
 
             // Act
             await sut.HandleAsync(receivedEvent);
-            await _fixture.UnitOfWork.SaveChangesAsync();
+            await _fixture.ChargesUnitOfWork.SaveChangesAsync();
 
             // Assert
             var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);

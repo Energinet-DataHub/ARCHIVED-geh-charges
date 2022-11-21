@@ -13,19 +13,20 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
 {
     /// <summary>
-    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charge history data store.
+    /// Persist message with relation to charge
     /// </summary>
-    public interface IChargeInformationHistoryRepository
+    public interface IChargeHistoryPersister
     {
         /// <summary>
-        /// Add a ChargeInformationHistory.
+        /// Persists message related to a charge
         /// </summary>
-        /// <param name="chargeInformationHistory"></param>
+        /// <param name="chargeInformationOperationsAcceptedEvent"></param>
         /// <returns>A <see cref="Task"/>.</returns>
-        Task AddAsync(ChargeInformationHistory chargeInformationHistory);
+        Task PersistHistoryAsync(ChargeInformationOperationsAcceptedEvent chargeInformationOperationsAcceptedEvent);
     }
 }

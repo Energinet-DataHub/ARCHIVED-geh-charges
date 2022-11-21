@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinksRepository _chargeLinksRepository;
         private readonly IBusinessValidator<ChargeLinkOperationDto> _businessValidator;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IChargesUnitOfWork _chargesUnitOfWork;
 
         public ChargeLinksReceivedEventHandler(
             ILoggerFactory loggerFactory,
@@ -44,14 +44,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinksRepository chargeLinksRepository,
             IBusinessValidator<ChargeLinkOperationDto> businessValidator,
-            IUnitOfWork unitOfWork)
+            IChargesUnitOfWork chargesUnitOfWork)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargeLinksReceivedEventHandler));
             _chargeLinksReceiptService = chargeLinksReceiptService;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinksRepository = chargeLinksRepository;
             _businessValidator = businessValidator;
-            _unitOfWork = unitOfWork;
+            _chargesUnitOfWork = chargesUnitOfWork;
         }
 
         public async Task HandleAsync(ChargeLinksReceivedEvent chargeLinksReceivedEvent)
@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 operationsToBeConfirmed.Add(operation);
             }
 
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            await _chargesUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
             var document = chargeLinksReceivedEvent.Command.Document;
             await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);

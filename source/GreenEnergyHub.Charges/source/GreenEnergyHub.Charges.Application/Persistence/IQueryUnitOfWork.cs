@@ -13,24 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Charges;
-using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence
+namespace GreenEnergyHub.Charges.Application.Persistence
 {
-    /// <summary>
-    /// Context representing the ChargesQuery database
-    /// </summary>
-    public interface IChargesQueryDatabaseContext
+    public interface IQueryUnitOfWork
     {
-        /// <summary>
-        /// ChargeHistories
-        /// </summary>
-        DbSet<ChargeHistory> ChargeHistories { get; }
-
-        /// <summary>
-        /// Saves charge histories to the database.
-        /// </summary>
-        Task<int> SaveChangesAsync();
+        Task SaveChangesAsync();
     }
 }

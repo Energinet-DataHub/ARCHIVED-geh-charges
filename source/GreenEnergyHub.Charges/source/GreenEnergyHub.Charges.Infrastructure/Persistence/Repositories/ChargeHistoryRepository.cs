@@ -13,25 +13,26 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
-    public class ChargeInformationHistoryRepository : IChargeInformationHistoryRepository
+    public class ChargeHistoryRepository : IChargeHistoryRepository
     {
         private readonly IChargesQueryDatabaseContext _chargesQueryDatabaseContext;
 
-        public ChargeInformationHistoryRepository(IChargesQueryDatabaseContext chargesQueryDatabaseContext)
+        public ChargeHistoryRepository(IChargesQueryDatabaseContext chargesQueryDatabaseContext)
         {
             _chargesQueryDatabaseContext = chargesQueryDatabaseContext;
         }
 
-        public async Task AddAsync(ChargeInformationHistory chargeInformationHistory)
+        public async Task AddRangeAsync(IEnumerable<ChargeHistory> chargeHistories)
         {
-            ArgumentNullException.ThrowIfNull(chargeInformationHistory);
+            ArgumentNullException.ThrowIfNull(chargeHistories);
 
-            await _chargesQueryDatabaseContext.ChargeInformationHistories.AddAsync(chargeInformationHistory).ConfigureAwait(false);
+            await _chargesQueryDatabaseContext.ChargeHistories.AddRangeAsync(chargeHistories).ConfigureAwait(false);
         }
     }
 }

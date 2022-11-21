@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
 
                 // Assert
                 dispatcher.Verify(d => d.DispatchAsync(It.IsAny<DomainEvent>()), Times.Once());
-                var writeContext = _fixture.DatabaseManager.CreateDbContext();
+                var writeContext = _fixture.ChargesDatabaseManager.CreateDbContext();
                 var actual = await writeContext.OutboxMessages.SingleAsync(om =>
                     om.Id == outboxMessage.Id);
                 actual.ProcessedDate.Should().NotBeNull();
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
                 await sut.RunAsync(timerInfo);
 
                 // Assert
-                var readContext = _fixture.DatabaseManager.CreateDbContext();
+                var readContext = _fixture.ChargesDatabaseManager.CreateDbContext();
                 var actual = await readContext.OutboxMessages
                     .SingleAsync(x => x.Id == outboxMessage.Id);
                 actual.Should().BeEquivalentTo(outboxMessage, om => om.Excluding(p => p.ProcessedDate));
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
                 TimerInfo timerInfo)
             {
                 // Arrange
-                await using var writeContext = _fixture.DatabaseManager.CreateDbContext();
+                await using var writeContext = _fixture.ChargesDatabaseManager.CreateDbContext();
 
                 var operationsRejectedEvent = chargePriceOperationsRejectedEventBuilder.Build();
                 var outboxMessage = await CreateStoredOutboxMessage(operationsRejectedEvent);
@@ -141,20 +141,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
                     _fixture.GetService<IClock>(),
                     _correlationContext,
                     dispatcher,
-                    _fixture.UnitOfWork,
+                    _fixture.ChargesUnitOfWork,
                     _fixture.GetService<ILoggerFactory>());
             }
 
             private async Task<OutboxMessage> FetchOutboxMessageAsync(Guid outboxMessageId)
             {
-                await using var readContext = _fixture.DatabaseManager.CreateDbContext();
+                await using var readContext = _fixture.ChargesDatabaseManager.CreateDbContext();
                 return await readContext.OutboxMessages.SingleAsync(x => x.Id == outboxMessageId);
             }
 
             private async Task<OutboxMessage> CreateStoredOutboxMessage(DomainEvent domainEvent)
             {
                 var outboxMessage = CreateOutboxMessage(domainEvent);
-                await using var chargesDatabaseWriteContext = _fixture.DatabaseManager.CreateDbContext();
+                await using var chargesDatabaseWriteContext = _fixture.ChargesDatabaseManager.CreateDbContext();
                 await chargesDatabaseWriteContext.OutboxMessages.AddAsync(outboxMessage);
                 await chargesDatabaseWriteContext.SaveChangesAsync();
                 return outboxMessage;

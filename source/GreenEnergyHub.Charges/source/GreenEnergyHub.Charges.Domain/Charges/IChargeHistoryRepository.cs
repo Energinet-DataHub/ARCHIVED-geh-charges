@@ -12,12 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Application.Persistence
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public interface IUnitOfWork
+    /// <summary>
+    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charge history data store.
+    /// </summary>
+    public interface IChargeHistoryRepository
     {
-        Task SaveChangesAsync();
+        /// <summary>
+        /// Add a range of ChargeHistory.
+        /// </summary>
+        /// <param name="chargeHistories"></param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        Task AddRangeAsync(IEnumerable<ChargeHistory> chargeHistories);
     }
 }

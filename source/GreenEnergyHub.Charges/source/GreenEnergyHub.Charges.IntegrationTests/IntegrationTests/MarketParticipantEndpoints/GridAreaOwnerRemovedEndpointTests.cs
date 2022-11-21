@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
             public async Task RunAsync_WhenEventHandled_GridAreaShouldHaveNoOwner()
             {
                 // Arrange
-                await using var setupContext = _fixture.DatabaseManager.CreateDbContext();
+                await using var setupContext = _fixture.ChargesDatabaseManager.CreateDbContext();
                 setupContext.MarketParticipants.Add(_marketParticipant);
                 setupContext.GridAreaLinks.Add(_gridAreaLink);
                 await setupContext.SaveChangesAsync();
@@ -61,13 +61,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
                 var sut = new GridAreaOwnerRemovedEndpoint(
                     _fixture.GetService<ISharedIntegrationEventParser>(),
                     _fixture.GetService<IGridAreaOwnerRemovedCommandHandler>(),
-                    _fixture.GetService<IUnitOfWork>());
+                    _fixture.GetService<IChargesUnitOfWork>());
 
                 // Act
                 await sut.RunAsync(message);
 
                 // Assert
-                await using var context = _fixture.DatabaseManager.CreateDbContext();
+                await using var context = _fixture.ChargesDatabaseManager.CreateDbContext();
                 var gridAreaLink = await context.GridAreaLinks.SingleAsync(g =>
                     g.GridAreaId == _gridAreaLink.GridAreaId);
                 gridAreaLink.OwnerId.Should().BeNull();

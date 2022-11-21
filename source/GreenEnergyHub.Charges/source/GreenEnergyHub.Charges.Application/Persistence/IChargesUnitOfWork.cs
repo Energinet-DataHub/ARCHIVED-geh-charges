@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
-using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Configuration
+namespace GreenEnergyHub.Charges.Application.Persistence
 {
-    internal static class ChargeInformationHistoryPersisterEndpointConfiguration
+    public interface IChargesUnitOfWork
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddScoped<IChargeInformationHistoryPersister, ChargeInformationHistoryPersister>();
-        }
+        Task SaveChangesAsync();
     }
 }

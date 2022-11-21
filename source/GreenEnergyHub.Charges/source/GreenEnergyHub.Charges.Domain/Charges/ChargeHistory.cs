@@ -21,17 +21,17 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// <summary>
     /// Class is used for handling history related to a chargeinformation.
     /// </summary>
-    public class ChargeInformationHistory
+    public class ChargeHistory
     {
-        private ChargeInformationHistory(
+        private ChargeHistory(
             string senderProvidedChargeId,
             ChargeType type,
             string owner,
             string name,
             string description,
             Resolution resolution,
-            TaxIndicator taxIndicator,
-            TransparentInvoicing transparentInvoicing,
+            bool taxIndicator,
+            bool transparentInvoicing,
             VatClassification vatClassification,
             Instant startDateTime,
             Instant? endDateTime,
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// Minimal ctor to support EF Core.
         /// </summary>
         // ReSharper disable once UnusedMember.Local - used by EF Core
-        private ChargeInformationHistory()
+        private ChargeHistory()
         {
             SenderProvidedChargeId = string.Empty;
             Owner = string.Empty;
@@ -91,10 +91,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public Resolution Resolution { get; }
 
         [Required]
-        public TaxIndicator TaxIndicator { get; }
+        public bool TaxIndicator { get; }
 
         [Required]
-        public TransparentInvoicing TransparentInvoicing { get; }
+        public bool TransparentInvoicing { get; }
 
         [Required]
         public VatClassification VatClassification { get; }
@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         [Required]
         public Instant AcceptedDateTime { get; }
 
-        public static ChargeInformationHistory Create(
+        public static ChargeHistory Create(
             string senderProvidedChargeId,
             ChargeType chargeType,
             string owner,
@@ -133,19 +133,39 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ArgumentNullException.ThrowIfNull(startDateTime);
             ArgumentNullException.ThrowIfNull(acceptedDateTime);
 
-            return new ChargeInformationHistory(
+            return new ChargeHistory(
                 senderProvidedChargeId,
                 chargeType,
                 owner,
                 name,
                 description,
                 resolution,
-                taxIndicator,
-                transparentInvoicing,
+                ParseTaxIndicator(taxIndicator),
+                ParseTransparentInvoicing(transparentInvoicing),
                 vatClassification,
                 startDateTime,
                 endDateTime,
                 acceptedDateTime);
+        }
+
+        private static bool ParseTaxIndicator(TaxIndicator taxIndicator)
+        {
+            return taxIndicator switch
+            {
+                Charges.TaxIndicator.Tax => true,
+                Charges.TaxIndicator.NoTax => false,
+                _ => throw new InvalidOperationException("Tax indicator must be set."),
+            };
+        }
+
+        private static bool ParseTransparentInvoicing(TransparentInvoicing transparentInvoicing)
+        {
+            return transparentInvoicing switch
+            {
+                Charges.TransparentInvoicing.Transparent => true,
+                Charges.TransparentInvoicing.NonTransparent => false,
+                _ => throw new InvalidOperationException("Transparent invoicing must be set."),
+            };
         }
     }
 }

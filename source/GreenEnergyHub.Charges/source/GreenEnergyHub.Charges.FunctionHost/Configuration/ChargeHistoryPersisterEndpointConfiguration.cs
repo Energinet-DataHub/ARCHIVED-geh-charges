@@ -12,25 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Charges;
-using Microsoft.EntityFrameworkCore;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence
+namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    /// <summary>
-    /// Context representing the ChargesQuery database
-    /// </summary>
-    public interface IChargesQueryDatabaseContext
+    internal static class ChargeHistoryPersisterEndpointConfiguration
     {
-        /// <summary>
-        /// ChargeHistories
-        /// </summary>
-        DbSet<ChargeHistory> ChargeHistories { get; }
-
-        /// <summary>
-        /// Saves charge histories to the database.
-        /// </summary>
-        Task<int> SaveChangesAsync();
+        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IChargeHistoryPersister, ChargeHistoryPersister>();
+        }
     }
 }

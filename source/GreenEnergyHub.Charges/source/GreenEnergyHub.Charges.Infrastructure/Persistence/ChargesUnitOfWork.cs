@@ -17,11 +17,11 @@ using GreenEnergyHub.Charges.Application.Persistence;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
-    public class UnitOfWork : IUnitOfWork
+    public class ChargesUnitOfWork : IChargesUnitOfWork
     {
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
 
-        public UnitOfWork(IChargesDatabaseContext chargesDatabaseContext)
+        public ChargesUnitOfWork(IChargesDatabaseContext chargesDatabaseContext)
         {
             _chargesDatabaseContext = chargesDatabaseContext;
         }
