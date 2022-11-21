@@ -8,9 +8,6 @@
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<App insights instrumentation key>",
     "APPLICATIONINSIGHTS_CONNECTION_STRING": "<App insights connection string>",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
-    "DOMAINEVENT_LISTENER_CONNECTION_STRING": "<connection string for listening for domain events on the service bus (without entity path)>",
-    "DOMAINEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for domain events (without EntityPath)>",
-    "DOMAINEVENT_SENDER_CONNECTION_STRING": "<connection string for sending domain events to the service bus (without entity path)>",
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
@@ -70,7 +67,7 @@
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted",
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-publish",
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PERSIST_MESSAGE_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-persist",
-    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PERSIST_HISTORY_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-persist_hi",
+    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PERSIST_HISTORY_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-persist-hi",
 
     // Internal, charge, rejected
     "CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-rejected",

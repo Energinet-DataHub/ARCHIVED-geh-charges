@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
                 "%" + EnvironmentSettingNames.ChargeInformationOperationsAcceptedDataAvailableSubscriptionName + "%",
-                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
+                Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
             var chargeCommandAcceptedEvent = await _deserializer
