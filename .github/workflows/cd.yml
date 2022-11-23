@@ -58,22 +58,8 @@ jobs:
 
   dispatch_deploment_event:
     runs-on: ubuntu-latest
-    needs: [
-      # Necessary to be able to use its outputs in the dispatch event
-      changes,
-      # .NET
-      dotnet_promote_prerelease,
-    ]
-    if: |
-      always() &&
-      !contains(needs.*.result, 'failure') &&
-      !contains(needs.*.result, 'cancelled') &&
-      !(
-        needs.dotnet_promote_prerelease.result == 'skipped'
-      )
+    needs: dotnet_promote_prerelease
     steps:
-      - run: echo "${{ toJSON(needs) }}"
-
       - name: Find associated pull request
         uses: Energinet-DataHub/.github/.github/actions/find-related-pr-number@v8
         id: find_pull_request
@@ -85,3 +71,21 @@ jobs:
           repository: '${{ secrets.ENVIRONMENT_REPOSITORY_PATH }}'
           event-type: 'charges-deployment-request-domain'
           client-payload: '{"domain_pr": "${{ steps.find_pull_request.outputs.pull_request_number }}"}'
+
+  #
+  # Send notification to teams channel if deployment dispatch failed
+  #
+
+  dispatch_failed:
+    needs: [
+      dotnet_promote_prerelease,
+      dispatch_deploment_event,
+    ]
+    if: |
+      always() &&
+      contains(needs.*.result, 'failure')
+    uses: Energinet-DataHub/.github/.github/workflows/notify-team.yml@v9
+    with:
+      TEAM_NAME: 'Volt'
+      SUBJECT: 'Deployment dispatch failed: Charges'
+    secrets: inherit
