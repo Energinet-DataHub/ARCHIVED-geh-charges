@@ -20,7 +20,6 @@ using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Charges.Contracts.ChargeHistory;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Azure;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices
 {
@@ -38,36 +37,35 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             var chargeHistories = await _data.ChargeHistories
                 .Where(c => c.SenderProvidedChargeId == searchCriteria.ChargeId
                             && (ChargeType)c.Type == searchCriteria.ChargeType
-                            && c.Owner == searchCriteria.ChargeOwner)
+                            && c.Owner == searchCriteria.ChargeOwner
+                            && c.AcceptedDateTime <= searchCriteria.AtDateTime)
                 .ToListAsync().ConfigureAwait(false);
 
-            // var dto = new ChargeHistoryV1Dto(
-            //     DateTimeOffset.Now,
-            //     DateTimeOffset.Now.AddDays(1),
-            //     "Name",
-            //     "Description",
-            //     Resolution.PT1H,
-            //     VatClassification.Vat25,
-            //     false,
-            //     false,
-            //     ChargeType.D03,
-            //     "Owner");
+            chargeHistories = chargeHistories
+                    .GroupBy(c => c.StartDateTime)
+                    .Select(c => c.MaxBy(d => d.AcceptedDateTime))
+                    .OrderBy(c => c!.StartDateTime)
+                    .ToList();
+
             return MapToChargeHistoryV1Dtos(chargeHistories);
         }
 
-        private static IList<ChargeHistoryV1Dto> MapToChargeHistoryV1Dtos(IEnumerable<ChargeHistory> chargeHistories)
+        private static IList<ChargeHistoryV1Dto> MapToChargeHistoryV1Dtos(IList<ChargeHistory> chargeHistories)
         {
-            return chargeHistories.Select(ch => new ChargeHistoryV1Dto(
-                DateTime.SpecifyKind(ch.StartDateTime, DateTimeKind.Utc),
-                DateTime.SpecifyKind(ch.EndDateTime, DateTimeKind.Utc),
-                ch.Name,
-                ch.Description,
-                (Resolution)ch.Resolution,
-                (VatClassification)ch.VatClassification,
-                ch.TaxIndicator,
-                ch.TransparentInvoicing,
-                (ChargeType)ch.Type,
-                ch.Owner))
+            var lastIndex = chargeHistories.IndexOf(chargeHistories.Last());
+
+            return chargeHistories
+                .Select((t, i) => new ChargeHistoryV1Dto(
+                    DateTime.SpecifyKind(t.StartDateTime, DateTimeKind.Utc),
+                    i == lastIndex ? null : DateTime.SpecifyKind(chargeHistories[i + 1].EndDateTime, DateTimeKind.Utc),
+                    t.Name,
+                    t.Description,
+                    (Resolution)t.Resolution,
+                    (VatClassification)t.VatClassification,
+                    t.TaxIndicator,
+                    t.TransparentInvoicing,
+                    (ChargeType)t.Type,
+                    t.Owner))
                 .ToList();
         }
     }
