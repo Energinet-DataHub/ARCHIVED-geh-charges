@@ -22,5 +22,5 @@ namespace Energinet.DataHub.Charges.Contracts.ChargeHistory
         string ChargeId, // SenderProvidedChargeId
         ChargeType ChargeType,
         string ChargeOwner, // Market Participant GLN no.
-        DateTimeOffset AtDateTime); // View the Charge history timeline from this point in (date) time.
+        DateTimeOffset AtDateTimeUtc); // View the Charge history timeline from this point in (date) time.
 }

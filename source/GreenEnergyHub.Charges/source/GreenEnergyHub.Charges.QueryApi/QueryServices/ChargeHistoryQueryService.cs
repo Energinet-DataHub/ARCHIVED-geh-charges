@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                 .Where(c => c.SenderProvidedChargeId == searchCriteria.ChargeId
                             && (ChargeType)c.Type == searchCriteria.ChargeType
                             && c.Owner == searchCriteria.ChargeOwner
-                            && c.AcceptedDateTime <= searchCriteria.AtDateTime)
+                            && c.AcceptedDateTime <= searchCriteria.AtDateTimeUtc)
                 .ToListAsync().ConfigureAwait(false);
 
             chargeHistories = chargeHistories
