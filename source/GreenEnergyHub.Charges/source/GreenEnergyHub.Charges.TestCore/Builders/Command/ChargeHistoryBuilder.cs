@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         private static TransparentInvoicing _transparentInvoicing = TransparentInvoicing.Unknown;
         private static VatClassification _vatClassification = VatClassification.Unknown;
         private static Instant _startDateTime = InstantHelper.GetTodayAtMidnightUtc();
-        private static Instant? _endDateTime;
+        private static Instant? _endDateTime = InstantHelper.GetEndDefault();
         private static Instant _acceptedDateTime = SystemClock.Instance.GetCurrentInstant();
 
         public ChargeHistoryBuilder WithSenderProvidedChargeId(string senderProvidedChargeId)
