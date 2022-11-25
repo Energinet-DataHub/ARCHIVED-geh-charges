@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Theory]
-        [InlineAutoMoqData("2022-01-01T06:14:00Z", 1, new string[] { "Name A0" })] // atm incorrect input date
+        [InlineAutoMoqData("2022-01-01T07:14:00Z", 1, new string[] { "Name A0" })]
         [InlineAutoMoqData("2022-01-01T07:16:00Z", 1, new string[] { "Name A1" })]
         [InlineAutoMoqData("2022-01-03T21:01:00Z", 2, new string[] { "Name A1", "Name B" })]
         [InlineAutoMoqData("2022-01-04T20:01:00Z", 2, new string[] { "Name A2", "Name B" })]
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
 
-            var atDateTimeOffset = DateTime.Parse(atDateTime, CultureInfo.InvariantCulture).ToDateTimeOffset();
+            var atDateTimeOffset = DateTime.Parse(atDateTime, CultureInfo.InvariantCulture).ToUniversalTime().ToDateTimeOffset();
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
                 .WithChargeId("TariffA")
@@ -71,13 +71,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             actual.Should().HaveCount(expectedDtos);
 
-            var listOfNames = GetListOfNames(actual);
+            var listOfNames = actual.Select(c => c.Name).ToArray();
             listOfNames.Should().ContainInOrder(expectedNames);
-        }
-
-        private static IEnumerable<string> GetListOfNames(IEnumerable<ChargeHistoryV1Dto> actual)
-        {
-           return actual.Select(c => c.Name).ToArray();
         }
 
         private static ChargeHistoryQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
