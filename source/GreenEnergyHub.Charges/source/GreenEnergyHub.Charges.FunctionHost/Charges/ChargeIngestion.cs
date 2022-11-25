@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Errors;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.FunctionHost.Charges.Handlers;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
@@ -63,6 +64,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             try
             {
                 inboundMessage = await ValidateMessageAsync(request).ConfigureAwait(false);
+                if (inboundMessage.HasErrors)
+                {
+                    return await CreateSchemaValidationErrorAsync(
+                        request,
+                        inboundMessage.SchemaValidationError).ConfigureAwait(false);
+                }
             }
             catch (Exception exception) when (exception is InvalidXmlValueException or InvalidEnumArgumentException)
             {
@@ -70,18 +77,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                     exception,
                     "Unable to parse request with correlation id: {CorrelationId}",
                     _correlationContext.Id);
-
                 return _httpResponseBuilder.CreateBadRequestB2BResponse(request, exception.Message);
             }
-
-            if (inboundMessage.HasErrors)
+            catch (SchemaValidationException exception)
             {
-                _logger.LogError(
-                    "Unable to schema validate request with correlation id: {CorrelationId}",
-                    _correlationContext.Id);
-                return await _httpResponseBuilder
-                    .CreateBadRequestResponseAsync(request, inboundMessage.SchemaValidationError)
-                    .ConfigureAwait(false);
+                return await CreateSchemaValidationErrorAsync(
+                    request,
+                    exception.SchemaValidationError).ConfigureAwait(false);
             }
 
             if (!AuthenticatedMatchesSenderId(inboundMessage))
@@ -93,6 +95,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var bundle = inboundMessage.ValidatedMessage;
             await _chargeCommandBundleHandler.HandleAsync(bundle).ConfigureAwait(false);
             return _httpResponseBuilder.CreateAcceptedResponse(request);
+        }
+
+        private async Task<HttpResponseData> CreateSchemaValidationErrorAsync(
+            HttpRequestData request,
+            ErrorResponse error)
+        {
+            _logger.LogError(
+                "Unable to schema validate request with correlation id: {CorrelationId}",
+                _correlationContext.Id);
+            return await _httpResponseBuilder
+                .CreateBadRequestResponseAsync(request, error)
+                .ConfigureAwait(false);
         }
 
         private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage)
