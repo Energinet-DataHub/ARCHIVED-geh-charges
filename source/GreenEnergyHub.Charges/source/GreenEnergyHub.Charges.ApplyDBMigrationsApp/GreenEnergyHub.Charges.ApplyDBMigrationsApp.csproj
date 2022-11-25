@@ -72,7 +72,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Test\202210071310 Update market participant name.sql" />
       <EmbeddedResource Include="Scripts\Test\202210281455 Add charge message test data.sql" />
       <EmbeddedResource Include="Scripts\Test\202211081045 Add charge with periods test data.sql" />
-      <EmbeddedResource Include="Scripts\Test\202211250945 Add charge history test data.sql" />
+      <EmbeddedResource Include="Scripts\Test\202211221157 Add charge history test data.sql" />
     </ItemGroup>
 
     <ItemGroup>
