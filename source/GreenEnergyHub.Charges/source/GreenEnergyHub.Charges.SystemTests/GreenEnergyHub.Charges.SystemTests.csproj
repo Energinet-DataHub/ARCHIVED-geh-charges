@@ -63,12 +63,6 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Fixtures\SystemFactAttribute.cs">
-      <DependentUpon>SystemTestConfiguration.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="TestFiles\Subscription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
