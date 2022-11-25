@@ -196,6 +196,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             {
                 if (reader.Is(CimChargeCommandConstants.Id))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     operationId = content;
                 }
