@@ -78,14 +78,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.BusinessReasonCode))
                 {
-                    if (!reader.CanReadValue) continue;
+                    ValidateElementContent(reader);
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     businessReasonCode = BusinessReasonCodeMapper.Map(content);
                     ValidateBusinessReasonCode(businessReasonCode, content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.IndustryClassification))
                 {
-                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     industryClassification = IndustryClassificationMapper.Map(content);
                 }
@@ -97,7 +96,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderBusinessProcessRole))
                 {
-                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     senderBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
@@ -109,13 +107,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientBusinessProcessRole))
                 {
-                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     recipientBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.CreatedDateTime))
                 {
-                    if (!reader.CanReadValue) continue;
                     createdDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
                 else if (reader.IsElement())
