@@ -56,7 +56,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202210201038 Create ChargeMessage table.sql" />
       <EmbeddedResource Include="Scripts\Model\202210221245 Recreate ChargeMessage table.sql" />
       <EmbeddedResource Include="Scripts\Model\202210251454 Add MessageType and MessageDateTime columns to ChargeMessage table.sql" />
-      <EmbeddedResource Include="Scripts\Model\202211221157 Create Charge History table.sql" />
+      <EmbeddedResource Include="Scripts\Model\202211221157 Create Charge History Table.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
