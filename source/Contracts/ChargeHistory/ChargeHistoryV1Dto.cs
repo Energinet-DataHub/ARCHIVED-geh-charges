@@ -19,8 +19,8 @@ using Energinet.DataHub.Charges.Contracts.Charge;
 namespace Energinet.DataHub.Charges.Contracts.ChargeHistory
 {
     public record ChargeHistoryV1Dto(
-        DateTimeOffset PeriodFromDateTime,
-        DateTimeOffset? PeriodToDateTime, // Unless stopped, for newest period this will be empty
+        DateTimeOffset StartDateTime,
+        DateTimeOffset? EndDateTime, // Unless stopped, for newest period this will be empty
         string Name,
         string Description,
         Resolution Resolution,
