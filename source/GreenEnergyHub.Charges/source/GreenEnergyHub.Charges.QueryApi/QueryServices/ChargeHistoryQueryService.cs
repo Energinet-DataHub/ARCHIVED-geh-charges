@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             return chargeHistories
                 .Select((c, i) => new ChargeHistoryV1Dto(
                     DateTime.SpecifyKind(c.StartDateTime, DateTimeKind.Utc),
-                    i == lastIndex ? null : DateTime.SpecifyKind(chargeHistories[i + 1].StartDateTime, DateTimeKind.Utc),
+                    i == lastIndex ? DetermineEndDateTime(c) : DateTime.SpecifyKind(chargeHistories[i + 1].StartDateTime, DateTimeKind.Utc),
                     c.Name,
                     c.Description,
                     (Resolution)c.Resolution,
@@ -67,6 +67,11 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                     (ChargeType)c.Type,
                     c.Owner))
                 .ToList();
+        }
+
+        private static DateTimeOffset? DetermineEndDateTime(ChargeHistory ch)
+        {
+            return ch.StartDateTime == ch.EndDateTime ? DateTime.SpecifyKind(ch.EndDateTime, DateTimeKind.Utc) : null;
         }
     }
 }

@@ -56,6 +56,15 @@ namespace GreenEnergyHub.Charges.TestCore.Data
                 public const ChargeType ChargeType = Energinet.DataHub.Charges.Contracts.Charge.ChargeType.D03;
                 public const string ChargeOwner = SeededData.MarketParticipants.Provider8100000000030.Gln;
             }
+
+            public static class TariffB
+            {
+                public const string SenderProvidedChargeId = "TariffB";
+                public const ChargeType ChargeType = Energinet.DataHub.Charges.Contracts.Charge.ChargeType.D03;
+                public const string ChargeOwner = SeededData.MarketParticipants.Provider8100000000030.Gln;
+                public static readonly DateTimeOffset FirstStartDateTime = new(2022, 01, 31, 23, 00, 00, TimeSpan.FromHours(0));
+                public static readonly DateTimeOffset SecondStartDateTime = new(2022, 02, 14, 23, 00, 00, TimeSpan.FromHours(0));
+            }
         }
     }
 }

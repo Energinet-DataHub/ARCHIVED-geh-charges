@@ -172,6 +172,32 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             dto.ChargeOwner.Should().Be(TestData.ChargeHistory.HistTar001.ChargeOwner);
         }
 
+        [Fact]
+        public async Task GetAsync_WhenCalled_ReturnsChargeHistoryWithAStop()
+        {
+            // Arrange
+            await using var chargesQueryDbContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesQueryDbContext);
+
+            var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
+                .WithChargeId(TestData.ChargeHistory.TariffB.SenderProvidedChargeId)
+                .WithChargeType(TestData.ChargeHistory.TariffB.ChargeType)
+                .WithChargeOwner(TestData.ChargeHistory.TariffB.ChargeOwner)
+                .WithAtDateTime(DateTimeOffset.Now)
+                .Build();
+
+            // Act
+            var actual = await sut.GetAsync(searchCriteria);
+
+            // Assert
+            using var assertionScope = new AssertionScope();
+
+            actual[0].StartDateTime.Should().Be(TestData.ChargeHistory.TariffB.FirstStartDateTime);
+            actual[0].EndDateTime.Should().Be(TestData.ChargeHistory.TariffB.SecondStartDateTime);
+            actual[1].StartDateTime.Should().Be(TestData.ChargeHistory.TariffB.SecondStartDateTime);
+            actual[1].EndDateTime.Should().Be(TestData.ChargeHistory.TariffB.SecondStartDateTime);
+        }
+
         private static ChargeHistoryQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
         {
             var data = new Data(chargesDatabaseQueryContext);
