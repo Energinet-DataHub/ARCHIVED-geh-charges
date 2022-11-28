@@ -13,21 +13,19 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Contracts.Charge;
-using Energinet.DataHub.Charges.Contracts.ChargeHistory;
 using FluentAssertions;
 using FluentAssertions.Common;
+using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
-using Microsoft.Azure.Amqp.Serialization;
+using GreenEnergyHub.Charges.TestCore.Data;
 using Xunit;
 using Xunit.Categories;
 
@@ -44,11 +42,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Theory]
-        [InlineAutoMoqData("2022-01-01T07:14:00Z", 1, new string[] { "Name A0" })]
-        [InlineAutoMoqData("2022-01-01T07:16:00Z", 1, new string[] { "Name A1" })]
-        [InlineAutoMoqData("2022-01-03T21:01:00Z", 2, new string[] { "Name A1", "Name B" })]
-        [InlineAutoMoqData("2022-01-04T20:01:00Z", 2, new string[] { "Name A2", "Name B" })]
-        [InlineAutoMoqData("2022-01-05T20:01:00Z", 3, new string[] { "Name A2", "Name B", "Name future" })]
+        [InlineAutoMoqData("2022-01-01T07:14:00Z", 1, new[] { "Name A0" })]
+        [InlineAutoMoqData("2022-01-01T07:16:00Z", 1, new[] { "Name A1" })]
+        [InlineAutoMoqData("2022-01-03T21:01:00Z", 2, new[] { "Name A1", "Name B" })]
+        [InlineAutoMoqData("2022-01-04T20:01:00Z", 2, new[] { "Name A2", "Name B" })]
+        [InlineAutoMoqData("2022-01-05T20:01:00Z", 3, new[] { "Name A2", "Name B", "Name future" })]
         public async Task GetAsync_WhenCalled_ReturnsChargeHistoryBasedOnSearchCriteria(
             string atDateTime,
             int expectedDtos,
@@ -61,18 +59,117 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var atDateTimeOffset = DateTime.Parse(atDateTime, CultureInfo.InvariantCulture).ToUniversalTime().ToDateTimeOffset();
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
-                .WithChargeId("TariffA")
-                .WithChargeType(ChargeType.D03)
-                .WithChargeOwner("8100000000030")
+                .WithChargeId(TestData.ChargeHistory.TariffA.SenderProvidedChargeId)
+                .WithChargeType(TestData.ChargeHistory.TariffA.ChargeType)
+                .WithChargeOwner(TestData.ChargeHistory.TariffA.ChargeOwner)
                 .WithAtDateTime(atDateTimeOffset)
                 .Build();
 
+            // Act
             var actual = await sut.GetAsync(searchCriteria);
 
+            // Assert
+            using var assertionScope = new AssertionScope();
             actual.Should().HaveCount(expectedDtos);
 
             var listOfNames = actual.Select(c => c.Name).ToArray();
             listOfNames.Should().ContainInOrder(expectedNames);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("2022-01-05T20:01:00Z", 3)]
+        public async Task GetAsync_WhenCalled_ReturnsChargeHistoryOrderedByStartDateAscending(
+            string atDateTime,
+            int expectedDtos)
+        {
+            // Arrange
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var atDateTimeOffset = DateTime.Parse(atDateTime, CultureInfo.InvariantCulture).ToUniversalTime().ToDateTimeOffset();
+
+            var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
+                .WithChargeId(TestData.ChargeHistory.TariffA.SenderProvidedChargeId)
+                .WithChargeType(TestData.ChargeHistory.TariffA.ChargeType)
+                .WithChargeOwner(TestData.ChargeHistory.TariffA.ChargeOwner)
+                .WithAtDateTime(atDateTimeOffset)
+                .Build();
+
+            // Act
+            var actual = await sut.GetAsync(searchCriteria);
+
+            // Assert
+            using var assertionScope = new AssertionScope();
+            actual.Should().HaveCount(expectedDtos);
+            actual.Should().BeInAscendingOrder(x => x.StartDateTime);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("2022-01-05T20:01:00Z", 3)]
+        public async Task GetAsync_WhenCalled_ReturnsChargeHistoryWithCorrectPeriods(
+            string atDateTime,
+            int expectedDtos)
+        {
+            // Arrange
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var atDateTimeOffset = DateTime.Parse(atDateTime, CultureInfo.InvariantCulture).ToUniversalTime().ToDateTimeOffset();
+
+            var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
+                .WithChargeId(TestData.ChargeHistory.TariffA.SenderProvidedChargeId)
+                .WithChargeType(TestData.ChargeHistory.TariffA.ChargeType)
+                .WithChargeOwner(TestData.ChargeHistory.TariffA.ChargeOwner)
+                .WithAtDateTime(atDateTimeOffset)
+                .Build();
+
+            // Act
+            var actual = await sut.GetAsync(searchCriteria);
+
+            // Assert
+            using var assertionScope = new AssertionScope();
+            actual.Should().HaveCount(expectedDtos);
+
+            var firstHistory = actual[0];
+            var secondHistory = actual[1];
+            var thirdHistory = actual[2];
+
+            firstHistory.EndDateTime.Should().Be(secondHistory.StartDateTime);
+            secondHistory.EndDateTime.Should().Be(thirdHistory.StartDateTime);
+            thirdHistory.EndDateTime.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalled_ReturnsChargeHistoryV1DtoWithCorrectValues()
+        {
+            // Arrange
+            await using var chargesQueryDbContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesQueryDbContext);
+
+            var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
+                .WithChargeId(TestData.ChargeHistory.HistTar001.SenderProvidedChargeId)
+                .WithChargeType(TestData.ChargeHistory.HistTar001.ChargeType)
+                .WithChargeOwner(TestData.ChargeHistory.HistTar001.ChargeOwner)
+                .WithAtDateTime(DateTimeOffset.Now)
+                .Build();
+
+            // Act
+            var actual = await sut.GetAsync(searchCriteria);
+
+            // Assert
+            var dto = actual.Single();
+            using var assertionScope = new AssertionScope();
+
+            dto.StartDateTime.Should().Be(TestData.ChargeHistory.HistTar001.StartDateTime);
+            dto.EndDateTime.Should().BeNull();
+            dto.Name.Should().Be(TestData.ChargeHistory.HistTar001.Name);
+            dto.Description.Should().Be(TestData.ChargeHistory.HistTar001.Description);
+            dto.Resolution.Should().Be(TestData.ChargeHistory.HistTar001.Resolution);
+            dto.VatClassification.Should().Be(TestData.ChargeHistory.HistTar001.VatClassification);
+            dto.TaxIndicator.Should().Be(TestData.ChargeHistory.HistTar001.TaxIndicator);
+            dto.TransparentInvoicing.Should().Be(TestData.ChargeHistory.HistTar001.TransparentInvoicing);
+            dto.ChargeType.Should().Be(TestData.ChargeHistory.HistTar001.ChargeType);
+            dto.ChargeOwner.Should().Be(TestData.ChargeHistory.HistTar001.ChargeOwner);
         }
 
         private static ChargeHistoryQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)

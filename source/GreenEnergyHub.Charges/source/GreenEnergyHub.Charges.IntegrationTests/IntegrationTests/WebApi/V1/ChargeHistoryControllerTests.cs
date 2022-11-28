@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             var sut = CreateHttpClient(factory);
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1Dto(
-                "TestTar001",
+                "HistTar001",
                 ChargeType.D03,
                 SeededData.MarketParticipants.Provider8100000000030.Gln,
                 DateTimeOffset.Now);
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             // Arrange
             var sut = CreateHttpClient(factory);
             var searchCriteria = new ChargeHistorySearchCriteriaV1Dto(
-                "TestTar001",
+                "HistTar001",
                 ChargeType.D03,
                 SeededData.MarketParticipants.Provider8100000000030.Gln,
                 DateTimeOffset.Now);
