@@ -56,8 +56,6 @@ namespace GreenEnergyHub.Charges.TestCore.Data
                 public const ChargeType ChargeType = Energinet.DataHub.Charges.Contracts.Charge.ChargeType.D03;
                 public const string ChargeOwner = SeededData.MarketParticipants.Provider8100000000030.Gln;
             }
-
-
         }
     }
 }
