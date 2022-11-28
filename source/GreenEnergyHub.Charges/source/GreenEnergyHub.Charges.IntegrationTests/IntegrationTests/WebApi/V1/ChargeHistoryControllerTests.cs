@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             actual.Should().HaveCount(1);
 
             var actualChargeHistoryV1Dto = actual.Single();
-            actualChargeHistoryV1Dto.Name.Should().Be("Name");
+            actualChargeHistoryV1Dto.Name.Should().Be("HistTar001 Name");
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()
