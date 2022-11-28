@@ -55,17 +55,17 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             var lastIndex = chargeHistories.IndexOf(chargeHistories.Last());
 
             return chargeHistories
-                .Select((t, i) => new ChargeHistoryV1Dto(
-                    DateTime.SpecifyKind(t.StartDateTime, DateTimeKind.Utc),
-                    i == lastIndex ? null : DateTime.SpecifyKind(chargeHistories[i + 1].EndDateTime, DateTimeKind.Utc),
-                    t.Name,
-                    t.Description,
-                    (Resolution)t.Resolution,
-                    (VatClassification)t.VatClassification,
-                    t.TaxIndicator,
-                    t.TransparentInvoicing,
-                    (ChargeType)t.Type,
-                    t.Owner))
+                .Select((c, i) => new ChargeHistoryV1Dto(
+                    DateTime.SpecifyKind(c.StartDateTime, DateTimeKind.Utc),
+                    i == lastIndex ? null : DateTime.SpecifyKind(chargeHistories[i + 1].StartDateTime, DateTimeKind.Utc),
+                    c.Name,
+                    c.Description,
+                    (Resolution)c.Resolution,
+                    (VatClassification)c.VatClassification,
+                    c.TaxIndicator,
+                    c.TransparentInvoicing,
+                    (ChargeType)c.Type,
+                    c.Owner))
                 .ToList();
         }
     }
