@@ -29,7 +29,6 @@ using GreenEnergyHub.Charges.TestCore.Data;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
-using ChargeType = Energinet.DataHub.Charges.Contracts.Charge.ChargeType;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 {
@@ -59,9 +58,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             var sut = CreateHttpClient(factory);
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1Dto(
-                "HistTar001",
-                ChargeType.D03,
-                SeededData.MarketParticipants.Provider8100000000030.Gln,
+                TestData.ChargeHistory.HistTar001.SenderProvidedChargeId,
+                TestData.ChargeHistory.HistTar001.ChargeType,
+                TestData.ChargeHistory.HistTar001.ChargeOwner,
                 DateTimeOffset.Now);
 
             // Act
@@ -80,9 +79,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             // Arrange
             var sut = CreateHttpClient(factory);
             var searchCriteria = new ChargeHistorySearchCriteriaV1Dto(
-                "HistTar001",
-                ChargeType.D03,
-                SeededData.MarketParticipants.Provider8100000000030.Gln,
+                TestData.ChargeHistory.HistTar001.SenderProvidedChargeId,
+                TestData.ChargeHistory.HistTar001.ChargeType,
+                TestData.ChargeHistory.HistTar001.ChargeOwner,
                 DateTimeOffset.Now);
 
             // Act
@@ -97,7 +96,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             actual.Should().HaveCount(1);
 
             var actualChargeHistoryV1Dto = actual.Single();
-            actualChargeHistoryV1Dto.Name.Should().Be("HistTar001 Name");
+            actualChargeHistoryV1Dto.Name.Should().Be(TestData.ChargeHistory.HistTar001.Name);
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()
