@@ -36,11 +36,11 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         /// Returns charge history based on the search criteria
         /// </summary>
         /// <returns>Charge history data or "400 Bad request"</returns>
-        [HttpPost("GetAsync")]
+        [HttpPost("SearchAsync")]
         [MapToApiVersion(Version1)]
-        public async Task<IActionResult> GetAsync(ChargeHistorySearchCriteriaV1Dto searchCriteria)
+        public async Task<IActionResult> SearchAsync(ChargeHistorySearchCriteriaV1Dto searchCriteria)
         {
-            var chargeHistoryV1Dtos = await _chargeHistoryQueryService.GetAsync(searchCriteria).ConfigureAwait(false);
+            var chargeHistoryV1Dtos = await _chargeHistoryQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
             return Ok(chargeHistoryV1Dtos);
         }
     }

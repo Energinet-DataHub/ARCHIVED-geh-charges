@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Build();
 
             // Act
-            var actual = await sut.GetAsync(searchCriteria);
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
             using var assertionScope = new AssertionScope();
@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Build();
 
             // Act
-            var actual = await sut.GetAsync(searchCriteria);
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
             using var assertionScope = new AssertionScope();
@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Build();
 
             // Act
-            var actual = await sut.GetAsync(searchCriteria);
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
             using var assertionScope = new AssertionScope();
@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Build();
 
             // Act
-            var actual = await sut.GetAsync(searchCriteria);
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
             var dto = actual.Single();
@@ -187,7 +187,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Build();
 
             // Act
-            var actual = await sut.GetAsync(searchCriteria);
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
             using var assertionScope = new AssertionScope();

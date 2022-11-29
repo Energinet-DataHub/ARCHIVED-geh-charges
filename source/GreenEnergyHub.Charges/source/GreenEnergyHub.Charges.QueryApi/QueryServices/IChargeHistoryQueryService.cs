@@ -28,5 +28,5 @@ public interface IChargeHistoryQueryService
     /// Get charge history for a single charge
     /// </summary>
     /// <returns>A <see cref="ChargeHistoryV1Dto"/></returns>
-    Task<IList<ChargeHistoryV1Dto>> GetAsync(ChargeHistorySearchCriteriaV1Dto searchCriteria);
+    Task<IList<ChargeHistoryV1Dto>> SearchAsync(ChargeHistorySearchCriteriaV1Dto searchCriteria);
 }

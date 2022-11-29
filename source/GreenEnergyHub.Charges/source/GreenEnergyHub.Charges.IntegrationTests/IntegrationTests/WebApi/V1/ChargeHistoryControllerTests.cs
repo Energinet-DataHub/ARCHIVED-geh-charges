@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAsync_WhenChargeHistoryExists_ReturnsOkAndCorrectContentType(
+        public async Task SearchAsync_WhenChargeHistoryExists_ReturnsOkAndCorrectContentType(
             WebApiFactory factory)
         {
             // Arrange
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
                 DateTimeOffset.Now);
 
             // Act
-            var response = await sut.PostAsJsonAsync($"{BaseUrl}/GetAsync", searchCriteria);
+            var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
 
             // Assert
             var contentType = response.Content.Headers.ContentType!.ToString();
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAsync_WhenRequested_ReturnsChargeHistory(WebApiFactory factory)
+        public async Task SearchAsync_WhenRequested_ReturnsChargeHistory(WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
                 DateTimeOffset.Now);
 
             // Act
-            var response = await sut.PostAsJsonAsync($"{BaseUrl}/GetAsync", searchCriteria);
+            var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
 
             // Assert
             var jsonString = await response.Content.ReadAsStringAsync();

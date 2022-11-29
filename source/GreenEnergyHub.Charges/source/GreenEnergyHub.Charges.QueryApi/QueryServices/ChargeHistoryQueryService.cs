@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             _data = data;
         }
 
-        public async Task<IList<ChargeHistoryV1Dto>> GetAsync(ChargeHistorySearchCriteriaV1Dto searchCriteria)
+        public async Task<IList<ChargeHistoryV1Dto>> SearchAsync(ChargeHistorySearchCriteriaV1Dto searchCriteria)
         {
             var chargeHistories = await _data.ChargeHistories
                 .Where(c => c.SenderProvidedChargeId == searchCriteria.ChargeId
