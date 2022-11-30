@@ -13,14 +13,11 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.Charges.Contracts.Charge;
 
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.DataHub.Charges.Contracts.ChargeHistory
 {
     public record ChargeHistorySearchCriteriaV1Dto(
-        string ChargeId, // SenderProvidedChargeId
-        ChargeType ChargeType,
-        string ChargeOwner, // Market Participant GLN no.
+        Guid ChargeId,
         DateTimeOffset AtDateTimeUtc); // View the Charge history timeline from this point in (date) time.
 }

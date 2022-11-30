@@ -13,33 +13,19 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Charges.Contracts.ChargeHistory;
+using GreenEnergyHub.Charges.TestCore.Data;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Query
 {
     public class ChargeHistorySearchCriteriaV1DtoBuilder
     {
-        private string _chargeId = "TariffA";
-        private ChargeType _chargeType = ChargeType.D03;
-        private string _chargeOwner = "Owner";
+        private Guid _chargeId = SeededData.MarketParticipants.Provider8100000000030.Id;
         private DateTimeOffset _atDateTime = DateTimeOffset.Now;
 
-        public ChargeHistorySearchCriteriaV1DtoBuilder WithChargeId(string chargeId)
+        public ChargeHistorySearchCriteriaV1DtoBuilder WithChargeId(Guid chargeId)
         {
             _chargeId = chargeId;
-            return this;
-        }
-
-        public ChargeHistorySearchCriteriaV1DtoBuilder WithChargeType(ChargeType chargeType)
-        {
-            _chargeType = chargeType;
-            return this;
-        }
-
-        public ChargeHistorySearchCriteriaV1DtoBuilder WithChargeOwner(string chargeOwner)
-        {
-            _chargeOwner = chargeOwner;
             return this;
         }
 
@@ -53,8 +39,6 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
         {
             return new ChargeHistorySearchCriteriaV1Dto(
                 _chargeId,
-                _chargeType,
-                _chargeOwner,
                 _atDateTime);
         }
     }

@@ -58,9 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             var sut = CreateHttpClient(factory);
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1Dto(
-                TestData.ChargeHistory.HistTar001.SenderProvidedChargeId,
-                TestData.ChargeHistory.HistTar001.ChargeType,
-                TestData.ChargeHistory.HistTar001.ChargeOwner,
+                TestData.ChargeHistory.HistTar001.Id,
                 DateTimeOffset.Now);
 
             // Act
@@ -79,9 +77,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             // Arrange
             var sut = CreateHttpClient(factory);
             var searchCriteria = new ChargeHistorySearchCriteriaV1Dto(
-                TestData.ChargeHistory.HistTar001.SenderProvidedChargeId,
-                TestData.ChargeHistory.HistTar001.ChargeType,
-                TestData.ChargeHistory.HistTar001.ChargeOwner,
+                TestData.ChargeHistory.HistTar001.Id,
                 DateTimeOffset.Now);
 
             // Act

@@ -34,10 +34,20 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
 
         public async Task<IList<ChargeHistoryV1Dto>> SearchAsync(ChargeHistorySearchCriteriaV1Dto searchCriteria)
         {
+            var charge = await _data.Charges
+                .SingleOrDefaultAsync(c => c.Id == searchCriteria.ChargeId)
+                .ConfigureAwait(false);
+
+            if (charge == null) throw new ArgumentException("Charge not found");
+
+            var marketParticipant = await _data.MarketParticipants
+                .SingleAsync(mp => mp.Id == charge.OwnerId)
+                .ConfigureAwait(false);
+
             var chargeHistories = await _data.ChargeHistories
-                .Where(c => c.SenderProvidedChargeId == searchCriteria.ChargeId
-                            && (ChargeType)c.Type == searchCriteria.ChargeType
-                            && c.Owner == searchCriteria.ChargeOwner
+                .Where(c => c.SenderProvidedChargeId == charge.SenderProvidedChargeId
+                            && c.Type == charge.Type
+                            && c.Owner == marketParticipant.MarketParticipantId
                             && c.AcceptedDateTime <= searchCriteria.AtDateTimeUtc)
                 .ToListAsync().ConfigureAwait(false);
 

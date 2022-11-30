@@ -45,6 +45,7 @@ namespace GreenEnergyHub.Charges.TestCore.Data
                 public const Resolution Resolution = Energinet.DataHub.Charges.Contracts.Charge.Resolution.PT1H;
                 public const VatClassification VatClassification = Energinet.DataHub.Charges.Contracts.Charge.VatClassification.NoVat;
                 public const ChargeType ChargeType = Energinet.DataHub.Charges.Contracts.Charge.ChargeType.D03;
+                public static readonly Guid Id = new("6139bb99-599a-4944-9914-f7e14ced32a3");
                 public static readonly DateTimeOffset StartDateTime = new(2021, 12, 31, 23, 00, 00, TimeSpan.FromHours(0));
                 public static readonly bool TaxIndicator = false;
                 public static readonly bool TransparentInvoicing = false;
@@ -55,6 +56,7 @@ namespace GreenEnergyHub.Charges.TestCore.Data
                 public const string SenderProvidedChargeId = "TariffA";
                 public const ChargeType ChargeType = Energinet.DataHub.Charges.Contracts.Charge.ChargeType.D03;
                 public const string ChargeOwner = SeededData.MarketParticipants.Provider8100000000030.Gln;
+                public static readonly Guid Id = new("7d938c6c-e785-4a20-bbe3-b9726f710358");
             }
 
             public static class TariffB
@@ -62,6 +64,7 @@ namespace GreenEnergyHub.Charges.TestCore.Data
                 public const string SenderProvidedChargeId = "TariffB";
                 public const ChargeType ChargeType = Energinet.DataHub.Charges.Contracts.Charge.ChargeType.D03;
                 public const string ChargeOwner = SeededData.MarketParticipants.Provider8100000000030.Gln;
+                public static readonly Guid Id = new("2ae7fd29-959b-4604-bcb0-2d66ada40831");
                 public static readonly DateTimeOffset FirstStartDateTime = new(2022, 01, 31, 23, 00, 00, TimeSpan.FromHours(0));
                 public static readonly DateTimeOffset SecondStartDateTime = new(2022, 02, 14, 23, 00, 00, TimeSpan.FromHours(0));
             }

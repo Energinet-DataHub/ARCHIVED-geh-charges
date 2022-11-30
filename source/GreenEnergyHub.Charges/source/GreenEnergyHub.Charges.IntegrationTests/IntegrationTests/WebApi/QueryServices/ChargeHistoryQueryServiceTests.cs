@@ -59,9 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var atDateTimeOffset = DateTime.Parse(atDateTime, CultureInfo.InvariantCulture).ToUniversalTime().ToDateTimeOffset();
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
-                .WithChargeId(TestData.ChargeHistory.TariffA.SenderProvidedChargeId)
-                .WithChargeType(TestData.ChargeHistory.TariffA.ChargeType)
-                .WithChargeOwner(TestData.ChargeHistory.TariffA.ChargeOwner)
+                .WithChargeId(TestData.ChargeHistory.TariffA.Id)
                 .WithAtDateTime(atDateTimeOffset)
                 .Build();
 
@@ -89,9 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var atDateTimeOffset = DateTime.Parse(atDateTime, CultureInfo.InvariantCulture).ToUniversalTime().ToDateTimeOffset();
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
-                .WithChargeId(TestData.ChargeHistory.TariffA.SenderProvidedChargeId)
-                .WithChargeType(TestData.ChargeHistory.TariffA.ChargeType)
-                .WithChargeOwner(TestData.ChargeHistory.TariffA.ChargeOwner)
+                .WithChargeId(TestData.ChargeHistory.TariffA.Id)
                 .WithAtDateTime(atDateTimeOffset)
                 .Build();
 
@@ -117,9 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var atDateTimeOffset = DateTime.Parse(atDateTime, CultureInfo.InvariantCulture).ToUniversalTime().ToDateTimeOffset();
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
-                .WithChargeId(TestData.ChargeHistory.TariffA.SenderProvidedChargeId)
-                .WithChargeType(TestData.ChargeHistory.TariffA.ChargeType)
-                .WithChargeOwner(TestData.ChargeHistory.TariffA.ChargeOwner)
+                .WithChargeId(TestData.ChargeHistory.TariffA.Id)
                 .WithAtDateTime(atDateTimeOffset)
                 .Build();
 
@@ -147,9 +141,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesQueryDbContext);
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
-                .WithChargeId(TestData.ChargeHistory.HistTar001.SenderProvidedChargeId)
-                .WithChargeType(TestData.ChargeHistory.HistTar001.ChargeType)
-                .WithChargeOwner(TestData.ChargeHistory.HistTar001.ChargeOwner)
+                .WithChargeId(TestData.ChargeHistory.HistTar001.Id)
                 .WithAtDateTime(DateTimeOffset.Now)
                 .Build();
 
@@ -180,9 +172,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesQueryDbContext);
 
             var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
-                .WithChargeId(TestData.ChargeHistory.TariffB.SenderProvidedChargeId)
-                .WithChargeType(TestData.ChargeHistory.TariffB.ChargeType)
-                .WithChargeOwner(TestData.ChargeHistory.TariffB.ChargeOwner)
+                .WithChargeId(TestData.ChargeHistory.TariffB.Id)
                 .WithAtDateTime(DateTimeOffset.Now)
                 .Build();
 

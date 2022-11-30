@@ -3,8 +3,8 @@
 ------------------------------------------------------------------------------------------------------------------------
 
 DECLARE @chargeOwner NVARCHAR(255) = '8100000000030';
-DECLARE @tariffA NVARCHAR(35) = 'TariffA';
 DECLARE @endDefaultDateTime NVARCHAR(20) = '9999-12-31 23:59:59';
+DECLARE @tariffA NVARCHAR(35) = 'TariffA';
 DECLARE @tariffB NVARCHAR(35) = 'TariffB';    
 
 INSERT INTO [ChargesQuery].[ChargeHistory] VALUES (NEWID(), 'HistTar001', 3, @chargeOwner, 'HistTar001 Name', 'HistTar001 Description', 2, 0, 0, 1, '2021-12-31 23:00:00', '2022-12-31 23:00:00', '2021-10-31 23:00:00')
