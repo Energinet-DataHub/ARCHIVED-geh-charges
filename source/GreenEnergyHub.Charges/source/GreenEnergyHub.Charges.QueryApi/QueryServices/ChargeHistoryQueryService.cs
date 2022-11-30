@@ -52,12 +52,10 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
 
         private static IList<ChargeHistoryV1Dto> MapToChargeHistoryV1Dtos(IList<ChargeHistory> chargeHistories)
         {
-            var lastIndex = chargeHistories.IndexOf(chargeHistories.Last());
-
             return chargeHistories
                 .Select((c, i) => new ChargeHistoryV1Dto(
                     DateTime.SpecifyKind(c.StartDateTime, DateTimeKind.Utc),
-                    i == lastIndex ? DetermineEndDateTime(c) : DateTime.SpecifyKind(chargeHistories[i + 1].StartDateTime, DateTimeKind.Utc),
+                    DetermineEndDateTime(c, i, chargeHistories),
                     c.Name,
                     c.Description,
                     (Resolution)c.Resolution,
@@ -69,9 +67,22 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                 .ToList();
         }
 
-        private static DateTimeOffset? DetermineEndDateTime(ChargeHistory ch)
+        private static DateTimeOffset? DetermineEndDateTime(ChargeHistory chargeHistory, int index, IList<ChargeHistory> chargeHistories)
         {
-            return ch.StartDateTime == ch.EndDateTime ? DateTime.SpecifyKind(ch.EndDateTime, DateTimeKind.Utc) : null;
+            var lastIndex = chargeHistories.IndexOf(chargeHistories.Last());
+
+            // If charge history not last in list, use the next charge history's start datetime as end datetime for the current
+            if (index != lastIndex)
+                return DateTime.SpecifyKind(chargeHistories[index + 1].StartDateTime, DateTimeKind.Utc);
+
+            // If charge history is last in list, check if charge history contains a stopped charge, if so use it's own end date time
+            if (chargeHistory.StartDateTime == chargeHistory.EndDateTime)
+            {
+                return DateTime.SpecifyKind(chargeHistory.EndDateTime, DateTimeKind.Utc);
+            }
+
+            // Else no end datetime set
+            return null;
         }
     }
 }
