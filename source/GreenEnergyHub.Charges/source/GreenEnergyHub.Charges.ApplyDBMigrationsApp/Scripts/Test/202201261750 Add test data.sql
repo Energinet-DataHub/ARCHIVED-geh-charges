@@ -90,20 +90,20 @@ INSERT INTO charges.charge VALUES (@chargeId5, 'TestTaxTar', 3, @systemOperatorI
    */
 INSERT INTO [Charges].[Charge] (Id, SenderProvidedChargeId, [Type], OwnerId, TaxIndicator, Resolution, TransparentInvoicing, StartDateTime, EndDateTime, Name, Description, VatClassification) VALUES (
     NEWID(),
-    'EA-001a', /* ChargeId */
-    3, /* [Type], Tariff */
-    @chargeOwnerId, /* Owner */
-    1, /* TaxIndicator, yes */
-    2, /* Resolution, PT1H */
-    1, /* TransparentInvoicing, yes */
-    '2014-12-31 23:00', /* StartDateTime */
+    'EA-001a', -- ChargeId
+    3, -- [Type], Tariff
+    @chargeOwnerId, -- Owner
+    1, -- TaxIndicator, yes
+    2, -- Resolution, PT1H
+    1, -- TransparentInvoicing, yes
+    '2014-12-31 23:00', --StartDateTime
     '9999-12-31 23:59:59', -- Equivalent to InstantExtensions.TimeOrEndDefault()
-    'Elafgift', /* Name */
-    'Elafgiften', /* Description */
-    2 /* VatClassification, 25% */
+    'Elafgift', -- Name
+    'Elafgiften', -- Description
+    2 -- VatClassification, 25%
     )
 
-/* Below is needed for testing Charge History */
+-- Below is needed for testing Charge History
 INSERT INTO charges.charge VALUES (@histTarId, 'HistTar001', 3, @provider8100000000030, 0, 2, 0, 'HistTar001 Description', 'HistTar001 Name', 1, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@tariffA, 'TariffA', 3, @provider8100000000030, 0, 2, 0, 'Description A0', 'Name A0', 1, '2022-01-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@tariffB, 'TariffB', 3, @provider8100000000030, 0, 2, 0, 'Description B0', 'Name B0', 1, '2022-01-31 23:00:00', '9999-12-31 23:59:59')
