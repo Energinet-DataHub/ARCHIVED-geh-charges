@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         [InlineAutoMoqData("2022-01-03T21:01:00Z", 2, new[] { "Name A1", "Name B" })]
         [InlineAutoMoqData("2022-01-04T20:01:00Z", 2, new[] { "Name A2", "Name B" })]
         [InlineAutoMoqData("2022-01-05T20:01:00Z", 3, new[] { "Name A2", "Name B", "Name future" })]
-        public async Task GetAsync_WhenCalled_ReturnsChargeHistoryBasedOnSearchCriteria(
+        public async Task SearchAsync_WhenCalled_ReturnsChargeHistoryBasedOnSearchCriteria(
             string atDateTime,
             int expectedDtos,
             string[] expectedNames)
@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
         [Theory]
         [InlineAutoMoqData("2022-01-05T20:01:00Z", 3)]
-        public async Task GetAsync_WhenCalled_ReturnsChargeHistoryOrderedByStartDateAscending(
+        public async Task SearchAsync_WhenCalled_ReturnsChargeHistoryOrderedByStartDateAscending(
             string atDateTime,
             int expectedDtos)
         {
@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
         [Theory]
         [InlineAutoMoqData("2022-01-05T20:01:00Z", 3)]
-        public async Task GetAsync_WhenCalled_ReturnsChargeHistoryWithCorrectPeriods(
+        public async Task SearchAsync_WhenCalled_ReturnsChargeHistoryWithCorrectPeriods(
             string atDateTime,
             int expectedDtos)
         {
@@ -134,7 +134,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task GetAsync_WhenCalled_ReturnsChargeHistoryV1DtoWithCorrectValues()
+        public async Task SearchAsync_WhenCalled_ReturnsChargeHistoryV1DtoWithCorrectValues()
         {
             // Arrange
             await using var chargesQueryDbContext = _databaseManager.CreateDbQueryContext();
@@ -165,7 +165,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task GetAsync_WhenCalled_ReturnsChargeHistoryWithAStop()
+        public async Task SearchAsync_WhenCalled_ReturnsChargeHistoryWithAStop()
         {
             // Arrange
             await using var chargesQueryDbContext = _databaseManager.CreateDbQueryContext();
@@ -186,6 +186,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             actual[0].EndDateTime.Should().Be(TestData.ChargeHistory.TariffB.SecondStartDateTime);
             actual[1].StartDateTime.Should().Be(TestData.ChargeHistory.TariffB.SecondStartDateTime);
             actual[1].EndDateTime.Should().Be(TestData.ChargeHistory.TariffB.SecondStartDateTime);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WhenChargeDoesntExist_ThrowsArgumentException()
+        {
+            // Arrange
+            await using var chargesQueryDbContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesQueryDbContext);
+            var searchCriteria = new ChargeHistorySearchCriteriaV1DtoBuilder()
+                .WithChargeId(Guid.NewGuid())
+                .WithAtDateTime(DateTimeOffset.Now)
+                .Build();
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentException>(() => sut.SearchAsync(searchCriteria));
         }
 
         private static ChargeHistoryQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
