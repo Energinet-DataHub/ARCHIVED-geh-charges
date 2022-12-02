@@ -27,8 +27,9 @@ namespace GreenEnergyHub.Charges.WebApi
         public const string ChargeDbConnectionString = "CHARGE_DB_CONNECTION_STRING";
 
         // JWT Token auth
-        public const string FrontEndOpenIdUrl = "FRONTEND_OPEN_ID_URL";
-        public const string FrontEndServiceAppId = "FRONTEND_SERVICE_APP_ID";
+        public const string ExternalOpenIdUrl = "EXTERNAL_OPEN_ID_URL";
+        public const string InternalOpenIdUrl = "INTERNAL_OPEN_ID_URL";
+        public const string BackendAppId = "BACKEND_SERVICE_APP_ID";
 
         // Localization
         public const string LocalTimeZoneName = "LOCAL_TIMEZONENAME";
