@@ -31,16 +31,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
     /// </summary>
     public class WebApiFactory : WebApplicationFactory<Startup>
     {
-        private bool _authenticationEnabled;
-
-        /// <summary>
-        /// Integration tests run without authentication, unless explicitly enabled.
-        /// </summary>
-        public void ReenableAuthentication()
-        {
-            _authenticationEnabled = true;
-        }
-
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             if (builder == null)
@@ -49,10 +39,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
             // This can be used for changing registrations in the container (e.g. for mocks).
             builder.ConfigureServices(services =>
             {
-                if (!_authenticationEnabled)
-                {
-                    services.AddSingleton<IAuthorizationHandler, AllowAnonymous>();
-                }
+                services.AddSingleton<IAuthorizationHandler>(new AllowAnonymous());
             });
         }
 
