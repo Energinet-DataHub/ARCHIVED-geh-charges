@@ -120,10 +120,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
         private static HttpClient CreateHttpClient(WebApiFactory factory)
         {
-            var sut = factory.CreateClient();
-            factory.ReenableAuthentication();
-            sut.DefaultRequestHeaders.Add("Authorization", "Bearer xxx");
-            return sut;
+            return factory.CreateClient();
         }
 
         private static async Task<Charge> GetSeededChargeAsync(IChargesDatabaseContext context)
