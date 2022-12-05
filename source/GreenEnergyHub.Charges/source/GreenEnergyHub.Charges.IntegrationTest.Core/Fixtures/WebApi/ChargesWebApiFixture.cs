@@ -65,9 +65,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
                 $"CONNECTIONSTRINGS:{EnvironmentSettingNames.ChargeDbConnectionString}",
                 DatabaseManager.ConnectionString);
 
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ExternalOpenIdUrl, "mocked");
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.InternalOpenIdUrl, "mocked");
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendAppId, "mocked");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ExternalOpenIdUrl, "disabled");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.InternalOpenIdUrl, "disabled");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendAppId, "disabled");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
 
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
