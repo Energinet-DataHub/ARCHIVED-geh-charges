@@ -96,7 +96,7 @@ INSERT INTO [Charges].[Charge] (Id, SenderProvidedChargeId, [Type], OwnerId, Tax
     1, -- TaxIndicator, yes
     2, -- Resolution, PT1H
     1, -- TransparentInvoicing, yes
-    '2014-12-31 23:00', --StartDateTime
+    '2014-12-31 23:00', -- StartDateTime
     '9999-12-31 23:59:59', -- Equivalent to InstantExtensions.TimeOrEndDefault()
     'Elafgift', -- Name
     'Elafgiften', -- Description
