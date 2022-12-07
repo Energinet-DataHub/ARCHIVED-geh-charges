@@ -103,7 +103,7 @@ jobs:
             .github/workflows/charges-libraries-publish.yml
 
       - name: Assert versions of NuGet packages and push them to NuGet.org
-        uses: Energinet-DataHub/.github/.github/actions/nuget-packages-assert-and-push@v8
+        uses: Energinet-DataHub/.github/.github/actions/nuget-packages-assert-and-push@v9
         with:
           PUSH_PACKAGES: ${{ env.PUSH_PACKAGES }}
           CONTENT_CHANGED: ${{ steps.changed-content.outputs.any_changed }}
