@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             return chargeHistories
                 .Select((c, i) => new ChargeHistoryV1Dto(
                     DateTime.SpecifyKind(c.StartDateTime, DateTimeKind.Utc),
-                    DetermineEndDateTime(c, i, chargeHistories),
+                    DetermineChargeHistoryEndDateTime(c, i, chargeHistories),
                     c.Name,
                     c.Description,
                     (Resolution)c.Resolution,
@@ -78,21 +78,34 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                 .ToList();
         }
 
-        private static DateTimeOffset? DetermineEndDateTime(ChargeHistory chargeHistory, int index, IList<ChargeHistory> chargeHistories)
+        private static DateTimeOffset? DetermineChargeHistoryEndDateTime(ChargeHistory chargeHistory, int index, IList<ChargeHistory> chargeHistories)
         {
             var lastIndex = chargeHistories.IndexOf(chargeHistories.Last());
+            var isChargeHistoryTheMostRecent = index == lastIndex;
 
-            // If charge history not last in list, use the next charge history's start datetime as end datetime for the current
-            if (index != lastIndex)
-                return DateTime.SpecifyKind(chargeHistories[index + 1].StartDateTime, DateTimeKind.Utc);
+            return isChargeHistoryTheMostRecent
+                ? UseChargeStopDateOrNull(chargeHistory)
+                : UseNextChargeHistoryStartAsEndDateTimeForCurrentHistory(chargeHistories, index);
+        }
 
-            // If charge history is last in list, check if charge history contains a stopped charge, if so use it's own end date time
+        private static DateTimeOffset? UseNextChargeHistoryStartAsEndDateTimeForCurrentHistory(IList<ChargeHistory> chargeHistories, int index)
+        {
+            return DateTime.SpecifyKind(chargeHistories[index + 1].StartDateTime, DateTimeKind.Utc);
+        }
+
+        /// <summary>
+        /// Use this when the charge history is the last (most recent) in the list of charge histories
+        /// It checks if charge history contains a stop date (start and end are equal), if so use the end date time
+        /// Otherwise return null.
+        /// </summary>
+        /// <param name="chargeHistory">Current charge history</param>
+        private static DateTimeOffset? UseChargeStopDateOrNull(ChargeHistory chargeHistory)
+        {
             if (chargeHistory.StartDateTime == chargeHistory.EndDateTime)
             {
                 return DateTime.SpecifyKind(chargeHistory.EndDateTime, DateTimeKind.Utc);
             }
 
-            // Else no end datetime set
             return null;
         }
     }
