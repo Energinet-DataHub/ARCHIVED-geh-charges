@@ -38,7 +38,8 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                 .SingleOrDefaultAsync(c => c.Id == searchCriteria.ChargeId)
                 .ConfigureAwait(false);
 
-            if (charge == null) throw new ArgumentException("Charge not found");
+            if (charge == null)
+                throw new ArgumentNullException(nameof(charge), "Charge not found using the provided search criteria");
 
             var marketParticipant = await _data.MarketParticipants
                 .SingleAsync(mp => mp.Id == charge.OwnerId)
