@@ -189,7 +189,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task SearchAsync_WhenChargeDoesntExist_ThrowsArgumentException()
+        public async Task SearchAsync_WhenChargeDoesNotExist_ThrowsArgumentException()
         {
             // Arrange
             await using var chargesQueryDbContext = _databaseManager.CreateDbQueryContext();
