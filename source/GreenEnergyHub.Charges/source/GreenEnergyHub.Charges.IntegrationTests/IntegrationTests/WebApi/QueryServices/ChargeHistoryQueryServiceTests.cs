@@ -200,7 +200,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Build();
 
             // Act / Assert
-            await Assert.ThrowsAsync<ArgumentException>(() => sut.SearchAsync(searchCriteria));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.SearchAsync(searchCriteria));
         }
 
         private static ChargeHistoryQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
