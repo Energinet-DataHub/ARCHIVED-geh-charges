@@ -48,7 +48,7 @@ limitations under the License.
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-        <PackageReference Include="Energinet.DataHub.MarketParticipant.Integration.Model" Version="2.5.1" />
+        <PackageReference Include="Energinet.DataHub.MarketParticipant.Integration.Model" Version="2.5.2" />
         <PackageReference Include="NodaTime.Testing" Version="3.1.4" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.2" />
@@ -60,7 +60,7 @@ limitations under the License.
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Google.Protobuf" Version="3.21.7" />
+        <PackageReference Include="Google.Protobuf" Version="3.21.11" />
         <PackageReference Include="Grpc.Tools" Version="2.50.0" PrivateAssets="All" />
         <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
           <PrivateAssets>all</PrivateAssets>
