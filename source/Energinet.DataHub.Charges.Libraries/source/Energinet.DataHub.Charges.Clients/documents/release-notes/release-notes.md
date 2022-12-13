@@ -1,8 +1,12 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
-## Version 6.1.1
+## Version 6.1.2
 
 Updated NuGet packages
+
+## Version 6.1.1
+
+- Bumped version due to workflow changes
 
 ## Version 6.1.0
 

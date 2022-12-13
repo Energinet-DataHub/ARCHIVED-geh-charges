@@ -28,7 +28,7 @@ $context = "QueryDbContext"
 $outputDir = "Model"
 
 # Define all tables that should be included in scaffolding.
-$tables = "-t Charge -t ChargeLink -t ChargePeriod -t ChargePoint -t ChargeMessage -t DefaultChargeLink -t MarketParticipant -t MeteringPoint -t GridAreaLink"
+$tables = "-t Charge -t ChargeLink -t ChargePeriod -t ChargePoint -t ChargeMessage -t ChargeHistory -t DefaultChargeLink -t MarketParticipant -t MeteringPoint -t GridAreaLink"
 
 # Update database model
 Invoke-Expression "dotnet build ..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj"

@@ -77,6 +77,7 @@ namespace GreenEnergyHub.Charges.WebApi
             serviceCollection.AddScoped<IMarketParticipantQueryService, MarketParticipantQueryService>();
             serviceCollection.AddScoped<IChargePriceQueryService, ChargePriceQueryService>();
             serviceCollection.AddScoped<IChargeMessageQueryService, ChargeMessageQueryService>();
+            serviceCollection.AddScoped<IChargeHistoryQueryService, ChargeHistoryQueryService>();
             serviceCollection.AddScoped<IChargeInformationCommandHandler, ChargeInformationCommandHandler>();
             serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
             serviceCollection.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
