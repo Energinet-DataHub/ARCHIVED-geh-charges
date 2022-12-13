@@ -29,6 +29,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public virtual DbSet<Charge> Charges { get; set; }
 
+        public virtual DbSet<ChargeHistory> ChargeHistories { get; set; }
+
         public virtual DbSet<ChargeLink> ChargeLinks { get; set; }
 
         public virtual DbSet<ChargeMessage> ChargeMessages { get; set; }
@@ -59,6 +61,14 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Charge_MarketParticipant");
+            });
+
+            modelBuilder.Entity<ChargeHistory>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .IsClustered(false);
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<ChargeLink>(entity =>
@@ -94,7 +104,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
                 entity.HasOne(d => d.Charge)
                     .WithMany(p => p.ChargePeriods)

@@ -29,6 +29,8 @@ namespace GreenEnergyHub.Charges.QueryApi
 
         public IQueryable<ChargeMessage> ChargeMessages { get; }
 
+        public IQueryable<ChargeHistory> ChargeHistories { get; }
+
         public IQueryable<MeteringPoint> MeteringPoints { get; }
 
         public IQueryable<MarketParticipant> MarketParticipants { get; }
