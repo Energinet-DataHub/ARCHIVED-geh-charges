@@ -70,6 +70,9 @@ DECLARE @chargeId2 UNIQUEIDENTIFIER = NEWID()
 DECLARE @chargeId3 UNIQUEIDENTIFIER = NEWID()
 DECLARE @chargeId4 UNIQUEIDENTIFIER = NEWID()
 DECLARE @chargeId5 UNIQUEIDENTIFIER = NEWID()
+DECLARE @histTarId UNIQUEIDENTIFIER = '6139bb99-599a-4944-9914-f7e14ced32a3'
+DECLARE @tariffA UNIQUEIDENTIFIER = '7d938c6c-e785-4a20-bbe3-b9726f710358'
+DECLARE @tariffB UNIQUEIDENTIFIER = '2ae7fd29-959b-4604-bcb0-2d66ada40831'
 DECLARE @meteringPointId VARCHAR(50)
 
 SELECT @chargeOwnerId = Id FROM charges.marketparticipant WHERE marketparticipantid = '8100000000030'
@@ -87,19 +90,23 @@ INSERT INTO charges.charge VALUES (@chargeId5, 'TestTaxTar', 3, @systemOperatorI
    */
 INSERT INTO [Charges].[Charge] (Id, SenderProvidedChargeId, [Type], OwnerId, TaxIndicator, Resolution, TransparentInvoicing, StartDateTime, EndDateTime, Name, Description, VatClassification) VALUES (
     NEWID(),
-    'EA-001a', /* ChargeId */
-    3, /* [Type], Tariff */
-    @chargeOwnerId, /* Owner */
-    1, /* TaxIndicator, yes */
-    2, /* Resolution, P1D */
-    1, /* TransparentInvoicing, yes */
-    '2014-12-31 23:00', /* StartDateTime */
+    'EA-001a', -- ChargeId
+    3, -- [Type], Tariff
+    @chargeOwnerId, -- Owner
+    1, -- TaxIndicator, yes
+    2, -- Resolution, PT1H
+    1, -- TransparentInvoicing, yes
+    '2014-12-31 23:00', -- StartDateTime
     '9999-12-31 23:59:59', -- Equivalent to InstantExtensions.TimeOrEndDefault()
-    'Elafgift', /* Name */
-    'Elafgiften', /* Description */
-    2 /* VatClassification, 25% */
+    'Elafgift', -- Name
+    'Elafgiften', -- Description
+    2 -- VatClassification, 25%
     )
 
+-- Below is needed for testing Charge History
+INSERT INTO charges.charge VALUES (@histTarId, 'HistTar001', 3, @provider8100000000030, 0, 2, 0, 'HistTar001 Description', 'HistTar001 Name', 1, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
+INSERT INTO charges.charge VALUES (@tariffA, 'TariffA', 3, @provider8100000000030, 0, 2, 0, 'Description A0', 'Name A0', 1, '2022-01-31 23:00:00', '9999-12-31 23:59:59')
+INSERT INTO charges.charge VALUES (@tariffB, 'TariffB', 3, @provider8100000000030, 0, 2, 0, 'Description B0', 'Name B0', 1, '2022-01-31 23:00:00', '9999-12-31 23:59:59')
 
 ------------------------------------------------------------------------------------------------------------------------
 -- Add charge links
