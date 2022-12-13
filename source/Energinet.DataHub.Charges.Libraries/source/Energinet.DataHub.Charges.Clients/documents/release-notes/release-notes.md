@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 6.1.1
+
+Updated NuGet packages
+
 ## Version 6.1.0
 
 Added `CreateChargeAsync` to `ChargesClient`.
