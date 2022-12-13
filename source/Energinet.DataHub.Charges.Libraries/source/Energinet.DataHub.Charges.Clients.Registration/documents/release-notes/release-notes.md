@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 6.1.1
+
+- Bumped version due to workflow changes
+
 ## Version 6.1.0
 
 Added `CreateChargeAsync` to `ChargesClient`.
