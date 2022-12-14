@@ -77,6 +77,9 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ChargeInformationMessagePersisterEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargePriceMessagePersisterEndpointConfiguration.ConfigureServices(serviceCollection);
 
+            // History
+            ChargeHistoryPersisterEndpointConfiguration.ConfigureServices(serviceCollection);
+
             // Integration events
             ChargeIntegrationEventsPublisherEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargePriceIntegrationEventsPublisherEndpointConfiguration.ConfigureServices(serviceCollection);

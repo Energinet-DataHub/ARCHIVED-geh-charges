@@ -45,14 +45,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
 
             public async Task InitializeAsync()
             {
-                await using var context = _fixture.DatabaseManager.CreateDbContext();
+                await using var context = _fixture.ChargesDatabaseManager.CreateDbContext();
                 context.MarketParticipants.Add(_marketParticipant);
                 await context.SaveChangesAsync();
             }
 
             public async Task DisposeAsync()
             {
-                await using var context = _fixture.DatabaseManager.CreateDbContext();
+                await using var context = _fixture.ChargesDatabaseManager.CreateDbContext();
                 context.MarketParticipants.Remove(_marketParticipant);
                 await context.SaveChangesAsync();
             }
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
                 await sut.RunAsync(message);
 
                 // Assert
-                await using var context = _fixture.DatabaseManager.CreateDbContext();
+                await using var context = _fixture.ChargesDatabaseManager.CreateDbContext();
                 var marketParticipant = context.MarketParticipants
                     .Single(x => x.ActorId == _marketParticipant.ActorId);
                 marketParticipant.Name.Should().Be(marketParticipantName);

@@ -47,6 +47,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
             _chargeName = "some charge name";
             _chargeType = ChargeType.Fee;
             _resolution = Resolution.PT1H;
+            _transparentInvoicing = TransparentInvoicing.Transparent;
         }
 
         public ChargeInformationOperationDtoBuilder WithDescription(string description)

@@ -37,9 +37,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures
     {
         public ChargesManagedDependenciesTestFixture()
         {
-            DatabaseManager = new ChargesDatabaseManager();
+            ChargesDatabaseManager = new ChargesDatabaseManager();
 
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, ChargesDatabaseManager.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
 
             Host = ChargesFunctionApp.ConfigureApplication();
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures
             CorrelationContext = GetService<ICorrelationContext>();
         }
 
-        public ChargesDatabaseManager DatabaseManager { get; }
+        public ChargesDatabaseManager ChargesDatabaseManager { get; }
 
         public IUnitOfWork UnitOfWork { get; }
 
@@ -58,12 +58,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures
 
         public Task InitializeAsync()
         {
-            return DatabaseManager.CreateDatabaseAsync();
+            return ChargesDatabaseManager.CreateDatabaseAsync();
         }
 
         public Task DisposeAsync()
         {
-            return DatabaseManager.DeleteDatabaseAsync();
+            return ChargesDatabaseManager.DeleteDatabaseAsync();
         }
 
         public T GetService<T>()

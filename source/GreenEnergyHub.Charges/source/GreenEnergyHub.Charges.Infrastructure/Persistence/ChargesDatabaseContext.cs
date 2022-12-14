@@ -52,6 +52,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 
         public DbSet<OutboxMessage> OutboxMessages { get; private set; }
 
+        public DbSet<ChargeHistory> ChargeHistories { get; private set; }
+
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
 
@@ -69,6 +71,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new GridAreaLinkEntityConfiguration());
             modelBuilder.ApplyConfiguration(new OutboxMessageEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ChargeHistoryEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

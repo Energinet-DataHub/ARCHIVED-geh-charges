@@ -50,14 +50,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
 
             public async Task InitializeAsync()
             {
-                await using var context = _fixture.DatabaseManager.CreateDbContext();
+                await using var context = _fixture.ChargesDatabaseManager.CreateDbContext();
                 context.GridAreaLinks.Add(_gridAreaLink);
                 await context.SaveChangesAsync();
             }
 
             public async Task DisposeAsync()
             {
-                await using var context = _fixture.DatabaseManager.CreateDbContext();
+                await using var context = _fixture.ChargesDatabaseManager.CreateDbContext();
                 context.GridAreaLinks.Remove(_gridAreaLink);
                 await context.SaveChangesAsync();
             }
@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
                 await sut.RunAsync(message);
 
                 // Assert
-                await using var context = _fixture.DatabaseManager.CreateDbContext();
+                await using var context = _fixture.ChargesDatabaseManager.CreateDbContext();
                 var marketParticipant =
                     context.MarketParticipants.Single(x => x.ActorId == _gridAccessProvider.ActorId);
                 marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
