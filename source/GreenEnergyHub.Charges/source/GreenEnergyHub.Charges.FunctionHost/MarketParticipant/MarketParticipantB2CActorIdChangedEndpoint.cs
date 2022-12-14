@@ -28,16 +28,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         private const string FunctionName = nameof(MarketParticipantB2CActorIdChangedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantB2CActorIdChangedCommandHandler _marketParticipantB2CActorIdChangedCommandHandler;
-        private readonly IChargesUnitOfWork _chargesUnitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public MarketParticipantB2CActorIdChangedEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantB2CActorIdChangedCommandHandler marketParticipantB2CActorIdChangedCommandHandler,
-            IChargesUnitOfWork chargesUnitOfWork)
+            IUnitOfWork unitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
             _marketParticipantB2CActorIdChangedCommandHandler = marketParticipantB2CActorIdChangedCommandHandler;
-            _chargesUnitOfWork = chargesUnitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
         [Function(FunctionName)]
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             var externalIdChangedEvent = (ActorExternalIdChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
             var command = MarketParticipantIntegrationEventMapper.Map(externalIdChangedEvent);
             await _marketParticipantB2CActorIdChangedCommandHandler.HandleAsync(command).ConfigureAwait(false);
-            await _chargesUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

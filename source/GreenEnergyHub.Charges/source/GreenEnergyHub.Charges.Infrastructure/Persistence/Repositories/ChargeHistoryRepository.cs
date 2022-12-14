@@ -21,18 +21,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
     public class ChargeHistoryRepository : IChargeHistoryRepository
     {
-        private readonly IChargesQueryDatabaseContext _chargesQueryDatabaseContext;
+        private readonly IChargesDatabaseContext _chargesDatabaseContext;
 
-        public ChargeHistoryRepository(IChargesQueryDatabaseContext chargesQueryDatabaseContext)
+        public ChargeHistoryRepository(IChargesDatabaseContext chargesDatabaseContext)
         {
-            _chargesQueryDatabaseContext = chargesQueryDatabaseContext;
+            _chargesDatabaseContext = chargesDatabaseContext;
         }
 
         public async Task AddRangeAsync(IEnumerable<ChargeHistory> chargeHistories)
         {
             ArgumentNullException.ThrowIfNull(chargeHistories);
 
-            await _chargesQueryDatabaseContext.ChargeHistories.AddRangeAsync(chargeHistories).ConfigureAwait(false);
+            await _chargesDatabaseContext.ChargeHistories.AddRangeAsync(chargeHistories).ConfigureAwait(false);
         }
     }
 }

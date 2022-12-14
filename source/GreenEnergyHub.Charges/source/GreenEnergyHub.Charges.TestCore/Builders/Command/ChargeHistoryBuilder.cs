@@ -22,14 +22,14 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
     public class ChargeHistoryBuilder
     {
         private static string _senderProvidedChargeId = Guid.NewGuid().ToString();
-        private static ChargeType _chargeType = ChargeType.Unknown;
-        private static string _owner = string.Empty;
-        private static string _name = string.Empty;
-        private static string _description = string.Empty;
-        private static Resolution _resolution = Resolution.Unknown;
-        private static TaxIndicator _taxIndicator = TaxIndicator.Unknown;
-        private static TransparentInvoicing _transparentInvoicing = TransparentInvoicing.Unknown;
-        private static VatClassification _vatClassification = VatClassification.Unknown;
+        private static ChargeType _chargeType = ChargeType.Fee;
+        private static string _owner = "owner";
+        private static string _name = "name";
+        private static string _description = "description";
+        private static Resolution _resolution = Resolution.P1M;
+        private static TaxIndicator _taxIndicator = TaxIndicator.NoTax;
+        private static TransparentInvoicing _transparentInvoicing = TransparentInvoicing.NonTransparent;
+        private static VatClassification _vatClassification = VatClassification.NoVat;
         private static Instant _startDateTime = InstantHelper.GetTodayAtMidnightUtc();
         private static Instant? _endDateTime = InstantHelper.GetEndDefault();
         private static Instant _acceptedDateTime = SystemClock.Instance.GetCurrentInstant();

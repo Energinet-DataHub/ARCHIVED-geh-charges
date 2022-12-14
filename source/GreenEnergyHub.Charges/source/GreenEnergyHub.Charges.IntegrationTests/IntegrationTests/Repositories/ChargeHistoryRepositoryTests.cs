@@ -31,11 +31,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
     /// Tests <see cref="ChargeHistoryRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
-    public class ChargeHistoryRepositoryTests : IClassFixture<ChargesQueryDatabaseFixture>
+    public class ChargeHistoryRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
-        private readonly ChargesQueryDatabaseManager _databaseManager;
+        private readonly ChargesDatabaseManager _databaseManager;
 
-        public ChargeHistoryRepositoryTests(ChargesQueryDatabaseFixture fixture)
+        public ChargeHistoryRepositoryTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
         }
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             ChargeHistoryBuilder chargeHistoryBuilder)
         {
             // Arrange
-            await using var chargesQueryDatabaseWriteContext = _databaseManager.CreateDbContext();
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var chargeHistory = chargeHistoryBuilder
                 .WithSenderProvidedChargeId("ChargeFee_id")
                 .WithChargeType(ChargeType.Fee)
@@ -55,27 +55,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 .WithTaxIndicator(TaxIndicator.Tax)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
                 .Build();
-            var chargeHistories = new List<ChargeHistory>
-            {
-                chargeHistoryBuilder
-                    .WithSenderProvidedChargeId("ChargeFee_id")
-                    .WithChargeType(ChargeType.Fee)
-                    .WithOwner("ChargeOwner")
-                    .WithName("ChargeName")
-                    .WithTaxIndicator(TaxIndicator.Tax)
-                    .WithTransparentInvoicing(TransparentInvoicing.Transparent)
-                    .Build(),
-            };
+            var chargeHistories = new List<ChargeHistory> { chargeHistory };
 
-            var sut = new ChargeHistoryRepository(chargesQueryDatabaseWriteContext);
+            var sut = new ChargeHistoryRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.AddRangeAsync(chargeHistories);
-            await chargesQueryDatabaseWriteContext.SaveChangesAsync();
+            await chargesDatabaseWriteContext.SaveChangesAsync();
 
             // Assert
-            await using var chargesQueryDatabaseReadContext = _databaseManager.CreateDbContext();
-            var actual = await chargesQueryDatabaseReadContext.ChargeHistories.SingleAsync(x =>
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+            var actual = await chargesDatabaseReadContext.ChargeHistories.SingleAsync(x =>
                 x.SenderProvidedChargeId == chargeHistory.SenderProvidedChargeId &&
                 x.Type == chargeHistory.Type &&
                 x.Owner == chargeHistory.Owner);

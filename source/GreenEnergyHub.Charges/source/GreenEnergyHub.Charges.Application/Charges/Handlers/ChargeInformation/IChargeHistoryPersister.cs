@@ -18,12 +18,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
 {
     /// <summary>
-    /// Persist message with relation to charge
+    /// Persists accepted charge operation events as charge history
     /// </summary>
     public interface IChargeHistoryPersister
     {
         /// <summary>
-        /// Persists message related to a charge
+        /// Persists an accepted charge operation event as charge history
         /// </summary>
         /// <param name="chargeInformationOperationsAcceptedEvent"></param>
         /// <returns>A <see cref="Task"/>.</returns>

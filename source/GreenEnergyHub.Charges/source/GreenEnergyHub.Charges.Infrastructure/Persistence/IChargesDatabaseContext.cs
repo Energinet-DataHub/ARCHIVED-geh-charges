@@ -70,6 +70,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
         DbSet<OutboxMessage> OutboxMessages { get; }
 
         /// <summary>
+        /// ChargeHistories
+        /// </summary>
+        DbSet<ChargeHistory> ChargeHistories { get; }
+
+        /// <summary>
         /// Saves changes to the database.
         /// </summary>
         Task<int> SaveChangesAsync();

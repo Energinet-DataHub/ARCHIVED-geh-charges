@@ -13,22 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Persistence;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence
+namespace GreenEnergyHub.Charges.Application.Persistence
 {
-    public class QueryUnitOfWork : IQueryUnitOfWork
+    public interface IUnitOfWork
     {
-        private readonly IChargesQueryDatabaseContext _chargesQueryDatabaseContext;
-
-        public QueryUnitOfWork(IChargesQueryDatabaseContext chargesQueryDatabaseContext)
-        {
-            _chargesQueryDatabaseContext = chargesQueryDatabaseContext;
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _chargesQueryDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
-        }
+        Task SaveChangesAsync();
     }
 }

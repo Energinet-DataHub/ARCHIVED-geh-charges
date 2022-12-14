@@ -30,8 +30,8 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests.Charges
 {
-    [IntegrationTest]
     [Collection(nameof(ChargeHistoryPersisterEndpointTests))]
+    [IntegrationTest]
     public class ChargeHistoryPersisterEndpointTests
     {
         public class RunAsync : IClassFixture<ChargesManagedDependenciesTestFixture>
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var sut = new ChargeHistoryPersisterEndpoint(
                     _fixture.GetService<JsonMessageDeserializer>(),
                     _fixture.GetService<IChargeHistoryPersister>(),
-                    _fixture.GetService<IQueryUnitOfWork>());
+                    _fixture.GetService<IUnitOfWork>());
 
                 var jsonSerializer = new JsonSerializer();
                 var dataString = jsonSerializer.Serialize(operationsAcceptedEvent);
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await sut.RunAsync(data);
 
                 // Assert
-                await using var chargesQueryDatabaseReadContext = _fixture.ChargesQueryDatabaseManager.CreateDbContext();
+                await using var chargesQueryDatabaseReadContext = _fixture.ChargesDatabaseManager.CreateDbContext();
                 var actualHistories = chargesQueryDatabaseReadContext.ChargeHistories
                     .Where(x =>
                         x.SenderProvidedChargeId == senderProvidedChargeId &&

@@ -50,7 +50,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             AzuriteManager = new AzuriteManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             ChargesDatabaseManager = new ChargesDatabaseManager();
-            ChargesQueryDatabaseManager = new ChargesQueryDatabaseManager(ChargesDatabaseManager.ConnectionString);
             MessageHubDatabaseManager = new MessageHubDatabaseManager(ChargesDatabaseManager.ConnectionString);
             AuthorizationConfiguration = AuthorizationConfigurationData.CreateAuthorizationConfiguration();
             AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.ClientApps);
@@ -61,8 +60,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         }
 
         public ChargesDatabaseManager ChargesDatabaseManager { get; }
-
-        public ChargesQueryDatabaseManager ChargesQueryDatabaseManager { get; }
 
         public MessageHubDatabaseManager MessageHubDatabaseManager { get; }
 

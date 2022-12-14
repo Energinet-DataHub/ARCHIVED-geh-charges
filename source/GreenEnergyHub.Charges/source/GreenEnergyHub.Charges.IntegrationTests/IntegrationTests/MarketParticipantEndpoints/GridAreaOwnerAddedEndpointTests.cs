@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
                 var sut = new GridAreaOwnerAddedEndpoint(
                     _fixture.GetService<ISharedIntegrationEventParser>(),
                     _fixture.GetService<IGridAreaOwnerAddedCommandHandler>(),
-                    _fixture.GetService<IChargesUnitOfWork>());
+                    _fixture.GetService<IUnitOfWork>());
 
                 // Act
                 await sut.RunAsync(message);

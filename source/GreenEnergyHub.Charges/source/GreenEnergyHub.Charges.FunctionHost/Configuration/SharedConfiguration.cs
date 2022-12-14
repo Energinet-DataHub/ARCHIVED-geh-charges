@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 });
 
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
-            serviceCollection.AddScoped<IChargesUnitOfWork, ChargesUnitOfWork>();
+            serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
             serviceCollection.AddDbContext<MessageHubDatabaseContext>(
                 options =>
@@ -123,15 +123,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     options.UseSqlServer(connectionString, o => o.UseNodaTime());
                 });
             serviceCollection.AddScoped<IMessageHubDatabaseContext, MessageHubDatabaseContext>();
-
-            serviceCollection.AddDbContext<ChargesQueryDatabaseContext>(
-                options =>
-                {
-                    var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
-                    options.UseSqlServer(connectionString, o => o.UseNodaTime());
-                });
-            serviceCollection.AddScoped<IChargesQueryDatabaseContext, ChargesQueryDatabaseContext>();
-            serviceCollection.AddScoped<IQueryUnitOfWork, QueryUnitOfWork>();
 
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IChargeMessageRepository, ChargeMessageRepository>();

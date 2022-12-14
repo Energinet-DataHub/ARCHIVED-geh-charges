@@ -17,6 +17,5 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
     public static class DatabaseSchemaNames
     {
         public const string CommandModel = "Charges";
-        public const string QueryModel = "ChargesQuery";
     }
 }

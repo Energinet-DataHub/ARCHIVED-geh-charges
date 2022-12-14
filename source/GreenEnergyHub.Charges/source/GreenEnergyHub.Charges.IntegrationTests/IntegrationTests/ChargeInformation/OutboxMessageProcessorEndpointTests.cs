@@ -141,7 +141,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
                     _fixture.GetService<IClock>(),
                     _correlationContext,
                     dispatcher,
-                    _fixture.ChargesUnitOfWork,
+                    _fixture.UnitOfWork,
                     _fixture.GetService<ILoggerFactory>());
             }
 

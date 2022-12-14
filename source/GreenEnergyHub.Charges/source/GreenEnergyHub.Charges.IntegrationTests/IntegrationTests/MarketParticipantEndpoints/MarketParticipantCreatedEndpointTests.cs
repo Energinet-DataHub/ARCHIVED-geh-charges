@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
                 var sut = new MarketParticipantCreatedEndpoint(
                     _fixture.GetService<ISharedIntegrationEventParser>(),
                     _fixture.GetService<IMarketParticipantCreatedCommandHandler>(),
-                    _fixture.GetService<IChargesUnitOfWork>());
+                    _fixture.GetService<IUnitOfWork>());
 
                 // Act
                 await sut.RunAsync(message);

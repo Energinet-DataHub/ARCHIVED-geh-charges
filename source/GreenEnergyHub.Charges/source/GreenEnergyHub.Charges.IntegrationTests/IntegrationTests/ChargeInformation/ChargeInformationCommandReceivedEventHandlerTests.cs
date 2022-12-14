@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
 
             // Act
             await sut.HandleAsync(receivedEvent);
-            await _fixture.ChargesUnitOfWork.SaveChangesAsync();
+            await _fixture.UnitOfWork.SaveChangesAsync();
 
             // Assert
             var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);
@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
 
             // Act
             await sut.HandleAsync(receivedEvent);
-            await _fixture.ChargesUnitOfWork.SaveChangesAsync();
+            await _fixture.UnitOfWork.SaveChangesAsync();
 
             // Assert
             var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);
@@ -115,7 +115,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
 
             // Act
             await sut.HandleAsync(receivedEvent);
-            await _fixture.ChargesUnitOfWork.SaveChangesAsync();
+            await _fixture.UnitOfWork.SaveChangesAsync();
 
             // Assert
             var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);

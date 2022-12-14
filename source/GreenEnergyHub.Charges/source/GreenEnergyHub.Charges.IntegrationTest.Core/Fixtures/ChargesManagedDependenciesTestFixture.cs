@@ -38,25 +38,19 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures
         public ChargesManagedDependenciesTestFixture()
         {
             ChargesDatabaseManager = new ChargesDatabaseManager();
-            ChargesQueryDatabaseManager = new ChargesQueryDatabaseManager(ChargesDatabaseManager.ConnectionString);
 
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, ChargesDatabaseManager.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
 
             Host = ChargesFunctionApp.ConfigureApplication();
 
-            ChargesUnitOfWork = GetService<IChargesUnitOfWork>();
-            QueryUnitOfWork = GetService<IQueryUnitOfWork>();
+            UnitOfWork = GetService<IUnitOfWork>();
             CorrelationContext = GetService<ICorrelationContext>();
         }
 
         public ChargesDatabaseManager ChargesDatabaseManager { get; }
 
-        public ChargesQueryDatabaseManager ChargesQueryDatabaseManager { get; }
-
-        public IChargesUnitOfWork ChargesUnitOfWork { get; }
-
-        public IQueryUnitOfWork QueryUnitOfWork { get; }
+        public IUnitOfWork UnitOfWork { get; }
 
         public ICorrelationContext CorrelationContext { get; }
 

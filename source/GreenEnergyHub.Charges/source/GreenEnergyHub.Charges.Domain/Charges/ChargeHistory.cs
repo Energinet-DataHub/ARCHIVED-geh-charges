@@ -102,6 +102,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         [Required]
         public Instant StartDateTime { get; }
 
+        [Required]
         public Instant? EndDateTime { get; }
 
         [Required]
@@ -131,6 +132,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ArgumentNullException.ThrowIfNull(transparentInvoicing);
             ArgumentNullException.ThrowIfNull(vatClassification);
             ArgumentNullException.ThrowIfNull(startDateTime);
+            ArgumentNullException.ThrowIfNull(endDateTime);
             ArgumentNullException.ThrowIfNull(acceptedDateTime);
 
             return new ChargeHistory(
