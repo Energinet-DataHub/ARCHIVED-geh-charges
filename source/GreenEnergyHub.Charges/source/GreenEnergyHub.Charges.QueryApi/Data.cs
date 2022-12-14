@@ -35,6 +35,8 @@ namespace GreenEnergyHub.Charges.QueryApi
 
         public IQueryable<ChargeMessage> ChargeMessages => _context.ChargeMessages.AsNoTracking();
 
+        public IQueryable<ChargeHistory> ChargeHistories => _context.ChargeHistories.AsNoTracking();
+
         public IQueryable<MeteringPoint> MeteringPoints => _context.MeteringPoints.AsNoTracking();
 
         public IQueryable<MarketParticipant> MarketParticipants => _context.MarketParticipants.AsNoTracking();

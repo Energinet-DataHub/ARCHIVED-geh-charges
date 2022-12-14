@@ -15,11 +15,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    [Table("ChargeMessage", Schema = "Charges")]
-    public class ChargeMessage
+    [Table("ChargeHistory", Schema = "ChargesQuery")]
+    [Index("SenderProvidedChargeId", "Type", "Owner", Name = "I1_SenderProvidedChargeId_Type_Owner")]
+    public class ChargeHistory
     {
         [Key]
         public Guid Id { get; set; }
@@ -32,14 +34,28 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         [Required]
         [StringLength(35)]
-        public string MarketParticipantId { get; set; }
+        public string Owner { get; set; }
 
         [Required]
-        [StringLength(255)]
-        public string MessageId { get; set; }
+        [StringLength(132)]
+        public string Name { get; set; }
 
-        public int MessageType { get; set; }
+        [Required]
+        [StringLength(2048)]
+        public string Description { get; set; }
 
-        public DateTime MessageDateTime { get; set; }
+        public int Resolution { get; set; }
+
+        public bool TaxIndicator { get; set; }
+
+        public bool TransparentInvoicing { get; set; }
+
+        public int VatClassification { get; set; }
+
+        public DateTime StartDateTime { get; set; }
+
+        public DateTime EndDateTime { get; set; }
+
+        public DateTime AcceptedDateTime { get; set; }
     }
 }
