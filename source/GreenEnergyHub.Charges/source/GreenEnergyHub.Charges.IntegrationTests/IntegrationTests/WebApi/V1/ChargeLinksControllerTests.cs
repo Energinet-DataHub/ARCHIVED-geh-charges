@@ -49,12 +49,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            factory.ReconfigureJwtTokenValidatorMock(isValid: true);
         }
 
         public Task InitializeAsync()
         {
-            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer xxx");
             return Task.CompletedTask;
         }
 

@@ -33,7 +33,7 @@ using GreenEnergyHub.Charges.TestCore.Data;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
-using Actor = Energinet.DataHub.Core.App.Common.Abstractions.Actor.Actor;
+using Actor = Energinet.DataHub.Core.App.Common.Abstractions.Actors.Actor;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 {
