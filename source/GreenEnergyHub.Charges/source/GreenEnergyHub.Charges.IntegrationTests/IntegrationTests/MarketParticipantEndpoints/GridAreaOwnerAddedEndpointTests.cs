@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
                 RunAsync_WhenValidGridAreaAddedToMarketParticipantEventHandled_GridAreaShouldHaveUpdatedOwner()
             {
                 // Arrange
-                await using var setupContext = _fixture.DatabaseManager.CreateDbContext();
+                await using var setupContext = _fixture.ChargesDatabaseManager.CreateDbContext();
                 setupContext.MarketParticipants.Add(_marketParticipant);
                 setupContext.GridAreaLinks.Add(_gridAreaLink);
                 await setupContext.SaveChangesAsync();
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketPartici
                 await sut.RunAsync(message);
 
                 // Assert
-                await using var assertContext = _fixture.DatabaseManager.CreateDbContext();
+                await using var assertContext = _fixture.ChargesDatabaseManager.CreateDbContext();
                 var gridAreaLink = await assertContext.GridAreaLinks.SingleAsync(g =>
                     g.GridAreaId == _gridAreaLink.GridAreaId);
                 gridAreaLink.OwnerId.Should().Be(_marketParticipant.Id);
