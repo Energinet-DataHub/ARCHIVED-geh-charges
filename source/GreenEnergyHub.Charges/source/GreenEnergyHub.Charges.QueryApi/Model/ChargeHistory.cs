@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    [Table("ChargeHistory", Schema = "ChargesQuery")]
+    [Table("ChargeHistory", Schema = "Charges")]
     [Index("SenderProvidedChargeId", "Type", "Owner", Name = "I1_SenderProvidedChargeId_Type_Owner")]
     public class ChargeHistory
     {

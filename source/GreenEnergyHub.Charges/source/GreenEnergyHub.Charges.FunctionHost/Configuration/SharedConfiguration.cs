@@ -122,11 +122,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
                     options.UseSqlServer(connectionString, o => o.UseNodaTime());
                 });
-
             serviceCollection.AddScoped<IMessageHubDatabaseContext, MessageHubDatabaseContext>();
 
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IChargeMessageRepository, ChargeMessageRepository>();
+            serviceCollection.AddScoped<IChargeHistoryRepository, ChargeHistoryRepository>();
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
             serviceCollection.AddScoped<
                 IAvailableDataRepository<AvailableChargeLinksData>,
