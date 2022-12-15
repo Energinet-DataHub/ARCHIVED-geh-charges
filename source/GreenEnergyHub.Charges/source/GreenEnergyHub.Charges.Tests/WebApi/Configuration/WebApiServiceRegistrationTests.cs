@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Tests.TestHelpers;
@@ -25,6 +26,13 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Configuration
     [UnitTest]
     public class WebApiServiceRegistrationTests
     {
+        public WebApiServiceRegistrationTests()
+        {
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ExternalOpenIdUrl, "disabled");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.InternalOpenIdUrl, "disabled");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendAppId, "disabled");
+        }
+
         [Fact]
         public void WhenWebApiIsConfigured_ThenAllApplicationDependenciesMustBeRegisteredOnlyOnce()
         {

@@ -16,7 +16,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using Energinet.DataHub.Core.App.Common.Diagnostics.HealthChecks;
 using Energinet.DataHub.Core.App.WebApp.Diagnostics.HealthChecks;
-using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -114,14 +113,12 @@ namespace GreenEnergyHub.Charges.WebApi
 
             app.UseRouting();
             app.UseApiVersioning();
-
-            // This middleware has to be configured after 'UseRouting' for 'AllowAnonymousAttribute' to work.
-            if (!env.IsDevelopment())
-                app.UseMiddleware<JwtTokenMiddleware>();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers().RequireAuthorization();
 
                 // Health check
                 endpoints.MapLiveHealthChecks();
