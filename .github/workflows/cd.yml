@@ -61,7 +61,7 @@ jobs:
     needs: dotnet_promote_prerelease
     steps:
       - name: Find associated pull request
-        uses: Energinet-DataHub/.github/.github/actions/find-related-pr-number@v8
+        uses: Energinet-DataHub/.github/.github/actions/find-related-pr-number@v9
         id: find_pull_request
 
       - name: Repository Dispatch
