@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
@@ -22,31 +22,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
 {
     public class ChargeHistoryPersister : IChargeHistoryPersister
     {
+        private readonly IChargeHistoryFactory _chargeHistoryFactory;
         private readonly IChargeHistoryRepository _chargeHistoryRepository;
 
-        public ChargeHistoryPersister(IChargeHistoryRepository chargeHistoryRepository)
+        public ChargeHistoryPersister(
+            IChargeHistoryFactory chargeHistoryFactory,
+            IChargeHistoryRepository chargeHistoryRepository)
         {
+            _chargeHistoryFactory = chargeHistoryFactory;
             _chargeHistoryRepository = chargeHistoryRepository;
         }
 
         public async Task PersistHistoryAsync(ChargeInformationOperationsAcceptedEvent chargeInformationOperationsAcceptedEvent)
         {
             ArgumentNullException.ThrowIfNull(chargeInformationOperationsAcceptedEvent);
-            var chargeHistories = chargeInformationOperationsAcceptedEvent
-                .Operations.Select(chargeInformationOperationDto =>
-                    ChargeHistory.Create(
-                        chargeInformationOperationDto.SenderProvidedChargeId,
-                        chargeInformationOperationDto.ChargeType,
-                        chargeInformationOperationDto.ChargeOwner,
-                        chargeInformationOperationDto.ChargeName,
-                        chargeInformationOperationDto.ChargeDescription,
-                        chargeInformationOperationDto.Resolution,
-                        chargeInformationOperationDto.TaxIndicator,
-                        chargeInformationOperationDto.TransparentInvoicing,
-                        chargeInformationOperationDto.VatClassification,
-                        chargeInformationOperationDto.StartDateTime,
-                        chargeInformationOperationDto.EndDateTime,
-                        chargeInformationOperationsAcceptedEvent.PublishedTime)).ToList();
+            var chargeHistories = _chargeHistoryFactory.Create(chargeInformationOperationsAcceptedEvent);
 
             await _chargeHistoryRepository.AddRangeAsync(chargeHistories).ConfigureAwait(false);
         }

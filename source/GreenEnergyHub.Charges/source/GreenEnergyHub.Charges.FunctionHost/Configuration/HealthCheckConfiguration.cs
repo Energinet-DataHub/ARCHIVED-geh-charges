@@ -170,7 +170,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     _ => EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeInformationOperationsAcceptedPersistHistorySubscriptionName),
                     name: "ChargeInformationOperationsAcceptedPersistHistorySubscriptionExists")
                 .AddAzureServiceBusSubscription(
-                    _ => EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubListenerConnectionString),
+                    _ => EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
                     _ => EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
                     _ => EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceCommandReceivedSubscriptionName),
                     name: "ChargePriceCommandReceivedSubscriptionExists")

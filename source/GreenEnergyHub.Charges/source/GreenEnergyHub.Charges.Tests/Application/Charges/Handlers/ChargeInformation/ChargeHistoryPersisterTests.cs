@@ -17,9 +17,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -33,7 +35,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task PersistHistoryAsync_WhenCalled_ShouldCallChargeHistoryRepository(
+        public async Task PersistHistoryAsync_WhenCalled_ShouldCallChargeHistoryFactoryAndRepository(
+            [Frozen] Mock<IChargeHistoryFactory> chargeHistoryFactory,
             [Frozen] Mock<IChargeHistoryRepository> chargeHistoryRepository,
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
@@ -52,7 +55,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
             await sut.PersistHistoryAsync(acceptedEvent).ConfigureAwait(false);
 
             // Assert
-            chargeHistoryRepository.Verify(x => x.AddRangeAsync(It.IsAny<List<ChargeHistory>>()), Times.Once());
+            chargeHistoryFactory.Verify(x => x.Create(It.IsAny<ChargeInformationOperationsAcceptedEvent>()), Times.Once);
+            chargeHistoryRepository.Verify(x => x.AddRangeAsync(It.IsAny<IList<ChargeHistory>>()), Times.Once());
         }
 
         [Theory]
