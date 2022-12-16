@@ -23,7 +23,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
 {
     [UnitTest]
-    public class ChargeCreatedFactoryTests
+    public class ChargeCreatedEventFactoryTests
     {
         [Theory]
         [InlineAutoDomainData]
