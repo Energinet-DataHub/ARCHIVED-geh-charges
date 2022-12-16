@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
@@ -45,7 +46,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
                         chargeInformationOperationDto.TransparentInvoicing,
                         chargeInformationOperationDto.VatClassification,
                         chargeInformationOperationDto.StartDateTime,
-                        chargeInformationOperationDto.EndDateTime,
+                        chargeInformationOperationDto.EndDateTime.TimeOrEndDefault(),
                         chargeInformationOperationsAcceptedEvent.PublishedTime)).ToList();
 
             await _chargeHistoryRepository.AddRangeAsync(chargeHistories).ConfigureAwait(false);
