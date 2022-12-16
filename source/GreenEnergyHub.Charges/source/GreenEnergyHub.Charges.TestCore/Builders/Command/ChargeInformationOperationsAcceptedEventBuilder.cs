@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         public ChargeInformationOperationsAcceptedEventBuilder()
         {
             _document = new DocumentDtoBuilder()
-                .WithDocumentType(DocumentType.ConfirmRequestChangeOfPriceList)
+                .WithDocumentType(DocumentType.RequestChangeOfPriceList)
                 .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
                 .Build();
 
