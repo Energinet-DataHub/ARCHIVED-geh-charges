@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
     public interface IChargeHistoryFactory
     {
         /// <summary>
-        /// Creates charge histories based on accepted event and returns the in list
+        /// Creates charge histories based on accepted event and returns them in a list
         /// </summary>
         /// <param name="chargeInformationOperationsAcceptedEvent"></param>
         /// <returns>A list of ChargeHistories</returns>
